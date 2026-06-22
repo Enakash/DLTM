@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Voice Analyzer">
+<meta name="theme-color" content="#060d06">
+<title>Voice Credibility Analyzer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    background: #060d06;
+    color: #c8e8c8;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 14px 30px;
+    gap: 18px;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header { text-align: center; }
+  .header-sub { font-size: 10px; letter-spacing: 5px; color: #2a5a2a; margin-bottom: 4px; text-transform: uppercase; }
+  .header-title { font-size: 19px; font-weight: bold; color: #00FF88; letter-spacing: 2px; text-shadow: 0 0 16px #00FF8866; }
+  .header-ver { font-size: 9px; color: #1a4a1a; margin-top: 3px; letter-spacing: 3px; }
+
+  /* MAIN PANEL */
+  .panel {
+    width: 100%; max-width: 480px;
+    background: #0a120a;
+    border: 1px solid #1a2e1a;
+    border-radius: 12px;
+    padding: 18px 16px;
+    display: flex; flex-direction: column; gap: 16px;
+    transition: box-shadow 0.4s, border-color 0.4s;
+  }
+  .panel.active { border-color: #1a4a1a; box-shadow: 0 0 30px #00FF8811; }
+
+  /* GAUGE */
+  .gauge-wrap { display: flex; justify-content: center; }
+  svg#gauge { overflow: visible; }
+
+  /* STATUS BADGE */
+  .badge-wrap { display: flex; justify-content: center; }
+  .badge {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 18px; border-radius: 20px;
+    border: 1px solid #1a3a1a; background: #0d180d;
+    font-size: 13px; color: #1a4a1a; font-weight: bold;
+    transition: all 0.3s;
+  }
+  .badge.active { border-color: var(--cred-color); background: color-mix(in srgb, var(--cred-color) 7%, transparent); color: var(--cred-color); }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #1a3a1a; display: inline-block; transition: all 0.3s;
+  }
+  .dot.active { background: var(--cred-color); box-shadow: 0 0 8px var(--cred-color); animation: pulse 1.2s infinite; }
+
+  /* WAVEFORM */
+  .section-label { font-size: 10px; color: #1a4a1a; margin-bottom: 5px; letter-spacing: 2px; }
+  #waveCanvas {
+    width: 100%; height: 65px; border-radius: 6px;
+    background: #080f08; border: 1px solid #1a3a1a; display: block;
+  }
+
+  /* METRICS */
+  .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .metric-card {
+    background: #0c160c; border: 1px solid #1a2e1a;
+    border-radius: 8px; padding: 10px 12px;
+  }
+  .metric-label { font-size: 10px; color: #2a5a2a; margin-bottom: 3px; }
+  .metric-value { font-size: 16px; color: #1a4a1a; font-weight: bold; transition: color 0.3s; }
+  .metric-value.active { color: #88cc88; }
+
+  /* HISTORY CHART */
+  #histCanvas {
+    width: 100%; height: 65px; border-radius: 6px;
+    background: #080f08; border: 1px solid #1a3a1a; display: block;
+  }
+
+  /* BUTTON */
+  .btn {
+    width: 100%; padding: 15px 0;
+    border-radius: 8px; border: 2px solid #00FF88;
+    background: #00FF8822; color: #00FF88;
+    font-size: 15px; font-family: inherit; font-weight: bold;
+    letter-spacing: 3px; cursor: pointer;
+    transition: all 0.2s; text-transform: uppercase;
+    box-shadow: 0 0 16px #00FF8844;
+    -webkit-appearance: none;
+  }
+  .btn.stop { border-color: #FF3D5A; background: #FF3D5A22; color: #FF3D5A; box-shadow: 0 0 16px #FF3D5A44; }
+  .btn:active { transform: scale(0.97); }
+
+  /* ERROR */
+  .error-msg { color: #FF3D5A; font-size: 12px; text-align: center; display: none; }
+  .error-msg.show { display: block; }
+
+  /* INSTRUCTIONS */
+  .instructions {
+    width: 100%; max-width: 480px;
+    background: #0a120a; border: 1px solid #111a11;
+    border-radius: 10px; padding: 14px 16px;
+    font-size: 11px; color: #2a5a2a; line-height: 1.9;
+  }
+  .instr-title { color: #00FF8844; margin-bottom: 6px; letter-spacing: 2px; font-size: 10px; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-sub">מערכת ניתוח קול</div>
+  <div class="header-title">VOICE CREDIBILITY ANALYZER</div>
+  <div class="header-ver">v1.0 · ניתוח בזמן אמת</div>
+</div>
+
+<!-- MAIN PANEL -->
+<div class="panel" id="mainPanel">
+
+  <!-- GAUGE -->
+  <div class="gauge-wrap">
+    <svg id="gauge" width="180" height="130" viewBox="0 0 180 130">
+      <!-- bg arc -->
+      <path id="arcBg" fill="none" stroke="#1a2a1a" stroke-width="14" stroke-linecap="round"/>
+      <!-- value arc -->
+      <path id="arcVal" fill="none" stroke="#00FF88" stroke-width="14" stroke-linecap="round" style="filter:drop-shadow(0 0 6px #00FF88); display:none"/>
+      <!-- ticks -->
+      <g id="ticks"></g>
+      <!-- needle -->
+      <line id="needle" x1="90" y1="90" x2="90" y2="30" stroke="#00FF88" stroke-width="2.5" stroke-linecap="round" style="display:none; transition:all 0.3s; filter:drop-shadow(0 0 4px #00FF88)"/>
+      <circle id="needleDot" cx="90" cy="90" r="5" fill="#00FF88" style="display:none; filter:drop-shadow(0 0 4px #00FF88)"/>
+      <!-- text -->
+      <text id="gaugeVal" x="90" y="112" text-anchor="middle" fill="#2a4a2a" font-size="28" font-family="'Courier New',monospace" font-weight="bold">--</text>
+      <text id="gaugeLabel" x="90" y="128" text-anchor="middle" fill="#2a4a2a" font-size="11" font-family="'Courier New',monospace">ממתין</text>
+    </svg>
+  </div>
+
+  <!-- BADGE -->
+  <div class="badge-wrap">
+    <div class="badge" id="badge">
+      <span class="dot" id="dot"></span>
+      <span id="badgeText">לא פעיל</span>
+    </div>
+  </div>
+
+  <!-- WAVEFORM -->
+  <div>
+    <div class="section-label">▶ גל קול חי</div>
+    <canvas id="waveCanvas"></canvas>
+  </div>
+
+  <!-- METRICS -->
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="metric-label">♪ גובה קול</div>
+      <div class="metric-value" id="mPitch">---</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">⏱ קצב דיבור</div>
+      <div class="metric-value" id="mRate">---</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">⏸ פאוזות</div>
+      <div class="metric-value" id="mPause">---</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">〰 רעידת קול</div>
+      <div class="metric-value" id="mJitter">---</div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div>
+    <div class="section-label">▶ היסטוריית אמינות (30 שניות)</div>
+    <canvas id="histCanvas"></canvas>
+  </div>
+
+  <!-- BUTTON -->
+  <button class="btn" id="mainBtn" onclick="toggleAnalysis()">▶ התחל ניתוח</button>
+
+  <!-- ERROR -->
+  <div class="error-msg" id="errMsg">❌ שגיאה: לא ניתן לגשת למיקרופון. בדוק הרשאות דפדפן.</div>
+</div>
+
+<!-- INSTRUCTIONS -->
+<div class="instructions">
+  <div class="instr-title">⚠ הוראות שימוש</div>
+  <div>1. הדלק רמקול בטלפון בזמן השיחה</div>
+  <div>2. לחץ "התחל ניתוח" ← אשר גישה למיקרופון</div>
+  <div>3. הכלי יקשיב לקול הצד השני דרך הרמקול</div>
+  <div>4. המד מציג הערכה — לא תוצאה מדעית מוחלטת</div>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────
+let active = false;
+let audioCtx, analyser, processor, stream;
+let pitchHist = [], voiceFrames = 0, totalFrames = 0;
+let lastPitch = 0, jitterAcc = 0, sampleCount = 0;
+let credibility = 75;
+let historyData = [];
+let histInterval = null;
+let waveAnimId = null;
+
+// ─── GAUGE SETUP ─────────────────────────────────────────
+const cx = 90, cy = 90, r = 70;
+const startA = Math.PI * 0.75, endA = Math.PI * 2.25;
+const total = endA - startA;
+
+function arcX(a){ return cx + r * Math.cos(a); }
+function arcY(a){ return cy + r * Math.sin(a); }
+function describeArc(from, to){
+  const large = (to - from) > Math.PI ? 1 : 0;
+  return `M ${arcX(from)} ${arcY(from)} A ${r} ${r} 0 ${large} 1 ${arcX(to)} ${arcY(to)}`;
+}
+
+// Draw static bg arc + ticks
+document.getElementById('arcBg').setAttribute('d', describeArc(startA, endA));
+const ticksG = document.getElementById('ticks');
+[0,25,50,75,100].forEach(v => {
+  const a = startA + (v/100)*total;
+  const x1 = cx+(r-20)*Math.cos(a), y1 = cy+(r-20)*Math.sin(a);
+  const x2 = cx+(r-8)*Math.cos(a),  y2 = cy+(r-8)*Math.sin(a);
+  const ln = document.createElementNS('http://www.w3.org/2000/svg','line');
+  ln.setAttribute('x1',x1); ln.setAttribute('y1',y1);
+  ln.setAttribute('x2',x2); ln.setAttribute('y2',y2);
+  ln.setAttribute('stroke','#2a3a2a'); ln.setAttribute('stroke-width','2');
+  ticksG.appendChild(ln);
+});
+
+function credColor(v){ return v>70?'#00FF88': v>40?'#FFD600':'#FF3D5A'; }
+function credLabel(v){ return v>70?'אמין': v>40?'חשוד':'לא אמין'; }
+
+function updateGauge(v){
+  const color = credColor(v);
+  const frac = v/100;
+  const angle = startA + frac*total;
+  // arc
+  document.getElementById('arcVal').setAttribute('d', describeArc(startA, angle));
+  document.getElementById('arcVal').setAttribute('stroke', color);
+  document.getElementById('arcVal').style.filter = `drop-shadow(0 0 6px ${color})`;
+  document.getElementById('arcVal').style.display = '';
+  // needle
+  const nx = cx+(r-12)*Math.cos(angle), ny = cy+(r-12)*Math.sin(angle);
+  const needle = document.getElementById('needle');
+  needle.setAttribute('x2', nx); needle.setAttribute('y2', ny);
+  needle.setAttribute('stroke', color);
+  needle.style.display = '';
+  const dot = document.getElementById('needleDot');
+  dot.setAttribute('fill', color); dot.style.display = '';
+  dot.style.filter = `drop-shadow(0 0 4px ${color})`;
+  // text
+  document.getElementById('gaugeVal').textContent = Math.round(v);
+  document.getElementById('gaugeVal').setAttribute('fill', color);
+  document.getElementById('gaugeLabel').textContent = credLabel(v);
+  document.getElementById('gaugeLabel').setAttribute('fill', color);
+}
+
+function resetGauge(){
+  document.getElementById('arcVal').style.display = 'none';
+  document.getElementById('needle').style.display = 'none';
+  document.getElementById('needleDot').style.display = 'none';
+  document.getElementById('gaugeVal').textContent = '--';
+  document.getElementById('gaugeVal').setAttribute('fill', '#2a4a2a');
+  document.getElementById('gaugeLabel').textContent = 'ממתין';
+  document.getElementById('gaugeLabel').setAttribute('fill', '#2a4a2a');
+}
+
+// ─── CREDIBILITY COMPUTE ─────────────────────────────────
+function computeCredibility({pitchVariance, pauseRatio, speechRate, jitter}){
+  const pitchScore  = Math.max(0, 100 - pitchVariance * 2.5);
+  const pauseScore  = Math.max(0, 100 - pauseRatio * 120);
+  const rateScore   = speechRate > 0 ? Math.max(0, 100 - Math.abs(speechRate - 3.5) * 18) : 60;
+  const jitterScore = Math.max(0, 100 - jitter * 400);
+  return Math.min(100, Math.max(0, pitchScore*0.3 + pauseScore*0.25 + rateScore*0.2 + jitterScore*0.25));
+}
+
+// ─── PITCH DETECTION ─────────────────────────────────────
+function detectPitch(buffer, sampleRate){
+  const SIZE = buffer.length, MAX = Math.floor(SIZE/2);
+  let rms = 0;
+  for(let i=0;i<SIZE;i++) rms += buffer[i]*buffer[i];
+  rms = Math.sqrt(rms/SIZE);
+  if(rms < 0.01) return 0;
+  let bestOffset=-1, bestCorr=0, lastCorr=1;
+  for(let offset=20; offset<MAX; offset++){
+    let corr=0;
+    for(let i=0;i<MAX;i++) corr += Math.abs(buffer[i]-buffer[i+offset]);
+    corr = 1 - corr/MAX;
+    if(corr > 0.9 && corr > lastCorr){ bestCorr=corr; bestOffset=offset; }
+    lastCorr = corr;
+  }
+  return (bestCorr > 0.9 && bestOffset > 0) ? sampleRate/bestOffset : 0;
+}
+
+// ─── WAVEFORM DRAW ───────────────────────────────────────
+function drawWaveform(){
+  if(!active || !analyser) return;
+  waveAnimId = requestAnimationFrame(drawWaveform);
+  const canvas = document.getElementById('waveCanvas');
+  const ctx = canvas.getContext('2d');
+  const bufLen = analyser.fftSize;
+  const data = new Uint8Array(bufLen);
+  analyser.getByteTimeDomainData(data);
+  ctx.fillStyle = '#080f08';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = '#00FF88';
+  ctx.shadowColor = '#00FF88';
+  ctx.shadowBlur = 4;
+  ctx.beginPath();
+  const sliceW = canvas.width/bufLen;
+  let x=0;
+  for(let i=0;i<bufLen;i++){
+    const v = data[i]/128.0;
+    const y = v*canvas.height/2;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    x+=sliceW;
+  }
+  ctx.lineTo(canvas.width, canvas.height/2);
+  ctx.stroke();
+}
+
+// ─── HISTORY CHART ───────────────────────────────────────
+function drawHistory(){
+  const canvas = document.getElementById('histCanvas');
+  const ctx = canvas.getContext('2d');
+  const w=canvas.width, h=canvas.height, pad=8;
+  ctx.fillStyle='#080f08'; ctx.fillRect(0,0,w,h);
+  if(historyData.length < 2){
+    ctx.fillStyle='#1a4a1a'; ctx.font='11px Courier New'; ctx.textAlign='center';
+    ctx.fillText('ממתין לנתונים...', w/2, h/2+4);
+    return;
+  }
+  // grid lines
+  [25,50,75].forEach(v=>{
+    const y = h - pad - (v/100)*(h-pad*2);
+    ctx.strokeStyle='#1a2a1a'; ctx.lineWidth=1;
+    ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(w-pad,y); ctx.stroke();
+  });
+  ctx.setLineDash([]);
+  const lastVal = historyData[historyData.length-1];
+  const color = credColor(lastVal);
+  ctx.strokeStyle=color; ctx.lineWidth=2;
+  ctx.shadowColor=color; ctx.shadowBlur=4;
+  ctx.beginPath();
+  historyData.forEach((v,i)=>{
+    const x = pad + (i/(historyData.length-1))*(w-pad*2);
+    const y = h - pad - (v/100)*(h-pad*2);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  // dots
+  historyData.forEach((v,i)=>{
+    const x = pad + (i/(historyData.length-1))*(w-pad*2);
+    const y = h - pad - (v/100)*(h-pad*2);
+    ctx.beginPath(); ctx.arc(x,y,2.5,0,Math.PI*2);
+    ctx.fillStyle=credColor(v); ctx.shadowBlur=0; ctx.fill();
+  });
+}
+
+// ─── CANVAS RESIZE ───────────────────────────────────────
+function resizeCanvases(){
+  const wc = document.getElementById('waveCanvas');
+  const hc = document.getElementById('histCanvas');
+  wc.width = wc.offsetWidth * window.devicePixelRatio;
+  wc.height = 65 * window.devicePixelRatio;
+  wc.style.height = '65px';
+  hc.width = hc.offsetWidth * window.devicePixelRatio;
+  hc.height = 65 * window.devicePixelRatio;
+  hc.style.height = '65px';
+}
+
+// ─── BADGE / CSS VAR UPDATE ──────────────────────────────
+function updateBadge(v){
+  const color = credColor(v);
+  document.documentElement.style.setProperty('--cred-color', color);
+  document.getElementById('badge').classList.add('active');
+  document.getElementById('dot').classList.add('active');
+  document.getElementById('badgeText').textContent = `${credLabel(v)} · ${Math.round(v)}%`;
+}
+function resetBadge(){
+  document.getElementById('badge').classList.remove('active');
+  document.getElementById('dot').classList.remove('active');
+  document.getElementById('badgeText').textContent = 'לא פעיל';
+}
+
+// ─── METRICS UPDATE ──────────────────────────────────────
+function setMetrics(pitch, rate, pause, jitter){
+  ['mPitch','mRate','mPause','mJitter'].forEach(id=>document.getElementById(id).classList.add('active'));
+  document.getElementById('mPitch').textContent   = pitch  ? `${pitch} Hz` : '---';
+  document.getElementById('mRate').textContent    = rate   ? `${rate} יח'/ש'` : '---';
+  document.getElementById('mPause').textContent   = pause !== null ? `${pause}%` : '---';
+  document.getElementById('mJitter').textContent  = jitter ? `${jitter}%` : '---';
+}
+function resetMetrics(){
+  ['mPitch','mRate','mPause','mJitter'].forEach(id=>{
+    document.getElementById(id).classList.remove('active');
+    document.getElementById(id).textContent = '---';
+  });
+}
+
+// ─── START / STOP ─────────────────────────────────────────
+async function toggleAnalysis(){
+  if(active){ stopAnalysis(); return; }
+  await startAnalysis();
+}
+
+async function startAnalysis(){
+  document.getElementById('errMsg').classList.remove('show');
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const source = audioCtx.createMediaStreamSource(stream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 2048;
+    source.connect(analyser);
+
+    processor = audioCtx.createScriptProcessor(2048, 1, 1);
+    source.connect(processor);
+    processor.connect(audioCtx.destination);
+
+    pitchHist=[]; voiceFrames=0; totalFrames=0;
+    lastPitch=0; jitterAcc=0; sampleCount=0;
+    historyData=[];
+
+    processor.onaudioprocess = (e) => {
+      const buf = Array.from(e.inputBuffer.getChannelData(0));
+      const pitch = detectPitch(buf, audioCtx.sampleRate);
+      totalFrames++;
+
+      if(pitch > 80 && pitch < 400){
+        voiceFrames++;
+        pitchHist.push(pitch);
+        if(pitchHist.length > 60) pitchHist.shift();
+        if(lastPitch > 0){
+          jitterAcc += Math.abs(pitch-lastPitch)/Math.max(pitch,lastPitch);
+          sampleCount++;
+        }
+        lastPitch = pitch;
+      } else { lastPitch = 0; }
+
+      if(totalFrames % 15 === 0){
+        const avg = pitchHist.length > 0 ? pitchHist.reduce((a,b)=>a+b,0)/pitchHist.length : 0;
+        const variance = pitchHist.length > 1
+          ? Math.sqrt(pitchHist.reduce((a,p)=>a+(p-avg)**2,0)/pitchHist.length) : 0;
+        const pauseRatio = totalFrames > 0 ? (totalFrames-voiceFrames)/totalFrames : 0;
+        const speechRate = voiceFrames / (totalFrames/21.5);
+        const jitter = sampleCount > 0 ? jitterAcc/sampleCount : 0;
+
+        credibility = computeCredibility({pitchVariance:variance, pauseRatio, speechRate, jitter});
+        updateGauge(credibility);
+        updateBadge(credibility);
+        setMetrics(
+          Math.round(avg),
+          speechRate.toFixed(1),
+          Math.round(pauseRatio*100),
+          (jitter*100).toFixed(1)
+        );
+      }
+    };
+
+    histInterval = setInterval(()=>{
+      historyData.push(credibility);
+      if(historyData.length > 30) historyData.shift();
+      drawHistory();
+    }, 2000);
+
+    active = true;
+    document.getElementById('mainPanel').classList.add('active');
+    document.getElementById('mainBtn').textContent = '⏹ עצור ניתוח';
+    document.getElementById('mainBtn').classList.add('stop');
+    resizeCanvases();
+    drawWaveform();
+    drawHistory();
+
+  } catch(err){
+    console.error(err);
+    document.getElementById('errMsg').classList.add('show');
+  }
+}
+
+function stopAnalysis(){
+  if(processor){ processor.disconnect(); processor = null; }
+  if(analyser){ analyser.disconnect(); analyser = null; }
+  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream = null; }
+  if(audioCtx){ audioCtx.close(); audioCtx = null; }
+  if(histInterval){ clearInterval(histInterval); histInterval = null; }
+  if(waveAnimId){ cancelAnimationFrame(waveAnimId); waveAnimId = null; }
+
+  active = false;
+  document.getElementById('mainPanel').classList.remove('active');
+  document.getElementById('mainBtn').textContent = '▶ התחל ניתוח';
+  document.getElementById('mainBtn').classList.remove('stop');
+  resetGauge(); resetBadge(); resetMetrics();
+  // clear canvases
+  ['waveCanvas','histCanvas'].forEach(id=>{
+    const c=document.getElementById(id), ctx=c.getContext('2d');
+    ctx.fillStyle='#080f08'; ctx.fillRect(0,0,c.width,c.height);
+  });
+}
+
+// init canvas sizes
+window.addEventListener('load', ()=>{ resizeCanvases(); drawHistory(); });
+window.addEventListener('resize', resizeCanvases);
+</script>
+</body>
+</html>
