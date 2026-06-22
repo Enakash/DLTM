@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b0f1a">
+<title>TruthScan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0b0f1a; --surface:#111827; --surface2:#1a2235;
+  --border:#1e2d45; --border2:#243552;
+  --text:#e2e8f0; --muted:#64748b; --muted2:#94a3b8; --accent:#3b82f6;
+  --safe:#10b981; --warn:#f59e0b; --danger:#ef4444;
+  --font:'Inter',-apple-system,sans-serif;
+  --mono:'JetBrains Mono','Courier New',monospace;
+  --r:12px; --r-sm:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{height:-webkit-fill-available;}
+body{
+  min-height:100vh; min-height:-webkit-fill-available;
+  background:var(--bg); color:var(--text); font-family:var(--font);
+  display:flex; flex-direction:column; align-items:center;
+  padding:0 0 32px; overflow-x:hidden;
+}
+
+/* TOPBAR */
+.topbar{
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  padding:14px 20px; border-bottom:1px solid var(--border);
+  background:var(--surface); position:sticky; top:0; z-index:10;
+}
+.topbar-logo{font-size:17px;font-weight:700;letter-spacing:-0.3px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.topbar-logo span{color:var(--accent);}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-status{font-size:11px;font-family:var(--mono);color:var(--muted);letter-spacing:1px;display:flex;align-items:center;gap:6px;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);transition:background 0.3s,box-shadow 0.3s;}
+.status-dot.live{background:var(--safe);box-shadow:0 0 8px var(--safe);animation:blink 1.4s infinite;}
+.status-dot.calibrating{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:blink 0.8s infinite;}
+
+/* LANG TOGGLE */
+.lang-toggle{
+  display:flex; border-radius:20px; border:1px solid var(--border2);
+  overflow:hidden; background:var(--bg);
+}
+.lang-btn{
+  padding:5px 11px; font-size:11px; font-weight:600; font-family:var(--font);
+  letter-spacing:0.5px; cursor:pointer; border:none;
+  background:transparent; color:var(--muted); transition:all 0.2s;
+}
+.lang-btn.active{background:var(--accent); color:white;}
+
+/* SCORE */
+.score-section{width:100%;max-width:480px;padding:22px 20px 0;display:flex;flex-direction:column;align-items:center;}
+.score-ring-wrap{position:relative;width:200px;height:160px;}
+#gaugesvg{overflow:visible;}
+.score-center{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;}
+.score-number{font-size:42px;font-weight:700;font-family:var(--mono);line-height:1;letter-spacing:-2px;color:var(--muted);transition:color 0.4s;}
+.score-number.live{color:var(--cred-color,var(--safe));}
+.score-label{font-size:12px;font-weight:500;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:2px;transition:color 0.4s;}
+.score-label.live{color:var(--cred-color,var(--safe));}
+.calib-badge{margin-top:10px;padding:6px 16px;border-radius:20px;background:#f59e0b15;border:1px solid #f59e0b40;color:var(--warn);font-size:12px;font-weight:500;letter-spacing:1px;display:none;}
+.calib-badge.show{display:block;}
+
+/* ALERT */
+.alert-banner{
+  width:calc(100% - 40px);max-width:440px;margin:14px 0 0;
+  padding:10px 14px;border-radius:var(--r-sm);
+  background:#ef444415;border:1px solid #ef444450;
+  color:#fca5a5;font-size:13px;font-weight:500;
+  display:none;align-items:center;gap:8px;animation:slideIn 0.3s ease;
+}
+.alert-banner.show{display:flex;}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+
+/* WAVEFORM */
+.wave-section{width:calc(100% - 40px);max-width:440px;margin-top:16px;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.section-title{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+#waveCanvas{width:100%;height:56px;border-radius:var(--r-sm);background:var(--surface);border:1px solid var(--border);display:block;}
+
+/* METRICS */
+.metrics-section{width:calc(100% - 40px);max-width:440px;margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;transition:border-color 0.3s;}
+.metric-card.active{border-color:var(--border2);}
+.metric-icon-label{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.metric-val{font-size:20px;font-weight:600;font-family:var(--mono);color:var(--muted2);transition:color 0.3s;letter-spacing:-0.5px;}
+.metric-val.live{color:var(--text);}
+.metric-unit{font-size:11px;font-weight:400;color:var(--muted);margin-right:2px;}
+
+/* MARK */
+.mark-section{width:calc(100% - 40px);max-width:440px;margin-top:10px;}
+.mark-btn{
+  width:100%;padding:11px;border-radius:var(--r-sm);
+  border:1px solid var(--border2);background:var(--surface2);
+  color:var(--muted2);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.15s;
+}
+.mark-btn:active{transform:scale(0.98);background:var(--border);}
+.mark-btn:disabled{opacity:0.35;cursor:default;}
+.mark-count{background:var(--accent);color:white;font-size:11px;font-weight:700;font-family:var(--mono);padding:1px 6px;border-radius:10px;display:none;}
+.mark-count.show{display:inline;}
+
+/* HISTORY */
+.history-section{width:calc(100% - 40px);max-width:440px;margin-top:14px;}
+#histCanvas{width:100%;height:60px;border-radius:var(--r-sm);background:var(--surface);border:1px solid var(--border);display:block;}
+
+/* SUMMARY */
+.summary-panel{width:calc(100% - 40px);max-width:440px;margin-top:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;display:none;}
+.summary-panel.show{display:block;}
+.summary-title{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);}
+.summary-row:last-of-type{border-bottom:none;}
+.summary-key{font-size:13px;color:var(--muted2);}
+.summary-val{font-size:14px;font-weight:600;font-family:var(--mono);color:var(--text);}
+.summary-marks{font-size:12px;color:var(--muted);margin-top:10px;}
+.mark-item{display:inline-flex;align-items:center;gap:4px;background:#ef444415;border:1px solid #ef444430;color:#fca5a5;font-size:11px;font-family:var(--mono);padding:2px 8px;border-radius:10px;margin:3px 3px 0 0;}
+
+/* BUTTON */
+.btn-section{width:calc(100% - 40px);max-width:440px;margin-top:16px;}
+.main-btn{width:100%;padding:16px;border-radius:var(--r);border:none;cursor:pointer;font-family:var(--font);font-size:15px;font-weight:600;letter-spacing:0.3px;transition:all 0.2s;}
+.main-btn.start{background:var(--accent);color:white;box-shadow:0 4px 24px #3b82f640;}
+.main-btn.start:active{transform:scale(0.98);box-shadow:none;}
+.main-btn.stop{background:var(--surface2);border:1px solid var(--border2);color:#fca5a5;}
+.main-btn.stop:active{transform:scale(0.98);}
+
+/* ERROR */
+.err-msg{width:calc(100% - 40px);max-width:440px;margin-top:10px;padding:10px 14px;border-radius:var(--r-sm);background:#ef444410;border:1px solid #ef444440;color:#fca5a5;font-size:13px;display:none;}
+.err-msg.show{display:block;}
+
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">Truth<span>Scan</span></div>
+  <div class="topbar-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btnHe" onclick="setLang('he')">עב</button>
+      <button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button>
+    </div>
+    <div class="topbar-status">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">STANDBY</span>
+    </div>
+  </div>
+</div>
+
+<div class="score-section">
+  <div class="score-ring-wrap">
+    <svg id="gaugesvg" width="200" height="160" viewBox="0 0 200 160">
+      <path id="arcBg" fill="none" stroke="#1e2d45" stroke-width="10" stroke-linecap="round"/>
+      <path id="arcVal" fill="none" stroke="#10b981" stroke-width="10" stroke-linecap="round" style="display:none;transition:stroke 0.4s;"/>
+      <g id="gaugeTicks"></g>
+      <line id="needle" x1="100" y1="100" x2="100" y2="42" stroke="#10b981" stroke-width="2" stroke-linecap="round" style="display:none;transform-origin:100px 100px;transition:transform 0.4s,stroke 0.4s;"/>
+      <circle id="needleHub" cx="100" cy="100" r="5" fill="#1a2235" stroke="#10b981" stroke-width="2" style="display:none;transition:stroke 0.4s;"/>
+    </svg>
+    <div class="score-center">
+      <div class="score-number" id="scoreNum">--</div>
+      <div class="score-label" id="scoreLabel" data-key="waiting">ממתין</div>
+    </div>
+  </div>
+  <div class="calib-badge" id="calibBadge" data-key="calibrating">⏳ מכייל...</div>
+</div>
+
+<div class="alert-banner" id="alertBanner">
+  <span>⚠️</span><span id="alertText"></span>
+</div>
+
+<div class="wave-section">
+  <div class="section-header">
+    <span class="section-title" data-key="liveWave">גל קול חי</span>
+    <span class="section-title" id="waveStatus" style="color:var(--muted)">—</span>
+  </div>
+  <canvas id="waveCanvas"></canvas>
+</div>
+
+<div class="metrics-section">
+  <div class="metric-card" id="cardPitch">
+    <div class="metric-icon-label"><span>♪</span> <span data-key="pitch">גובה קול</span></div>
+    <div class="metric-val" id="mPitch">---</div>
+  </div>
+  <div class="metric-card" id="cardRate">
+    <div class="metric-icon-label"><span>◎</span> <span data-key="rate">קצב דיבור</span></div>
+    <div class="metric-val" id="mRate">---</div>
+  </div>
+  <div class="metric-card" id="cardPause">
+    <div class="metric-icon-label"><span>⏸</span> <span data-key="pauses">פאוזות</span></div>
+    <div class="metric-val" id="mPause">---</div>
+  </div>
+  <div class="metric-card" id="cardJitter">
+    <div class="metric-icon-label"><span>〰</span> <span data-key="jitter">רעידת קול</span></div>
+    <div class="metric-val" id="mJitter">---</div>
+  </div>
+</div>
+
+<div class="mark-section">
+  <button class="mark-btn" id="markBtn" onclick="markMoment()" disabled>
+    <span>🚩</span> <span data-key="markBtn">סמן רגע חשוד</span>
+    <span class="mark-count" id="markCount">0</span>
+  </button>
+</div>
+
+<div class="history-section">
+  <div class="section-header">
+    <span class="section-title" data-key="history">היסטוריה</span>
+    <span class="section-title" id="histDuration" style="color:var(--muted)">—</span>
+  </div>
+  <canvas id="histCanvas"></canvas>
+</div>
+
+<div class="summary-panel" id="summaryPanel">
+  <div class="summary-title" data-key="summaryTitle">סיכום שיחה</div>
+  <div class="summary-row"><span class="summary-key" data-key="sumAvgLabel">ציון ממוצע</span><span class="summary-val" id="sumAvg">—</span></div>
+  <div class="summary-row"><span class="summary-key" data-key="sumMinLabel">ציון מינימום</span><span class="summary-val" id="sumMin">—</span></div>
+  <div class="summary-row"><span class="summary-key" data-key="sumMaxLabel">ציון מקסימום</span><span class="summary-val" id="sumMax">—</span></div>
+  <div class="summary-row"><span class="summary-key" data-key="sumDurLabel">משך שיחה</span><span class="summary-val" id="sumDur">—</span></div>
+  <div class="summary-row"><span class="summary-key" data-key="sumMarksLabel">רגעים חשודים</span><span class="summary-val" id="sumMarks">—</span></div>
+  <div class="summary-marks" id="sumMarksList"></div>
+</div>
+
+<div class="btn-section">
+  <button class="main-btn start" id="mainBtn" onclick="toggleAnalysis()" data-key="startBtn">התחל ניתוח</button>
+</div>
+<div class="err-msg" id="errMsg" data-key="errMsg">לא ניתן לגשת למיקרופון — בדוק הרשאות האפליקציה.</div>
+
+<script>
+// ── TRANSLATIONS ──────────────────────────────────────────
+const T = {
+  he: {
+    waiting:      'ממתין',
+    calibrating:  '⏳ מכייל...',
+    liveWave:     'גל קול חי',
+    pitch:        'גובה קול',
+    rate:         'קצב דיבור',
+    pauses:       'פאוזות',
+    jitter:       'רעידת קול',
+    markBtn:      'סמן רגע חשוד',
+    history:      'היסטוריה',
+    summaryTitle: 'סיכום שיחה',
+    sumAvgLabel:  'ציון ממוצע',
+    sumMinLabel:  'ציון מינימום',
+    sumMaxLabel:  'ציון מקסימום',
+    sumDurLabel:  'משך שיחה',
+    sumMarksLabel:'רגעים חשודים',
+    startBtn:     'התחל ניתוח',
+    stopBtn:      'עצור ניתוח',
+    errMsg:       'לא ניתן לגשת למיקרופון — בדוק הרשאות האפליקציה.',
+    noMarks:      'אין',
+    waitingData:  'ממתין לנתונים...',
+    alertDrop:    '⚠️ ירידה חדה — אמינות נמוכה',
+    markedAt:     (t) => '🚩 רגע מסומן — ' + t,
+    credible:     'אמין',
+    suspicious:   'חשוד',
+    unreliable:   'לא אמין',
+    rateUnit:     "/ש'",
+    standby:      'STANDBY',
+    calib:        'CALIBRATING',
+    live:         'LIVE',
+  },
+  en: {
+    waiting:      'Waiting',
+    calibrating:  '⏳ Calibrating...',
+    liveWave:     'Live Waveform',
+    pitch:        'Pitch',
+    rate:         'Speech Rate',
+    pauses:       'Pauses',
+    jitter:       'Voice Jitter',
+    markBtn:      'Mark Suspicious Moment',
+    history:      'History',
+    summaryTitle: 'Call Summary',
+    sumAvgLabel:  'Average Score',
+    sumMinLabel:  'Minimum Score',
+    sumMaxLabel:  'Maximum Score',
+    sumDurLabel:  'Call Duration',
+    sumMarksLabel:'Suspicious Moments',
+    startBtn:     'Start Analysis',
+    stopBtn:      'Stop Analysis',
+    errMsg:       'Microphone access denied — check app permissions.',
+    noMarks:      'None',
+    waitingData:  'Waiting for data...',
+    alertDrop:    '⚠️ Sharp drop — low credibility',
+    markedAt:     (t) => '🚩 Marked — ' + t,
+    credible:     'Credible',
+    suspicious:   'Suspicious',
+    unreliable:   'Unreliable',
+    rateUnit:     '/s',
+    standby:      'STANDBY',
+    calib:        'CALIBRATING',
+    live:         'LIVE',
+  }
+};
+
+let currentLang = 'he';
+
+function t(key, arg) {
+  const val = T[currentLang][key];
+  return typeof val === 'function' ? val(arg) : val;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+  document.getElementById('btnHe').classList.toggle('active', lang === 'he');
+  document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+  // update all data-key elements
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.getAttribute('data-key');
+    if (T[lang][key] && typeof T[lang][key] === 'string') {
+      if (el.id === 'mainBtn') {
+        el.textContent = active ? t('stopBtn') : t('startBtn');
+      } else if (el.id === 'calibBadge') {
+        el.textContent = t('calibrating');
+      } else {
+        el.textContent = T[lang][key];
+      }
+    }
+  });
+  // re-render score label if active
+  if (active) updateGauge(credibility);
+  else {
+    document.getElementById('scoreLabel').textContent = t('waiting');
+  }
+  // re-render history empty state
+  if (historyData.length < 2) drawHistory();
+}
+
+// ── CONSTANTS ──
+const CALIB_FRAMES = 90;
+const CX=100, CY=100, R=72;
+const START_A=Math.PI*0.75, END_A=Math.PI*2.25, TOTAL_A=END_A-START_A;
+
+// ── STATE ──
+let active=false, calibrating=false;
+let audioCtx, analyser, processor, stream;
+let pitchHist=[], voiceFrames=0, totalFrames=0;
+let lastPitch=0, jitterAcc=0, sampleCount=0;
+let credibility=50, prevCredibility=50;
+let historyData=[], markTimes=[], marks=[];
+let histInterval=null, waveAnimId=null, durationInterval=null;
+let startTime=null, callDuration=0;
+let alertCooldown=false;
+let markCounter=0;
+
+// ── GAUGE SETUP ──
+function arcPt(a,rad){ return [CX+rad*Math.cos(a), CY+rad*Math.sin(a)]; }
+function arcPath(from,to){
+  const large=(to-from)>Math.PI?1:0;
+  const [x1,y1]=arcPt(from,R), [x2,y2]=arcPt(to,R);
+  return 'M'+x1+' '+y1+' A'+R+' '+R+' 0 '+large+' 1 '+x2+' '+y2;
+}
+document.getElementById('arcBg').setAttribute('d', arcPath(START_A, END_A));
+const ticksG=document.getElementById('gaugeTicks');
+[0,25,50,75,100].forEach(v=>{
+  const a=START_A+(v/100)*TOTAL_A;
+  const [x1,y1]=arcPt(a,R-18),[x2,y2]=arcPt(a,R-8);
+  const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+  l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);
+  l.setAttribute('stroke','#243552');l.setAttribute('stroke-width','1.5');
+  ticksG.appendChild(l);
+  if([0,50,100].includes(v)){
+    const tx=document.createElementNS('http://www.w3.org/2000/svg','text');
+    const [px,py]=arcPt(a,R-30);
+    tx.setAttribute('x',px);tx.setAttribute('y',py+4);
+    tx.setAttribute('text-anchor','middle');tx.setAttribute('fill','#334155');
+    tx.setAttribute('font-size','9');tx.setAttribute('font-family','JetBrains Mono,monospace');
+    tx.textContent=v; ticksG.appendChild(tx);
+  }
+});
+
+// ── COLORS ──
+function credColor(v){ return v>65?'#10b981':v>38?'#f59e0b':'#ef4444'; }
+function credLabel(v){ return v>65?t('credible'):v>38?t('suspicious'):t('unreliable'); }
+
+// ── GAUGE UPDATE ──
+function updateGauge(v){
+  const col=credColor(v);
+  document.documentElement.style.setProperty('--cred-color',col);
+  const frac=v/100, angle=START_A+frac*TOTAL_A;
+  document.getElementById('arcVal').setAttribute('d',arcPath(START_A,angle));
+  document.getElementById('arcVal').setAttribute('stroke',col);
+  document.getElementById('arcVal').style.filter='drop-shadow(0 0 6px '+col+'88)';
+  document.getElementById('arcVal').style.display='';
+  const deg=((angle-(Math.PI*1.5))*(180/Math.PI));
+  document.getElementById('needle').style.transform='rotate('+deg+'deg)';
+  document.getElementById('needle').setAttribute('stroke',col);
+  document.getElementById('needle').style.display='';
+  document.getElementById('needleHub').setAttribute('stroke',col);
+  document.getElementById('needleHub').style.display='';
+  const sn=document.getElementById('scoreNum'), sl=document.getElementById('scoreLabel');
+  sn.textContent=Math.round(v); sn.style.color=col; sn.classList.add('live');
+  sl.textContent=credLabel(v); sl.style.color=col; sl.classList.add('live');
+}
+
+function resetGauge(){
+  document.getElementById('arcVal').style.display='none';
+  document.getElementById('needle').style.display='none';
+  document.getElementById('needleHub').style.display='none';
+  const sn=document.getElementById('scoreNum'), sl=document.getElementById('scoreLabel');
+  sn.textContent='--'; sn.style.color=''; sn.classList.remove('live');
+  sl.textContent=t('waiting'); sl.style.color=''; sl.classList.remove('live');
+}
+
+// ── CREDIBILITY ──
+function computeCredibility({pitchVariance,pauseRatio,speechRate,jitter}){
+  const p=Math.max(0,100-pitchVariance*2.5);
+  const pa=Math.max(0,100-pauseRatio*120);
+  const r=speechRate>0?Math.max(0,100-Math.abs(speechRate-3.5)*18):60;
+  const j=Math.max(0,100-jitter*400);
+  return Math.min(100,Math.max(0,p*0.3+pa*0.25+r*0.2+j*0.25));
+}
+
+// ── PITCH ──
+function detectPitch(buf,sr){
+  const SIZE=buf.length,MAX=Math.floor(SIZE/2);
+  let rms=0; for(let i=0;i<SIZE;i++) rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/SIZE);
+  if(rms<0.01) return 0;
+  let bestOff=-1,bestCorr=0,lastCorr=1;
+  for(let off=20;off<MAX;off++){
+    let c=0; for(let i=0;i<MAX;i++) c+=Math.abs(buf[i]-buf[i+off]);
+    c=1-c/MAX;
+    if(c>0.9&&c>lastCorr){bestCorr=c;bestOff=off;}
+    lastCorr=c;
+  }
+  return (bestCorr>0.9&&bestOff>0)?sr/bestOff:0;
+}
+
+// ── WAVEFORM ──
+function drawWave(){
+  if(!active||!analyser){return;}
+  waveAnimId=requestAnimationFrame(drawWave);
+  const c=document.getElementById('waveCanvas'),ctx=c.getContext('2d');
+  const buf=new Uint8Array(analyser.fftSize);
+  analyser.getByteTimeDomainData(buf);
+  ctx.fillStyle='#111827'; ctx.fillRect(0,0,c.width,c.height);
+  const col=credColor(credibility);
+  ctx.lineWidth=1.5; ctx.strokeStyle=col;
+  ctx.shadowColor=col; ctx.shadowBlur=calibrating?0:3;
+  ctx.beginPath();
+  const sw=c.width/buf.length; let x=0;
+  for(let i=0;i<buf.length;i++){
+    const y=(buf[i]/128)*c.height/2;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    x+=sw;
+  }
+  ctx.lineTo(c.width,c.height/2); ctx.stroke();
+}
+
+// ── HISTORY ──
+function drawHistory(){
+  const c=document.getElementById('histCanvas'),ctx=c.getContext('2d');
+  const w=c.width,h=c.height,pad=10;
+  ctx.fillStyle='#111827'; ctx.fillRect(0,0,w,h);
+  [38,65].forEach(v=>{
+    const y=h-pad-(v/100)*(h-pad*2);
+    ctx.strokeStyle='#1e2d45';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();
+  });
+  ctx.setLineDash([]);
+  if(historyData.length<2){
+    ctx.fillStyle='#334155';ctx.font='11px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText(t('waitingData'),w/2,h/2+4);return;
+  }
+  marks.forEach(mt=>{
+    const idx=Math.round(mt);
+    if(idx>=0&&idx<historyData.length){
+      const x=pad+(idx/(historyData.length-1))*(w-pad*2);
+      ctx.strokeStyle='#ef444460';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+      ctx.beginPath();ctx.moveTo(x,pad);ctx.lineTo(x,h-pad);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  });
+  historyData.forEach((v,i)=>{
+    if(i===0)return;
+    const prev=historyData[i-1];
+    const x=pad+(i/(historyData.length-1))*(w-pad*2);
+    const y=h-pad-(v/100)*(h-pad*2);
+    const px=pad+((i-1)/(historyData.length-1))*(w-pad*2);
+    const py=h-pad-(prev/100)*(h-pad*2);
+    const col=credColor(v);
+    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.shadowColor=col;ctx.shadowBlur=2;
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(x,y);ctx.stroke();
+  });
+  marks.forEach(mt=>{
+    const idx=Math.round(mt);
+    if(idx>=0&&idx<historyData.length){
+      const x=pad+(idx/(historyData.length-1))*(w-pad*2);
+      const y=h-pad-(historyData[idx]/100)*(h-pad*2);
+      ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);
+      ctx.fillStyle='#ef4444';ctx.shadowBlur=0;ctx.fill();
+    }
+  });
+}
+
+function resizeCanvases(){
+  ['waveCanvas','histCanvas'].forEach(id=>{
+    const c=document.getElementById(id),dpr=window.devicePixelRatio||1;
+    c.width=c.offsetWidth*dpr; c.height=c.offsetHeight*dpr;
+    c.getContext('2d').scale(dpr,dpr);
+  });
+}
+
+function formatTime(s){ const m=Math.floor(s/60),sec=s%60; return m+':'+String(sec).padStart(2,'0'); }
+
+// ── MARK ──
+function markMoment(){
+  if(!active)return;
+  markCounter++;
+  const elapsed=Math.floor((Date.now()-startTime)/1000);
+  marks.push(historyData.length);
+  markTimes.push(elapsed);
+  document.getElementById('markCount').textContent=markCounter;
+  document.getElementById('markCount').classList.add('show');
+  document.getElementById('alertBanner').classList.add('show');
+  document.getElementById('alertText').textContent=t('markedAt',formatTime(elapsed));
+  setTimeout(()=>{ if(!alertCooldown) document.getElementById('alertBanner').classList.remove('show'); },2500);
+  if(navigator.vibrate) navigator.vibrate([60,40,60]);
+  drawHistory();
+}
+
+// ── ALERT ──
+function checkAlert(newVal,prevVal){
+  if(alertCooldown)return;
+  if(prevVal-newVal>18&&newVal<50){
+    alertCooldown=true;
+    document.getElementById('alertBanner').classList.add('show');
+    document.getElementById('alertText').textContent=t('alertDrop');
+    if(navigator.vibrate) navigator.vibrate([100,50,100,50,200]);
+    setTimeout(()=>{ document.getElementById('alertBanner').classList.remove('show'); alertCooldown=false; },3500);
+  }
+}
+
+// ── TOGGLE ──
+async function toggleAnalysis(){ if(active){stopAnalysis();}else{await startAnalysis();} }
+
+async function startAnalysis(){
+  document.getElementById('errMsg').classList.remove('show');
+  document.getElementById('summaryPanel').classList.remove('show');
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const source=audioCtx.createMediaStreamSource(stream);
+    analyser=audioCtx.createAnalyser(); analyser.fftSize=2048;
+    source.connect(analyser);
+    processor=audioCtx.createScriptProcessor(2048,1,1);
+    source.connect(processor); processor.connect(audioCtx.destination);
+
+    pitchHist=[];voiceFrames=0;totalFrames=0;
+    lastPitch=0;jitterAcc=0;sampleCount=0;
+    credibility=50;prevCredibility=50;
+    historyData=[];marks=[];markTimes=[];markCounter=0;
+    alertCooldown=false; startTime=Date.now(); calibrating=true;
+
+    document.getElementById('calibBadge').textContent=t('calibrating');
+    document.getElementById('calibBadge').classList.add('show');
+    document.getElementById('statusDot').className='status-dot calibrating';
+    document.getElementById('statusText').textContent=t('calib');
+    document.getElementById('markCount').classList.remove('show');
+    document.getElementById('markCount').textContent='0';
+
+    processor.onaudioprocess=(e)=>{
+      const buf=Array.from(e.inputBuffer.getChannelData(0));
+      const pitch=detectPitch(buf,audioCtx.sampleRate);
+      totalFrames++;
+      if(pitch>80&&pitch<400){
+        voiceFrames++; pitchHist.push(pitch);
+        if(pitchHist.length>80) pitchHist.shift();
+        if(lastPitch>0){jitterAcc+=Math.abs(pitch-lastPitch)/Math.max(pitch,lastPitch);sampleCount++;}
+        lastPitch=pitch;
+      } else { lastPitch=0; }
+
+      if(totalFrames%15===0){
+        if(totalFrames<CALIB_FRAMES)return;
+        if(calibrating){
+          calibrating=false;
+          document.getElementById('calibBadge').classList.remove('show');
+          document.getElementById('statusDot').className='status-dot live';
+          document.getElementById('statusText').textContent=t('live');
+          document.getElementById('markBtn').disabled=false;
+          ['cardPitch','cardRate','cardPause','cardJitter'].forEach(id=>document.getElementById(id).classList.add('active'));
+          ['mPitch','mRate','mPause','mJitter'].forEach(id=>document.getElementById(id).classList.add('live'));
+        }
+        const avg=pitchHist.length>0?pitchHist.reduce((a,b)=>a+b,0)/pitchHist.length:0;
+        const variance=pitchHist.length>1?Math.sqrt(pitchHist.reduce((a,p)=>a+(p-avg)**2,0)/pitchHist.length):0;
+        const pauseRatio=totalFrames>0?(totalFrames-voiceFrames)/totalFrames:0;
+        const speechRate=voiceFrames/(totalFrames/21.5);
+        const jitter=sampleCount>0?jitterAcc/sampleCount:0;
+
+        prevCredibility=credibility;
+        credibility=computeCredibility({pitchVariance:variance,pauseRatio,speechRate,jitter});
+        updateGauge(credibility);
+        checkAlert(credibility,prevCredibility);
+
+        const ru=t('rateUnit');
+        document.getElementById('mPitch').innerHTML=avg>0?Math.round(avg)+'<span class="metric-unit"> Hz</span>':'<span style="color:var(--muted)">—</span>';
+        document.getElementById('mRate').innerHTML=speechRate.toFixed(1)+'<span class="metric-unit">'+ru+'</span>';
+        document.getElementById('mPause').innerHTML=Math.round(pauseRatio*100)+'<span class="metric-unit"> %</span>';
+        document.getElementById('mJitter').innerHTML=(jitter*100).toFixed(1)+'<span class="metric-unit"> %</span>';
+      }
+    };
+
+    histInterval=setInterval(()=>{
+      if(!calibrating){ historyData.push(credibility); if(historyData.length>60)historyData.shift(); drawHistory(); }
+      callDuration=Math.floor((Date.now()-startTime)/1000);
+      document.getElementById('histDuration').textContent=formatTime(callDuration);
+    },2000);
+
+    durationInterval=setInterval(()=>{
+      callDuration=Math.floor((Date.now()-startTime)/1000);
+      document.getElementById('waveStatus').textContent=formatTime(callDuration);
+    },1000);
+
+    active=true;
+    document.getElementById('mainBtn').textContent=t('stopBtn');
+    document.getElementById('mainBtn').className='main-btn stop';
+    resizeCanvases(); drawWave(); drawHistory();
+
+  }catch(err){
+    console.error(err);
+    document.getElementById('errMsg').textContent=t('errMsg');
+    document.getElementById('errMsg').classList.add('show');
+  }
+}
+
+function stopAnalysis(){
+  if(processor){processor.disconnect();processor=null;}
+  if(analyser){analyser.disconnect();analyser=null;}
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  if(audioCtx){audioCtx.close();audioCtx=null;}
+  if(histInterval){clearInterval(histInterval);histInterval=null;}
+  if(durationInterval){clearInterval(durationInterval);durationInterval=null;}
+  if(waveAnimId){cancelAnimationFrame(waveAnimId);waveAnimId=null;}
+
+  active=false;calibrating=false;
+  document.getElementById('calibBadge').classList.remove('show');
+  document.getElementById('statusDot').className='status-dot';
+  document.getElementById('statusText').textContent=t('standby');
+  document.getElementById('mainBtn').textContent=t('startBtn');
+  document.getElementById('mainBtn').className='main-btn start';
+  document.getElementById('markBtn').disabled=true;
+  document.getElementById('alertBanner').classList.remove('show');
+  document.getElementById('waveStatus').textContent='—';
+  ['cardPitch','cardRate','cardPause','cardJitter'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  ['mPitch','mRate','mPause','mJitter'].forEach(id=>{document.getElementById(id).classList.remove('live');document.getElementById(id).textContent='---';});
+  resetGauge();
+  showSummary();
+  ['waveCanvas','histCanvas'].forEach(id=>{
+    const c=document.getElementById(id);
+    c.getContext('2d').fillStyle='#111827';
+    c.getContext('2d').fillRect(0,0,c.width,c.height);
+  });
+}
+
+function showSummary(){
+  if(historyData.length<3)return;
+  const avg=Math.round(historyData.reduce((a,b)=>a+b,0)/historyData.length);
+  const min=Math.round(Math.min(...historyData));
+  const max=Math.round(Math.max(...historyData));
+  document.getElementById('sumAvg').textContent=avg+'%'; document.getElementById('sumAvg').style.color=credColor(avg);
+  document.getElementById('sumMin').textContent=min+'%'; document.getElementById('sumMin').style.color=credColor(min);
+  document.getElementById('sumMax').textContent=max+'%'; document.getElementById('sumMax').style.color=credColor(max);
+  document.getElementById('sumDur').textContent=formatTime(callDuration);
+  document.getElementById('sumMarks').textContent=markCounter>0?markCounter:t('noMarks');
+  const ml=document.getElementById('sumMarksList'); ml.innerHTML='';
+  markTimes.forEach(ti=>{ const s=document.createElement('span'); s.className='mark-item'; s.textContent='🚩 '+formatTime(ti); ml.appendChild(s); });
+  document.getElementById('summaryPanel').classList.add('show');
+}
+
+window.addEventListener('load',()=>{ resizeCanvases(); drawHistory(); });
+window.addEventListener('resize', resizeCanvases);
+</script>
+</body>
+</html>
