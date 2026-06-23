@@ -6,569 +6,707 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0b0f1a">
+<meta name="theme-color" content="#080c14">
 <title>TruthScan</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#0b0f1a; --surface:#111827; --surface2:#1a2235;
-  --border:#1e2d45; --border2:#243552;
-  --text:#e2e8f0; --muted:#64748b; --muted2:#94a3b8; --accent:#3b82f6;
+  --bg:#080c14; --surface:#0f1623; --surface2:#162030;
+  --border:#1c2d42; --border2:#243552;
+  --text:#e2e8f0; --muted:#4a6080; --muted2:#7a98b8; --accent:#3b82f6;
   --safe:#10b981; --warn:#f59e0b; --danger:#ef4444;
   --font:'Inter',-apple-system,sans-serif;
   --mono:'JetBrains Mono','Courier New',monospace;
-  --r:12px; --r-sm:8px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{height:-webkit-fill-available;}
 body{
-  min-height:100vh; min-height:-webkit-fill-available;
-  background:var(--bg); color:var(--text); font-family:var(--font);
-  display:flex; flex-direction:column; align-items:center;
-  padding:0 0 32px; overflow-x:hidden;
+  min-height:100vh;min-height:-webkit-fill-available;
+  background:var(--bg);color:var(--text);font-family:var(--font);
+  display:flex;flex-direction:column;align-items:center;
+  padding:0 0 40px;overflow-x:hidden;
 }
 
-/* TOPBAR */
+/* ── TOPBAR ── */
 .topbar{
-  width:100%; display:flex; align-items:center; justify-content:space-between;
-  padding:14px 20px; border-bottom:1px solid var(--border);
-  background:var(--surface); position:sticky; top:0; z-index:10;
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:13px 18px;border-bottom:1px solid var(--border);
+  background:var(--surface);position:sticky;top:0;z-index:20;
 }
-.topbar-logo{font-size:17px;font-weight:700;letter-spacing:-0.3px;color:var(--text);display:flex;align-items:center;gap:8px;}
-.topbar-logo span{color:var(--accent);}
-.topbar-right{display:flex;align-items:center;gap:12px;}
-.topbar-status{font-size:11px;font-family:var(--mono);color:var(--muted);letter-spacing:1px;display:flex;align-items:center;gap:6px;}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);transition:background 0.3s,box-shadow 0.3s;}
-.status-dot.live{background:var(--safe);box-shadow:0 0 8px var(--safe);animation:blink 1.4s infinite;}
-.status-dot.calibrating{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:blink 0.8s infinite;}
+.logo{font-size:16px;font-weight:700;letter-spacing:-0.5px;color:var(--text);}
+.logo em{color:var(--accent);font-style:normal;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.lang-toggle{display:flex;border-radius:20px;border:1px solid var(--border2);overflow:hidden;background:var(--bg);}
+.lang-btn{padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all 0.2s;font-family:var(--font);}
+.lang-btn.active{background:var(--accent);color:white;}
+.status-pill{display:flex;align-items:center;gap:5px;font-size:10px;font-family:var(--mono);color:var(--muted);letter-spacing:1px;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:all 0.3s;}
+.sdot.live{background:var(--safe);box-shadow:0 0 6px var(--safe);animation:blink 1.4s infinite;}
+.sdot.calib{background:var(--warn);box-shadow:0 0 6px var(--warn);animation:blink 0.8s infinite;}
 
-/* LANG TOGGLE */
-.lang-toggle{
-  display:flex; border-radius:20px; border:1px solid var(--border2);
-  overflow:hidden; background:var(--bg);
+/* ── SCORE ARC ── */
+.score-wrap{
+  width:100%;max-width:460px;
+  display:flex;flex-direction:column;align-items:center;
+  padding:20px 18px 0;
 }
-.lang-btn{
-  padding:5px 11px; font-size:11px; font-weight:600; font-family:var(--font);
-  letter-spacing:0.5px; cursor:pointer; border:none;
-  background:transparent; color:var(--muted); transition:all 0.2s;
+.arc-container{position:relative;width:180px;height:100px;}
+#arcSvg{overflow:visible;}
+.arc-center{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  text-align:center;pointer-events:none;
 }
-.lang-btn.active{background:var(--accent); color:white;}
+.arc-num{font-size:36px;font-weight:700;font-family:var(--mono);letter-spacing:-2px;color:var(--muted);transition:color 0.4s;line-height:1;}
+.arc-num.live{color:var(--cc,var(--safe));}
+.arc-lbl{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-top:1px;transition:color 0.4s;}
+.arc-lbl.live{color:var(--cc,var(--safe));}
+.calib-tag{margin-top:8px;padding:4px 12px;border-radius:20px;background:#f59e0b12;border:1px solid #f59e0b35;color:var(--warn);font-size:11px;font-weight:500;letter-spacing:1px;display:none;}
+.calib-tag.show{display:block;}
 
-/* SCORE */
-.score-section{width:100%;max-width:480px;padding:22px 20px 0;display:flex;flex-direction:column;align-items:center;}
-.score-ring-wrap{position:relative;width:200px;height:160px;}
-#gaugesvg{overflow:visible;}
-.score-center{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;}
-.score-number{font-size:42px;font-weight:700;font-family:var(--mono);line-height:1;letter-spacing:-2px;color:var(--muted);transition:color 0.4s;}
-.score-number.live{color:var(--cred-color,var(--safe));}
-.score-label{font-size:12px;font-weight:500;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:2px;transition:color 0.4s;}
-.score-label.live{color:var(--cred-color,var(--safe));}
-.calib-badge{margin-top:10px;padding:6px 16px;border-radius:20px;background:#f59e0b15;border:1px solid #f59e0b40;color:var(--warn);font-size:12px;font-weight:500;letter-spacing:1px;display:none;}
-.calib-badge.show{display:block;}
-
-/* ALERT */
-.alert-banner{
-  width:calc(100% - 40px);max-width:440px;margin:14px 0 0;
-  padding:10px 14px;border-radius:var(--r-sm);
-  background:#ef444415;border:1px solid #ef444450;
-  color:#fca5a5;font-size:13px;font-weight:500;
-  display:none;align-items:center;gap:8px;animation:slideIn 0.3s ease;
+/* ── ALERT ── */
+.alert{
+  width:calc(100% - 36px);max-width:424px;margin:12px 0 0;
+  padding:9px 12px;border-radius:8px;
+  background:#ef444412;border:1px solid #ef444445;
+  color:#fca5a5;font-size:12px;font-weight:500;
+  display:none;align-items:center;gap:7px;
+  animation:fadeDown 0.25s ease;
 }
-.alert-banner.show{display:flex;}
-@keyframes slideIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+.alert.show{display:flex;}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-5px);}to{opacity:1;transform:none;}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
 
-/* WAVEFORM */
-.wave-section{width:calc(100% - 40px);max-width:440px;margin-top:16px;}
-.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.section-title{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
-#waveCanvas{width:100%;height:56px;border-radius:var(--r-sm);background:var(--surface);border:1px solid var(--border);display:block;}
+/* ── EQ BARS SECTION ── */
+.eq-section{
+  width:calc(100% - 36px);max-width:424px;
+  margin-top:16px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:16px 14px 12px;
+}
+.eq-section-title{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.eq-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end;}
+.eq-col{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.eq-bar-wrap{
+  width:100%;height:100px;
+  background:var(--bg);border-radius:6px;
+  border:1px solid var(--border);
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.eq-bar-fill{
+  width:100%;border-radius:4px 4px 0 0;
+  transition:height 0.25s ease, background 0.3s;
+  min-height:3px;
+}
+/* danger flash */
+@keyframes dangerFlash{
+  0%,100%{box-shadow:none;}
+  25%,75%{box-shadow:0 0 12px var(--danger) inset, 0 0 6px var(--danger);}
+}
+.eq-bar-wrap.alert-flash{
+  border-color:var(--danger)!important;
+  animation:dangerFlash 0.6s ease 3;
+}
+/* threshold line */
+.eq-threshold{
+  position:absolute;width:100%;height:1px;
+  background:rgba(239,68,68,0.4);
+  pointer-events:none;
+}
+.eq-label{font-size:9px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);text-align:center;line-height:1.2;}
+.eq-value{font-size:10px;font-family:var(--mono);color:var(--muted2);text-align:center;min-height:13px;}
 
-/* METRICS */
-.metrics-section{width:calc(100% - 40px);max-width:440px;margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;transition:border-color 0.3s;}
-.metric-card.active{border-color:var(--border2);}
-.metric-icon-label{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-.metric-val{font-size:20px;font-weight:600;font-family:var(--mono);color:var(--muted2);transition:color 0.3s;letter-spacing:-0.5px;}
-.metric-val.live{color:var(--text);}
-.metric-unit{font-size:11px;font-weight:400;color:var(--muted);margin-right:2px;}
-
-/* MARK */
-.mark-section{width:calc(100% - 40px);max-width:440px;margin-top:10px;}
+/* ── MARK BUTTON ── */
+.mark-wrap{width:calc(100% - 36px);max-width:424px;margin-top:10px;}
 .mark-btn{
-  width:100%;padding:11px;border-radius:var(--r-sm);
+  width:100%;padding:10px;border-radius:8px;
   border:1px solid var(--border2);background:var(--surface2);
-  color:var(--muted2);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.15s;
+  color:var(--muted2);font-family:var(--font);font-size:13px;font-weight:500;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:all 0.15s;
 }
-.mark-btn:active{transform:scale(0.98);background:var(--border);}
-.mark-btn:disabled{opacity:0.35;cursor:default;}
-.mark-count{background:var(--accent);color:white;font-size:11px;font-weight:700;font-family:var(--mono);padding:1px 6px;border-radius:10px;display:none;}
-.mark-count.show{display:inline;}
+.mark-btn:active{transform:scale(0.98);}
+.mark-btn:disabled{opacity:0.3;cursor:default;}
+.mark-cnt{background:var(--accent);color:white;font-size:10px;font-weight:700;font-family:var(--mono);padding:1px 6px;border-radius:10px;display:none;}
+.mark-cnt.show{display:inline;}
 
-/* HISTORY */
-.history-section{width:calc(100% - 40px);max-width:440px;margin-top:14px;}
-#histCanvas{width:100%;height:60px;border-radius:var(--r-sm);background:var(--surface);border:1px solid var(--border);display:block;}
+/* ── HISTORY ── */
+.hist-section{width:calc(100% - 36px);max-width:424px;margin-top:12px;}
+.sec-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.sec-title{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+#histCanvas{width:100%;height:55px;border-radius:8px;background:var(--surface);border:1px solid var(--border);display:block;}
 
-/* SUMMARY */
-.summary-panel{width:calc(100% - 40px);max-width:440px;margin-top:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;display:none;}
-.summary-panel.show{display:block;}
-.summary-title{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
-.summary-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);}
-.summary-row:last-of-type{border-bottom:none;}
-.summary-key{font-size:13px;color:var(--muted2);}
-.summary-val{font-size:14px;font-weight:600;font-family:var(--mono);color:var(--text);}
-.summary-marks{font-size:12px;color:var(--muted);margin-top:10px;}
-.mark-item{display:inline-flex;align-items:center;gap:4px;background:#ef444415;border:1px solid #ef444430;color:#fca5a5;font-size:11px;font-family:var(--mono);padding:2px 8px;border-radius:10px;margin:3px 3px 0 0;}
+/* ── SUMMARY PANEL ── */
+.summary{
+  width:calc(100% - 36px);max-width:424px;margin-top:12px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:16px;display:none;
+}
+.summary.show{display:block;}
+.sum-title{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
 
-/* BUTTON */
-.btn-section{width:calc(100% - 40px);max-width:440px;margin-top:16px;}
-.main-btn{width:100%;padding:16px;border-radius:var(--r);border:none;cursor:pointer;font-family:var(--font);font-size:15px;font-weight:600;letter-spacing:0.3px;transition:all 0.2s;}
-.main-btn.start{background:var(--accent);color:white;box-shadow:0 4px 24px #3b82f640;}
-.main-btn.start:active{transform:scale(0.98);box-shadow:none;}
-.main-btn.stop{background:var(--surface2);border:1px solid var(--border2);color:#fca5a5;}
-.main-btn.stop:active{transform:scale(0.98);}
+/* verdict */
+.verdict-box{
+  border-radius:10px;padding:14px;margin-bottom:14px;text-align:center;
+  border:1px solid;
+}
+.verdict-score{font-size:40px;font-weight:700;font-family:var(--mono);line-height:1;letter-spacing:-2px;}
+.verdict-label{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+.verdict-desc{font-size:12px;color:var(--muted2);margin-top:6px;line-height:1.5;}
 
-/* ERROR */
-.err-msg{width:calc(100% - 40px);max-width:440px;margin-top:10px;padding:10px 14px;border-radius:var(--r-sm);background:#ef444410;border:1px solid #ef444440;color:#fca5a5;font-size:13px;display:none;}
+/* metric breakdown */
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.sum-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.sum-card-label{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.sum-card-val{font-size:15px;font-weight:600;font-family:var(--mono);}
+.sum-card-note{font-size:10px;color:var(--muted);margin-top:2px;}
+
+.sum-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);}
+.sum-row:last-of-type{border-bottom:none;}
+.sum-key{font-size:12px;color:var(--muted2);}
+.sum-val{font-size:13px;font-weight:600;font-family:var(--mono);}
+.mark-chips{margin-top:8px;}
+.chip{display:inline-flex;align-items:center;background:#ef444412;border:1px solid #ef444430;color:#fca5a5;font-size:10px;font-family:var(--mono);padding:2px 7px;border-radius:10px;margin:2px;}
+
+/* ── BUTTONS ── */
+.btn-row{width:calc(100% - 36px);max-width:424px;margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn-row.single{grid-template-columns:1fr;}
+.main-btn{
+  padding:15px;border-radius:10px;border:none;cursor:pointer;
+  font-family:var(--font);font-size:14px;font-weight:600;
+  transition:all 0.2s;letter-spacing:0.2px;
+}
+.btn-start{background:var(--accent);color:white;box-shadow:0 4px 20px #3b82f630;}
+.btn-start:active{transform:scale(0.98);box-shadow:none;}
+.btn-stop{background:var(--surface2);border:1px solid var(--border2);color:#fca5a5;}
+.btn-stop:active{transform:scale(0.98);}
+.btn-summary{background:var(--surface);border:1px solid var(--border2);color:var(--muted2);}
+.btn-summary:active{transform:scale(0.98);}
+.btn-summary.highlight{border-color:var(--accent);color:var(--accent);box-shadow:0 0 12px #3b82f625;}
+
+.err-msg{width:calc(100% - 36px);max-width:424px;margin-top:8px;padding:9px 12px;border-radius:8px;background:#ef444410;border:1px solid #ef444440;color:#fca5a5;font-size:12px;display:none;}
 .err-msg.show{display:block;}
-
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 </style>
 </head>
 <body>
 
+<!-- TOPBAR -->
 <div class="topbar">
-  <div class="topbar-logo">Truth<span>Scan</span></div>
+  <div class="logo">Truth<em>Scan</em></div>
   <div class="topbar-right">
     <div class="lang-toggle">
       <button class="lang-btn active" id="btnHe" onclick="setLang('he')">עב</button>
       <button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btnAr" onclick="setLang('ar')">ع</button>
     </div>
-    <div class="topbar-status">
-      <span class="status-dot" id="statusDot"></span>
-      <span id="statusText">STANDBY</span>
+    <div class="status-pill">
+      <span class="sdot" id="sdot"></span>
+      <span id="statusTxt">STANDBY</span>
     </div>
   </div>
 </div>
 
-<div class="score-section">
-  <div class="score-ring-wrap">
-    <svg id="gaugesvg" width="200" height="160" viewBox="0 0 200 160">
-      <path id="arcBg" fill="none" stroke="#1e2d45" stroke-width="10" stroke-linecap="round"/>
-      <path id="arcVal" fill="none" stroke="#10b981" stroke-width="10" stroke-linecap="round" style="display:none;transition:stroke 0.4s;"/>
-      <g id="gaugeTicks"></g>
-      <line id="needle" x1="100" y1="100" x2="100" y2="42" stroke="#10b981" stroke-width="2" stroke-linecap="round" style="display:none;transform-origin:100px 100px;transition:transform 0.4s,stroke 0.4s;"/>
-      <circle id="needleHub" cx="100" cy="100" r="5" fill="#1a2235" stroke="#10b981" stroke-width="2" style="display:none;transition:stroke 0.4s;"/>
+<!-- SCORE ARC -->
+<div class="score-wrap">
+  <div class="arc-container">
+    <svg id="arcSvg" width="180" height="100" viewBox="0 0 180 100">
+      <path id="arcBg" fill="none" stroke="#1c2d42" stroke-width="9" stroke-linecap="round"/>
+      <path id="arcFill" fill="none" stroke="#10b981" stroke-width="9" stroke-linecap="round" style="display:none;transition:stroke 0.4s;"/>
+      <line id="arcNeedle" x1="90" y1="90" x2="90" y2="28" stroke="#10b981" stroke-width="2" stroke-linecap="round" style="display:none;transform-origin:90px 90px;transition:transform 0.4s,stroke 0.4s;"/>
+      <circle id="arcHub" cx="90" cy="90" r="4" fill="#0f1623" stroke="#10b981" stroke-width="2" style="display:none;transition:stroke 0.4s;"/>
     </svg>
-    <div class="score-center">
-      <div class="score-number" id="scoreNum">--</div>
-      <div class="score-label" id="scoreLabel" data-key="waiting">ממתין</div>
+    <div class="arc-center">
+      <div class="arc-num" id="arcNum">--</div>
+      <div class="arc-lbl" id="arcLbl" data-key="waiting">ממתין</div>
     </div>
   </div>
-  <div class="calib-badge" id="calibBadge" data-key="calibrating">⏳ מכייל...</div>
+  <div class="calib-tag" id="calibTag" data-key="calibrating">⏳ מכייל...</div>
 </div>
 
-<div class="alert-banner" id="alertBanner">
-  <span>⚠️</span><span id="alertText"></span>
+<!-- ALERT -->
+<div class="alert" id="alertBox">
+  <span>⚠️</span><span id="alertTxt"></span>
 </div>
 
-<div class="wave-section">
-  <div class="section-header">
-    <span class="section-title" data-key="liveWave">גל קול חי</span>
-    <span class="section-title" id="waveStatus" style="color:var(--muted)">—</span>
+<!-- EQ BARS -->
+<div class="eq-section">
+  <div class="eq-section-title" data-key="eqTitle">ניתוח מאפייני קול בזמן אמת</div>
+  <div class="eq-grid">
+    <!-- pitch -->
+    <div class="eq-col">
+      <div class="eq-bar-wrap" id="bar-pitch">
+        <div class="eq-threshold" style="bottom:70%"></div>
+        <div class="eq-bar-fill" id="fill-pitch" style="height:3px;background:#10b981;"></div>
+      </div>
+      <div class="eq-label" data-key="pitch">גובה<br>קול</div>
+      <div class="eq-value" id="val-pitch">--</div>
+    </div>
+    <!-- jitter -->
+    <div class="eq-col">
+      <div class="eq-bar-wrap" id="bar-jitter">
+        <div class="eq-threshold" style="bottom:60%"></div>
+        <div class="eq-bar-fill" id="fill-jitter" style="height:3px;background:#10b981;"></div>
+      </div>
+      <div class="eq-label" data-key="jitter">רעידת<br>קול</div>
+      <div class="eq-value" id="val-jitter">--</div>
+    </div>
+    <!-- pause -->
+    <div class="eq-col">
+      <div class="eq-bar-wrap" id="bar-pause">
+        <div class="eq-threshold" style="bottom:55%"></div>
+        <div class="eq-bar-fill" id="fill-pause" style="height:3px;background:#10b981;"></div>
+      </div>
+      <div class="eq-label" data-key="pauses">פאוזות</div>
+      <div class="eq-value" id="val-pause">--</div>
+    </div>
+    <!-- rate -->
+    <div class="eq-col">
+      <div class="eq-bar-wrap" id="bar-rate">
+        <div class="eq-threshold" style="bottom:65%"></div>
+        <div class="eq-bar-fill" id="fill-rate" style="height:3px;background:#10b981;"></div>
+      </div>
+      <div class="eq-label" data-key="rate">קצב<br>דיבור</div>
+      <div class="eq-value" id="val-rate">--</div>
+    </div>
+    <!-- volume -->
+    <div class="eq-col">
+      <div class="eq-bar-wrap" id="bar-volume">
+        <div class="eq-threshold" style="bottom:75%"></div>
+        <div class="eq-bar-fill" id="fill-volume" style="height:3px;background:#10b981;"></div>
+      </div>
+      <div class="eq-label" data-key="volume">עוצמת<br>קול</div>
+      <div class="eq-value" id="val-volume">--</div>
+    </div>
+    <!-- breath -->
+    <div class="eq-col">
+      <div class="eq-bar-wrap" id="bar-breath">
+        <div class="eq-threshold" style="bottom:60%"></div>
+        <div class="eq-bar-fill" id="fill-breath" style="height:3px;background:#10b981;"></div>
+      </div>
+      <div class="eq-label" data-key="breath">קצב<br>נשימה</div>
+      <div class="eq-value" id="val-breath">--</div>
+    </div>
   </div>
-  <canvas id="waveCanvas"></canvas>
 </div>
 
-<div class="metrics-section">
-  <div class="metric-card" id="cardPitch">
-    <div class="metric-icon-label"><span>♪</span> <span data-key="pitch">גובה קול</span></div>
-    <div class="metric-val" id="mPitch">---</div>
-  </div>
-  <div class="metric-card" id="cardRate">
-    <div class="metric-icon-label"><span>◎</span> <span data-key="rate">קצב דיבור</span></div>
-    <div class="metric-val" id="mRate">---</div>
-  </div>
-  <div class="metric-card" id="cardPause">
-    <div class="metric-icon-label"><span>⏸</span> <span data-key="pauses">פאוזות</span></div>
-    <div class="metric-val" id="mPause">---</div>
-  </div>
-  <div class="metric-card" id="cardJitter">
-    <div class="metric-icon-label"><span>〰</span> <span data-key="jitter">רעידת קול</span></div>
-    <div class="metric-val" id="mJitter">---</div>
-  </div>
-</div>
-
-<div class="mark-section">
+<!-- MARK -->
+<div class="mark-wrap">
   <button class="mark-btn" id="markBtn" onclick="markMoment()" disabled>
     <span>🚩</span> <span data-key="markBtn">סמן רגע חשוד</span>
-    <span class="mark-count" id="markCount">0</span>
+    <span class="mark-cnt" id="markCnt">0</span>
   </button>
 </div>
 
-<div class="history-section">
-  <div class="section-header">
-    <span class="section-title" data-key="history">היסטוריה</span>
-    <span class="section-title" id="histDuration" style="color:var(--muted)">—</span>
+<!-- HISTORY -->
+<div class="hist-section">
+  <div class="sec-header">
+    <span class="sec-title" data-key="history">היסטוריה</span>
+    <span class="sec-title" id="histDur" style="color:var(--muted)">—</span>
   </div>
   <canvas id="histCanvas"></canvas>
 </div>
 
-<div class="summary-panel" id="summaryPanel">
-  <div class="summary-title" data-key="summaryTitle">סיכום שיחה</div>
-  <div class="summary-row"><span class="summary-key" data-key="sumAvgLabel">ציון ממוצע</span><span class="summary-val" id="sumAvg">—</span></div>
-  <div class="summary-row"><span class="summary-key" data-key="sumMinLabel">ציון מינימום</span><span class="summary-val" id="sumMin">—</span></div>
-  <div class="summary-row"><span class="summary-key" data-key="sumMaxLabel">ציון מקסימום</span><span class="summary-val" id="sumMax">—</span></div>
-  <div class="summary-row"><span class="summary-key" data-key="sumDurLabel">משך שיחה</span><span class="summary-val" id="sumDur">—</span></div>
-  <div class="summary-row"><span class="summary-key" data-key="sumMarksLabel">רגעים חשודים</span><span class="summary-val" id="sumMarks">—</span></div>
-  <div class="summary-marks" id="sumMarksList"></div>
+<!-- SUMMARY PANEL -->
+<div class="summary" id="summaryPanel">
+  <div class="sum-title" data-key="summaryTitle">סיכום שיחה</div>
+  <div class="verdict-box" id="verdictBox">
+    <div class="verdict-score" id="verdictScore">--</div>
+    <div class="verdict-label" id="verdictLabel">--</div>
+    <div class="verdict-desc" id="verdictDesc"></div>
+  </div>
+  <div class="sum-grid">
+    <div class="sum-card"><div class="sum-card-label" data-key="pitch">גובה קול</div><div class="sum-card-val" id="sPitch">--</div><div class="sum-card-note" id="sPitchNote"></div></div>
+    <div class="sum-card"><div class="sum-card-label" data-key="jitter">רעידת קול</div><div class="sum-card-val" id="sJitter">--</div><div class="sum-card-note" id="sJitterNote"></div></div>
+    <div class="sum-card"><div class="sum-card-label" data-key="pauses">פאוזות</div><div class="sum-card-val" id="sPause">--</div><div class="sum-card-note" id="sPauseNote"></div></div>
+    <div class="sum-card"><div class="sum-card-label" data-key="rate">קצב דיבור</div><div class="sum-card-val" id="sRate">--</div><div class="sum-card-note" id="sRateNote"></div></div>
+    <div class="sum-card"><div class="sum-card-label" data-key="volume">עוצמת קול</div><div class="sum-card-val" id="sVolume">--</div><div class="sum-card-note" id="sVolumeNote"></div></div>
+    <div class="sum-card"><div class="sum-card-label" data-key="breath">קצב נשימה</div><div class="sum-card-val" id="sBreath">--</div><div class="sum-card-note" id="sBreathNote"></div></div>
+  </div>
+  <div class="sum-row"><span class="sum-key" data-key="sumDurLabel">משך שיחה</span><span class="sum-val" id="sDur">—</span></div>
+  <div class="sum-row"><span class="sum-key" data-key="sumMarksLabel">רגעים מסומנים</span><span class="sum-val" id="sMarks">—</span></div>
+  <div class="mark-chips" id="markChips"></div>
 </div>
 
-<div class="btn-section">
-  <button class="main-btn start" id="mainBtn" onclick="toggleAnalysis()" data-key="startBtn">התחל ניתוח</button>
+<!-- BUTTONS -->
+<div class="btn-row" id="btnRow">
+  <button class="main-btn btn-start" id="mainBtn" onclick="toggleAnalysis()" data-key="startBtn">התחל ניתוח</button>
+  <button class="main-btn btn-summary" id="sumBtn" onclick="toggleSummary()" data-key="summaryBtn" disabled>סיכום</button>
 </div>
-<div class="err-msg" id="errMsg" data-key="errMsg">לא ניתן לגשת למיקרופון — בדוק הרשאות האפליקציה.</div>
+<div class="err-msg" id="errMsg" data-key="errMsg">לא ניתן לגשת למיקרופון.</div>
 
 <script>
-// ── TRANSLATIONS ──────────────────────────────────────────
+// ── TRANSLATIONS ──
 const T = {
-  he: {
-    waiting:      'ממתין',
-    calibrating:  '⏳ מכייל...',
-    liveWave:     'גל קול חי',
-    pitch:        'גובה קול',
-    rate:         'קצב דיבור',
-    pauses:       'פאוזות',
-    jitter:       'רעידת קול',
-    markBtn:      'סמן רגע חשוד',
-    history:      'היסטוריה',
-    summaryTitle: 'סיכום שיחה',
-    sumAvgLabel:  'ציון ממוצע',
-    sumMinLabel:  'ציון מינימום',
-    sumMaxLabel:  'ציון מקסימום',
-    sumDurLabel:  'משך שיחה',
-    sumMarksLabel:'רגעים חשודים',
-    startBtn:     'התחל ניתוח',
-    stopBtn:      'עצור ניתוח',
-    errMsg:       'לא ניתן לגשת למיקרופון — בדוק הרשאות האפליקציה.',
-    noMarks:      'אין',
-    waitingData:  'ממתין לנתונים...',
-    alertDrop:    '⚠️ ירידה חדה — אמינות נמוכה',
-    markedAt:     (t) => '🚩 רגע מסומן — ' + t,
-    credible:     'אמין',
-    suspicious:   'חשוד',
-    unreliable:   'לא אמין',
-    rateUnit:     "/ש'",
-    standby:      'STANDBY',
-    calib:        'CALIBRATING',
-    live:         'LIVE',
+  he:{
+    waiting:'ממתין', calibrating:'⏳ מכייל...', eqTitle:'ניתוח מאפייני קול בזמן אמת',
+    pitch:'גובה קול', jitter:'רעידת קול', pauses:'פאוזות',
+    rate:'קצב דיבור', volume:'עוצמת קול', breath:'קצב נשימה',
+    markBtn:'סמן רגע חשוד', history:'היסטוריה',
+    summaryTitle:'סיכום שיחה', summaryBtn:'סיכום',
+    sumDurLabel:'משך שיחה', sumMarksLabel:'רגעים מסומנים',
+    startBtn:'התחל ניתוח', stopBtn:'עצור ניתוח',
+    errMsg:'לא ניתן לגשת למיקרופון — בדוק הרשאות.',
+    noMarks:'אין', waitingData:'ממתין לנתונים...',
+    alertDrop:'ירידה חדה באמינות',
+    markedAt:(t)=>'🚩 רגע מסומן — '+t,
+    credible:'אמין', suspicious:'חשוד', unreliable:'לא אמין',
+    credDesc:(s)=> s>65?'הדובר מציג מאפייני קול יציבים ועקביים.': s>38?'זוהו מספר מאפיינים חשודים. מומלץ לשים לב.':'מאפייני קול מרובים מעידים על מתח גבוה.',
+    metricNorm:'תקין', metricHigh:'גבוה', metricLow:'נמוך', metricAlert:'חריגה',
+    standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
   },
-  en: {
-    waiting:      'Waiting',
-    calibrating:  '⏳ Calibrating...',
-    liveWave:     'Live Waveform',
-    pitch:        'Pitch',
-    rate:         'Speech Rate',
-    pauses:       'Pauses',
-    jitter:       'Voice Jitter',
-    markBtn:      'Mark Suspicious Moment',
-    history:      'History',
-    summaryTitle: 'Call Summary',
-    sumAvgLabel:  'Average Score',
-    sumMinLabel:  'Minimum Score',
-    sumMaxLabel:  'Maximum Score',
-    sumDurLabel:  'Call Duration',
-    sumMarksLabel:'Suspicious Moments',
-    startBtn:     'Start Analysis',
-    stopBtn:      'Stop Analysis',
-    errMsg:       'Microphone access denied — check app permissions.',
-    noMarks:      'None',
-    waitingData:  'Waiting for data...',
-    alertDrop:    '⚠️ Sharp drop — low credibility',
-    markedAt:     (t) => '🚩 Marked — ' + t,
-    credible:     'Credible',
-    suspicious:   'Suspicious',
-    unreliable:   'Unreliable',
-    rateUnit:     '/s',
-    standby:      'STANDBY',
-    calib:        'CALIBRATING',
-    live:         'LIVE',
+  en:{
+    waiting:'Waiting', calibrating:'⏳ Calibrating...', eqTitle:'Real-Time Voice Feature Analysis',
+    pitch:'Pitch', jitter:'Jitter', pauses:'Pauses',
+    rate:'Speech Rate', volume:'Volume', breath:'Breath Rate',
+    markBtn:'Mark Suspicious Moment', history:'History',
+    summaryTitle:'Call Summary', summaryBtn:'Summary',
+    sumDurLabel:'Call Duration', sumMarksLabel:'Marked Moments',
+    startBtn:'Start Analysis', stopBtn:'Stop Analysis',
+    errMsg:'Microphone access denied — check permissions.',
+    noMarks:'None', waitingData:'Waiting for data...',
+    alertDrop:'Sharp drop in credibility',
+    markedAt:(t)=>'🚩 Marked — '+t,
+    credible:'Credible', suspicious:'Suspicious', unreliable:'Unreliable',
+    credDesc:(s)=> s>65?'Speaker shows stable and consistent voice features.': s>38?'Several suspicious features detected. Pay attention.':'Multiple voice features indicate high stress levels.',
+    metricNorm:'Normal', metricHigh:'High', metricLow:'Low', metricAlert:'Alert',
+    standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
+  },
+  ar:{
+    waiting:'انتظار',
+    calibrating:'⏳ معايرة...',
+    eqTitle:'تحليل مميزات صوتية حية',
+    pitch:'طبقة الصوت',
+    jitter:'اهتزاز الصوت',
+    pauses:'توقفات',
+    rate:'سرعة الكلام',
+    volume:'مستوى الصوت',
+    breath:'معدل التنفس',
+    markBtn:'تحديد لحظة مشبوهة',
+    history:'السجل',
+    summaryTitle:'ملخص المكالمة',
+    summaryBtn:'ملخص',
+    sumDurLabel:'مدة المكالمة',
+    sumMarksLabel:'اللحظات المحددة',
+    startBtn:'بدء التحليل',
+    stopBtn:'إيقاف التحليل',
+    errMsg:'تعذّر الوصول إلى الميكروفون — تحقّق من الأذونات.',
+    noMarks:'لا يوجد',
+    waitingData:'في انتظار البيانات...',
+    alertDrop:'انخفاض حاد في المصداقية',
+    markedAt:(t)=>'⚠️ تم التحديد — '+t,
+    credible:'موثوق',
+    suspicious:'مشبوه',
+    unreliable:'غير موثوق',
+    credDesc:(s)=> s>65?'مميزات صوتية مستقرة ومتسقة.': s>38?'تم رصد عدة مميزات مشبوهة. يُنصح بالانتباه.':'مؤشرات تدل على توتر مرتفع.',
+    metricNorm:'طبيعي',
+    metricHigh:'مرتفع',
+    metricLow:'منخفض',
+    metricAlert:'تنبيه',
+    standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
   }
 };
-
-let currentLang = 'he';
-
-function t(key, arg) {
-  const val = T[currentLang][key];
-  return typeof val === 'function' ? val(arg) : val;
-}
-
-function setLang(lang) {
-  currentLang = lang;
-  document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
-  document.getElementById('btnHe').classList.toggle('active', lang === 'he');
-  document.getElementById('btnEn').classList.toggle('active', lang === 'en');
-  // update all data-key elements
-  document.querySelectorAll('[data-key]').forEach(el => {
-    const key = el.getAttribute('data-key');
-    if (T[lang][key] && typeof T[lang][key] === 'string') {
-      if (el.id === 'mainBtn') {
-        el.textContent = active ? t('stopBtn') : t('startBtn');
-      } else if (el.id === 'calibBadge') {
-        el.textContent = t('calibrating');
-      } else {
-        el.textContent = T[lang][key];
-      }
+let lang='he';
+function t(k,a){ const v=T[lang][k]; return typeof v==='function'?v(a):v; }
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l;
+  document.documentElement.dir=(l==='he'||l==='ar')?'rtl':'ltr';
+  document.getElementById('btnHe').classList.toggle('active',l==='he');
+  document.getElementById('btnEn').classList.toggle('active',l==='en');
+  document.getElementById('btnAr').classList.toggle('active',l==='ar');
+  document.body.style.fontFamily=l==='ar'?"'Noto Sans Arabic',sans-serif":"'Inter',-apple-system,sans-serif";
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    const k=el.getAttribute('data-key');
+    if(T[l][k]&&typeof T[l][k]==='string'){
+      if(el.id==='mainBtn') el.textContent=active?t('stopBtn'):t('startBtn');
+      else el.textContent=T[l][k];
     }
   });
-  // re-render score label if active
-  if (active) updateGauge(credibility);
-  else {
-    document.getElementById('scoreLabel').textContent = t('waiting');
-  }
-  // re-render history empty state
-  if (historyData.length < 2) drawHistory();
+  if(active) updateArc(credibility);
+  else document.getElementById('arcLbl').textContent=t('waiting');
 }
-
-// ── CONSTANTS ──
-const CALIB_FRAMES = 90;
-const CX=100, CY=100, R=72;
-const START_A=Math.PI*0.75, END_A=Math.PI*2.25, TOTAL_A=END_A-START_A;
-
-// ── STATE ──
-let active=false, calibrating=false;
-let audioCtx, analyser, processor, stream;
-let pitchHist=[], voiceFrames=0, totalFrames=0;
-let lastPitch=0, jitterAcc=0, sampleCount=0;
-let credibility=50, prevCredibility=50;
-let historyData=[], markTimes=[], marks=[];
-let histInterval=null, waveAnimId=null, durationInterval=null;
-let startTime=null, callDuration=0;
-let alertCooldown=false;
-let markCounter=0;
 
 // ── GAUGE SETUP ──
-function arcPt(a,rad){ return [CX+rad*Math.cos(a), CY+rad*Math.sin(a)]; }
-function arcPath(from,to){
-  const large=(to-from)>Math.PI?1:0;
-  const [x1,y1]=arcPt(from,R), [x2,y2]=arcPt(to,R);
-  return 'M'+x1+' '+y1+' A'+R+' '+R+' 0 '+large+' 1 '+x2+' '+y2;
+const ACX=90,ACY=90,AR=62;
+const ASA=Math.PI*0.85, AEA=Math.PI*2.15, ATA=AEA-ASA;
+function apt(a,r){return [ACX+r*Math.cos(a),ACY+r*Math.sin(a)];}
+function apath(f,to){
+  const lg=(to-f)>Math.PI?1:0;
+  const [x1,y1]=apt(f,AR),[x2,y2]=apt(to,AR);
+  return 'M'+x1+' '+y1+' A'+AR+' '+AR+' 0 '+lg+' 1 '+x2+' '+y2;
 }
-document.getElementById('arcBg').setAttribute('d', arcPath(START_A, END_A));
-const ticksG=document.getElementById('gaugeTicks');
-[0,25,50,75,100].forEach(v=>{
-  const a=START_A+(v/100)*TOTAL_A;
-  const [x1,y1]=arcPt(a,R-18),[x2,y2]=arcPt(a,R-8);
-  const l=document.createElementNS('http://www.w3.org/2000/svg','line');
-  l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);
-  l.setAttribute('stroke','#243552');l.setAttribute('stroke-width','1.5');
-  ticksG.appendChild(l);
-  if([0,50,100].includes(v)){
-    const tx=document.createElementNS('http://www.w3.org/2000/svg','text');
-    const [px,py]=arcPt(a,R-30);
-    tx.setAttribute('x',px);tx.setAttribute('y',py+4);
-    tx.setAttribute('text-anchor','middle');tx.setAttribute('fill','#334155');
-    tx.setAttribute('font-size','9');tx.setAttribute('font-family','JetBrains Mono,monospace');
-    tx.textContent=v; ticksG.appendChild(tx);
-  }
-});
+document.getElementById('arcBg').setAttribute('d',apath(ASA,AEA));
 
-// ── COLORS ──
-function credColor(v){ return v>65?'#10b981':v>38?'#f59e0b':'#ef4444'; }
-function credLabel(v){ return v>65?t('credible'):v>38?t('suspicious'):t('unreliable'); }
+function credColor(v){return v>65?'#10b981':v>38?'#f59e0b':'#ef4444';}
+function credLabel(v){return v>65?t('credible'):v>38?t('suspicious'):t('unreliable');}
 
-// ── GAUGE UPDATE ──
-function updateGauge(v){
+function updateArc(v){
   const col=credColor(v);
-  document.documentElement.style.setProperty('--cred-color',col);
-  const frac=v/100, angle=START_A+frac*TOTAL_A;
-  document.getElementById('arcVal').setAttribute('d',arcPath(START_A,angle));
-  document.getElementById('arcVal').setAttribute('stroke',col);
-  document.getElementById('arcVal').style.filter='drop-shadow(0 0 6px '+col+'88)';
-  document.getElementById('arcVal').style.display='';
-  const deg=((angle-(Math.PI*1.5))*(180/Math.PI));
-  document.getElementById('needle').style.transform='rotate('+deg+'deg)';
-  document.getElementById('needle').setAttribute('stroke',col);
-  document.getElementById('needle').style.display='';
-  document.getElementById('needleHub').setAttribute('stroke',col);
-  document.getElementById('needleHub').style.display='';
-  const sn=document.getElementById('scoreNum'), sl=document.getElementById('scoreLabel');
-  sn.textContent=Math.round(v); sn.style.color=col; sn.classList.add('live');
-  sl.textContent=credLabel(v); sl.style.color=col; sl.classList.add('live');
+  document.documentElement.style.setProperty('--cc',col);
+  const fr=v/100,ang=ASA+fr*ATA;
+  document.getElementById('arcFill').setAttribute('d',apath(ASA,ang));
+  document.getElementById('arcFill').setAttribute('stroke',col);
+  document.getElementById('arcFill').style.filter='drop-shadow(0 0 5px '+col+'99)';
+  document.getElementById('arcFill').style.display='';
+  const deg=((ang-(Math.PI*1.5))*(180/Math.PI));
+  document.getElementById('arcNeedle').style.transform='rotate('+deg+'deg)';
+  document.getElementById('arcNeedle').setAttribute('stroke',col);
+  document.getElementById('arcNeedle').style.display='';
+  document.getElementById('arcHub').setAttribute('stroke',col);
+  document.getElementById('arcHub').style.display='';
+  const an=document.getElementById('arcNum'),al=document.getElementById('arcLbl');
+  an.textContent=Math.round(v); an.style.color=col; an.classList.add('live');
+  al.textContent=credLabel(v); al.style.color=col; al.classList.add('live');
+}
+function resetArc(){
+  ['arcFill','arcNeedle','arcHub'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('arcNum').textContent='--'; document.getElementById('arcNum').classList.remove('live');
+  document.getElementById('arcLbl').textContent=t('waiting'); document.getElementById('arcLbl').classList.remove('live');
 }
 
-function resetGauge(){
-  document.getElementById('arcVal').style.display='none';
-  document.getElementById('needle').style.display='none';
-  document.getElementById('needleHub').style.display='none';
-  const sn=document.getElementById('scoreNum'), sl=document.getElementById('scoreLabel');
-  sn.textContent='--'; sn.style.color=''; sn.classList.remove('live');
-  sl.textContent=t('waiting'); sl.style.color=''; sl.classList.remove('live');
+// ── EQ BAR UPDATER ──
+// Each bar: value 0-100, threshold, color logic
+const BAR_THRESHOLDS = {pitch:70, jitter:60, pause:55, rate:65, volume:75, breath:60};
+let alertCooldownBars = {};
+
+function updateBar(name, pct, displayVal){
+  const fill=document.getElementById('fill-'+name);
+  const valEl=document.getElementById('val-'+name);
+  const wrap=document.getElementById('bar-'+name);
+  if(!fill) return;
+
+  const thresh=BAR_THRESHOLDS[name]||65;
+  let col;
+  if(pct>thresh){ col='#ef4444'; }
+  else if(pct>thresh*0.75){ col='#f59e0b'; }
+  else { col='#10b981'; }
+
+  fill.style.height=Math.max(3,pct)+'%';
+  fill.style.background=col;
+  fill.style.boxShadow=pct>thresh?'0 0 8px '+col+'88':'none';
+  if(valEl) valEl.textContent=displayVal||Math.round(pct)+'%';
+
+  // flash on threshold breach
+  if(pct>thresh && !alertCooldownBars[name]){
+    alertCooldownBars[name]=true;
+    wrap.classList.add('alert-flash');
+    setTimeout(()=>{ wrap.classList.remove('alert-flash'); alertCooldownBars[name]=false; },2000);
+  }
 }
 
-// ── CREDIBILITY ──
-function computeCredibility({pitchVariance,pauseRatio,speechRate,jitter}){
-  const p=Math.max(0,100-pitchVariance*2.5);
-  const pa=Math.max(0,100-pauseRatio*120);
-  const r=speechRate>0?Math.max(0,100-Math.abs(speechRate-3.5)*18):60;
-  const j=Math.max(0,100-jitter*400);
-  return Math.min(100,Math.max(0,p*0.3+pa*0.25+r*0.2+j*0.25));
-}
+// ── STATE ──
+let active=false,calibrating=false;
+let audioCtx,analyser,processor,stream;
+let pitchHist=[],voiceFrames=0,totalFrames=0;
+let lastPitch=0,jitterAcc=0,sampleCount=0;
+let credibility=50,prevCred=50;
+let historyData=[],markTimes=[],marks=[];
+let histInterval=null,waveAnimId=null,durInterval=null;
+let startTime=null,callDuration=0;
+let alertCooldown=false,markCounter=0;
+let summaryVisible=false;
+
+// running averages for summary
+let sumPitch=[],sumJitter=[],sumPause=[],sumRate=[],sumVolume=[],sumBreath=[];
 
 // ── PITCH ──
 function detectPitch(buf,sr){
-  const SIZE=buf.length,MAX=Math.floor(SIZE/2);
-  let rms=0; for(let i=0;i<SIZE;i++) rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/SIZE);
+  const S=buf.length,M=Math.floor(S/2);
+  let rms=0; for(let i=0;i<S;i++) rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/S);
   if(rms<0.01) return 0;
-  let bestOff=-1,bestCorr=0,lastCorr=1;
-  for(let off=20;off<MAX;off++){
-    let c=0; for(let i=0;i<MAX;i++) c+=Math.abs(buf[i]-buf[i+off]);
-    c=1-c/MAX;
-    if(c>0.9&&c>lastCorr){bestCorr=c;bestOff=off;}
-    lastCorr=c;
+  let bO=-1,bC=0,lC=1;
+  for(let o=20;o<M;o++){
+    let c=0; for(let i=0;i<M;i++) c+=Math.abs(buf[i]-buf[i+o]);
+    c=1-c/M; if(c>0.9&&c>lC){bC=c;bO=o;} lC=c;
   }
-  return (bestCorr>0.9&&bestOff>0)?sr/bestOff:0;
+  return (bC>0.9&&bO>0)?sr/bO:0;
 }
 
-// ── WAVEFORM ──
-function drawWave(){
-  if(!active||!analyser){return;}
-  waveAnimId=requestAnimationFrame(drawWave);
-  const c=document.getElementById('waveCanvas'),ctx=c.getContext('2d');
-  const buf=new Uint8Array(analyser.fftSize);
-  analyser.getByteTimeDomainData(buf);
-  ctx.fillStyle='#111827'; ctx.fillRect(0,0,c.width,c.height);
-  const col=credColor(credibility);
-  ctx.lineWidth=1.5; ctx.strokeStyle=col;
-  ctx.shadowColor=col; ctx.shadowBlur=calibrating?0:3;
-  ctx.beginPath();
-  const sw=c.width/buf.length; let x=0;
-  for(let i=0;i<buf.length;i++){
-    const y=(buf[i]/128)*c.height/2;
-    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-    x+=sw;
-  }
-  ctx.lineTo(c.width,c.height/2); ctx.stroke();
+// ── CREDIBILITY ──
+function computeCred({pitchVar,pauseRatio,speechRate,jitter,volume}){
+  const p=Math.max(0,100-pitchVar*2.5);
+  const pa=Math.max(0,100-pauseRatio*120);
+  const r=speechRate>0?Math.max(0,100-Math.abs(speechRate-3.5)*18):60;
+  const j=Math.max(0,100-jitter*400);
+  const v=Math.max(0,100-Math.abs(volume-0.08)*400);
+  return Math.min(100,Math.max(0,p*0.25+pa*0.2+r*0.2+j*0.2+v*0.15));
 }
 
-// ── HISTORY ──
+// ── HISTORY CHART ──
 function drawHistory(){
   const c=document.getElementById('histCanvas'),ctx=c.getContext('2d');
-  const w=c.width,h=c.height,pad=10;
-  ctx.fillStyle='#111827'; ctx.fillRect(0,0,w,h);
+  const w=c.width,h=c.height,pd=8;
+  ctx.fillStyle='#0f1623'; ctx.fillRect(0,0,w,h);
   [38,65].forEach(v=>{
-    const y=h-pad-(v/100)*(h-pad*2);
-    ctx.strokeStyle='#1e2d45';ctx.lineWidth=1;ctx.setLineDash([4,4]);
-    ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();
+    const y=h-pd-(v/100)*(h-pd*2);
+    ctx.strokeStyle='#1c2d42';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(pd,y);ctx.lineTo(w-pd,y);ctx.stroke();
   });
   ctx.setLineDash([]);
   if(historyData.length<2){
-    ctx.fillStyle='#334155';ctx.font='11px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillStyle='#2a4060';ctx.font='11px Inter,sans-serif';ctx.textAlign='center';
     ctx.fillText(t('waitingData'),w/2,h/2+4);return;
   }
-  marks.forEach(mt=>{
-    const idx=Math.round(mt);
-    if(idx>=0&&idx<historyData.length){
-      const x=pad+(idx/(historyData.length-1))*(w-pad*2);
-      ctx.strokeStyle='#ef444460';ctx.lineWidth=1;ctx.setLineDash([2,2]);
-      ctx.beginPath();ctx.moveTo(x,pad);ctx.lineTo(x,h-pad);ctx.stroke();
-      ctx.setLineDash([]);
+  marks.forEach(mi=>{
+    if(mi>=0&&mi<historyData.length){
+      const x=pd+(mi/(historyData.length-1))*(w-pd*2);
+      ctx.strokeStyle='#ef444450';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+      ctx.beginPath();ctx.moveTo(x,pd);ctx.lineTo(x,h-pd);ctx.stroke();ctx.setLineDash([]);
     }
   });
   historyData.forEach((v,i)=>{
     if(i===0)return;
     const prev=historyData[i-1];
-    const x=pad+(i/(historyData.length-1))*(w-pad*2);
-    const y=h-pad-(v/100)*(h-pad*2);
-    const px=pad+((i-1)/(historyData.length-1))*(w-pad*2);
-    const py=h-pad-(prev/100)*(h-pad*2);
-    const col=credColor(v);
-    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.shadowColor=col;ctx.shadowBlur=2;
+    const x=pd+(i/(historyData.length-1))*(w-pd*2);
+    const y=h-pd-(v/100)*(h-pd*2);
+    const px=pd+((i-1)/(historyData.length-1))*(w-pd*2);
+    const py=h-pd-(prev/100)*(h-pd*2);
+    ctx.strokeStyle=credColor(v);ctx.lineWidth=2;ctx.shadowColor=credColor(v);ctx.shadowBlur=2;
     ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(x,y);ctx.stroke();
   });
-  marks.forEach(mt=>{
-    const idx=Math.round(mt);
-    if(idx>=0&&idx<historyData.length){
-      const x=pad+(idx/(historyData.length-1))*(w-pad*2);
-      const y=h-pad-(historyData[idx]/100)*(h-pad*2);
-      ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);
-      ctx.fillStyle='#ef4444';ctx.shadowBlur=0;ctx.fill();
+  marks.forEach(mi=>{
+    if(mi>=0&&mi<historyData.length){
+      const x=pd+(mi/(historyData.length-1))*(w-pd*2);
+      const y=h-pd-(historyData[mi]/100)*(h-pd*2);
+      ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle='#ef4444';ctx.shadowBlur=0;ctx.fill();
     }
   });
 }
 
 function resizeCanvases(){
-  ['waveCanvas','histCanvas'].forEach(id=>{
-    const c=document.getElementById(id),dpr=window.devicePixelRatio||1;
-    c.width=c.offsetWidth*dpr; c.height=c.offsetHeight*dpr;
-    c.getContext('2d').scale(dpr,dpr);
-  });
+  const c=document.getElementById('histCanvas'),dpr=window.devicePixelRatio||1;
+  c.width=c.offsetWidth*dpr; c.height=c.offsetHeight*dpr;
+  c.getContext('2d').scale(dpr,dpr);
 }
 
-function formatTime(s){ const m=Math.floor(s/60),sec=s%60; return m+':'+String(sec).padStart(2,'0'); }
+function formatTime(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
 
 // ── MARK ──
 function markMoment(){
   if(!active)return;
   markCounter++;
-  const elapsed=Math.floor((Date.now()-startTime)/1000);
+  const el=Math.floor((Date.now()-startTime)/1000);
   marks.push(historyData.length);
-  markTimes.push(elapsed);
-  document.getElementById('markCount').textContent=markCounter;
-  document.getElementById('markCount').classList.add('show');
-  document.getElementById('alertBanner').classList.add('show');
-  document.getElementById('alertText').textContent=t('markedAt',formatTime(elapsed));
-  setTimeout(()=>{ if(!alertCooldown) document.getElementById('alertBanner').classList.remove('show'); },2500);
+  markTimes.push(el);
+  document.getElementById('markCnt').textContent=markCounter;
+  document.getElementById('markCnt').classList.add('show');
+  showAlert(t('markedAt',formatTime(el)),2500);
   if(navigator.vibrate) navigator.vibrate([60,40,60]);
   drawHistory();
 }
 
 // ── ALERT ──
-function checkAlert(newVal,prevVal){
+let alertTimer=null;
+function showAlert(msg,dur){
+  clearTimeout(alertTimer);
+  document.getElementById('alertTxt').textContent=msg;
+  document.getElementById('alertBox').classList.add('show');
+  alertTimer=setTimeout(()=>document.getElementById('alertBox').classList.remove('show'),dur||3000);
+}
+
+function checkAlert(nv,pv){
   if(alertCooldown)return;
-  if(prevVal-newVal>18&&newVal<50){
+  if(pv-nv>18&&nv<50){
     alertCooldown=true;
-    document.getElementById('alertBanner').classList.add('show');
-    document.getElementById('alertText').textContent=t('alertDrop');
+    showAlert(t('alertDrop'),3500);
     if(navigator.vibrate) navigator.vibrate([100,50,100,50,200]);
-    setTimeout(()=>{ document.getElementById('alertBanner').classList.remove('show'); alertCooldown=false; },3500);
+    setTimeout(()=>alertCooldown=false,4000);
   }
 }
 
-// ── TOGGLE ──
-async function toggleAnalysis(){ if(active){stopAnalysis();}else{await startAnalysis();} }
+// ── SUMMARY ──
+function toggleSummary(){
+  const p=document.getElementById('summaryPanel');
+  summaryVisible=!summaryVisible;
+  if(summaryVisible){ buildSummary(); p.classList.add('show'); }
+  else p.classList.remove('show');
+}
+
+function metricNote(v,lowOk,highBad){
+  if(lowOk){return v<30?t('metricNorm'):v<60?t('metricHigh'):t('metricAlert');}
+  return v<30?t('metricNorm'):v<60?t('metricHigh'):t('metricAlert');
+}
+
+function buildSummary(){
+  if(historyData.length<2)return;
+  const avg=v=>v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length):0;
+  const score=Math.round(historyData.reduce((a,b)=>a+b,0)/historyData.length);
+  const col=credColor(score);
+
+  // verdict
+  document.getElementById('verdictScore').textContent=score+'%';
+  document.getElementById('verdictScore').style.color=col;
+  document.getElementById('verdictLabel').textContent=credLabel(score);
+  document.getElementById('verdictLabel').style.color=col;
+  document.getElementById('verdictDesc').textContent=t('credDesc',score);
+  document.getElementById('verdictBox').style.borderColor=col+'50';
+  document.getElementById('verdictBox').style.background=col+'10';
+
+  // metric cards
+  const ap=avg(sumPitch),aj=avg(sumJitter),apa=avg(sumPause),ar=avg(sumRate),av=avg(sumVolume),ab=avg(sumBreath);
+  const setCard=(id,noteId,val,unit,note)=>{
+    document.getElementById(id).textContent=val+unit;
+    document.getElementById(id).style.color=note===t('metricAlert')?'#ef4444':note===t('metricHigh')?'#f59e0b':'#10b981';
+    document.getElementById(noteId).textContent=note;
+  };
+  setCard('sPitch','sPitchNote',ap,' Hz', ap>200?t('metricHigh'):t('metricNorm'));
+  setCard('sJitter','sJitterNote',aj,'%',aj>60?t('metricAlert'):aj>30?t('metricHigh'):t('metricNorm'));
+  setCard('sPause','sPauseNote',apa,'%',apa>55?t('metricAlert'):apa>30?t('metricHigh'):t('metricNorm'));
+  setCard('sRate','sRateNote',ar,'%',ar>65?t('metricAlert'):ar>40?t('metricHigh'):t('metricNorm'));
+  setCard('sVolume','sVolumeNote',av,'%',av>75?t('metricAlert'):t('metricNorm'));
+  setCard('sBreath','sBreathNote',ab,'%',ab>60?t('metricAlert'):t('metricNorm'));
+
+  document.getElementById('sDur').textContent=formatTime(callDuration);
+  document.getElementById('sMarks').textContent=markCounter||t('noMarks');
+  const chips=document.getElementById('markChips'); chips.innerHTML='';
+  markTimes.forEach(ti=>{ const s=document.createElement('span'); s.className='chip'; s.textContent='🚩 '+formatTime(ti); chips.appendChild(s); });
+}
+
+// ── START / STOP ──
+async function toggleAnalysis(){ if(active)stopAnalysis(); else await startAnalysis(); }
 
 async function startAnalysis(){
   document.getElementById('errMsg').classList.remove('show');
   document.getElementById('summaryPanel').classList.remove('show');
+  summaryVisible=false;
   try{
     stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
     audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-    const source=audioCtx.createMediaStreamSource(stream);
+    const src=audioCtx.createMediaStreamSource(stream);
     analyser=audioCtx.createAnalyser(); analyser.fftSize=2048;
-    source.connect(analyser);
+    src.connect(analyser);
     processor=audioCtx.createScriptProcessor(2048,1,1);
-    source.connect(processor); processor.connect(audioCtx.destination);
+    src.connect(processor); processor.connect(audioCtx.destination);
 
     pitchHist=[];voiceFrames=0;totalFrames=0;
     lastPitch=0;jitterAcc=0;sampleCount=0;
-    credibility=50;prevCredibility=50;
+    credibility=50;prevCred=50;
     historyData=[];marks=[];markTimes=[];markCounter=0;
-    alertCooldown=false; startTime=Date.now(); calibrating=true;
+    alertCooldown=false;alertCooldownBars={};
+    sumPitch=[];sumJitter=[];sumPause=[];sumRate=[];sumVolume=[];sumBreath=[];
+    startTime=Date.now();calibrating=true;
 
-    document.getElementById('calibBadge').textContent=t('calibrating');
-    document.getElementById('calibBadge').classList.add('show');
-    document.getElementById('statusDot').className='status-dot calibrating';
-    document.getElementById('statusText').textContent=t('calib');
-    document.getElementById('markCount').classList.remove('show');
-    document.getElementById('markCount').textContent='0';
+    document.getElementById('calibTag').textContent=t('calibrating');
+    document.getElementById('calibTag').classList.add('show');
+    document.getElementById('sdot').className='sdot calib';
+    document.getElementById('statusTxt').textContent=t('calib');
+    document.getElementById('markCnt').classList.remove('show');
+    document.getElementById('markCnt').textContent='0';
+    document.getElementById('sumBtn').disabled=true;
 
     processor.onaudioprocess=(e)=>{
       const buf=Array.from(e.inputBuffer.getChannelData(0));
       const pitch=detectPitch(buf,audioCtx.sampleRate);
       totalFrames++;
+
+      // RMS volume
+      let rms=0; for(let i=0;i<buf.length;i++) rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/buf.length);
+
+      // breath: low-frequency energy (envelope changes)
+      let breathEnergy=0;
+      for(let i=1;i<buf.length;i++) breathEnergy+=Math.abs(buf[i]-buf[i-1]);
+      breathEnergy/=buf.length;
+
       if(pitch>80&&pitch<400){
         voiceFrames++; pitchHist.push(pitch);
         if(pitchHist.length>80) pitchHist.shift();
@@ -577,50 +715,66 @@ async function startAnalysis(){
       } else { lastPitch=0; }
 
       if(totalFrames%15===0){
-        if(totalFrames<CALIB_FRAMES)return;
+        if(totalFrames<90)return;
         if(calibrating){
           calibrating=false;
-          document.getElementById('calibBadge').classList.remove('show');
-          document.getElementById('statusDot').className='status-dot live';
-          document.getElementById('statusText').textContent=t('live');
+          document.getElementById('calibTag').classList.remove('show');
+          document.getElementById('sdot').className='sdot live';
+          document.getElementById('statusTxt').textContent=t('live');
           document.getElementById('markBtn').disabled=false;
-          ['cardPitch','cardRate','cardPause','cardJitter'].forEach(id=>document.getElementById(id).classList.add('active'));
-          ['mPitch','mRate','mPause','mJitter'].forEach(id=>document.getElementById(id).classList.add('live'));
+          document.getElementById('sumBtn').disabled=false;
+          document.getElementById('sumBtn').classList.add('highlight');
         }
+
         const avg=pitchHist.length>0?pitchHist.reduce((a,b)=>a+b,0)/pitchHist.length:0;
         const variance=pitchHist.length>1?Math.sqrt(pitchHist.reduce((a,p)=>a+(p-avg)**2,0)/pitchHist.length):0;
         const pauseRatio=totalFrames>0?(totalFrames-voiceFrames)/totalFrames:0;
         const speechRate=voiceFrames/(totalFrames/21.5);
         const jitter=sampleCount>0?jitterAcc/sampleCount:0;
 
-        prevCredibility=credibility;
-        credibility=computeCredibility({pitchVariance:variance,pauseRatio,speechRate,jitter});
-        updateGauge(credibility);
-        checkAlert(credibility,prevCredibility);
+        // compute bar percentages
+        const pitchPct=Math.min(100,Math.max(0,(avg-80)/3.2));
+        const jitterPct=Math.min(100,jitter*800);
+        const pausePct=Math.min(100,pauseRatio*100);
+        const ratePct=Math.min(100,Math.abs(speechRate-3.5)*20);
+        const volPct=Math.min(100,rms*500);
+        const breathPct=Math.min(100,breathEnergy*2000);
 
-        const ru=t('rateUnit');
-        document.getElementById('mPitch').innerHTML=avg>0?Math.round(avg)+'<span class="metric-unit"> Hz</span>':'<span style="color:var(--muted)">—</span>';
-        document.getElementById('mRate').innerHTML=speechRate.toFixed(1)+'<span class="metric-unit">'+ru+'</span>';
-        document.getElementById('mPause').innerHTML=Math.round(pauseRatio*100)+'<span class="metric-unit"> %</span>';
-        document.getElementById('mJitter').innerHTML=(jitter*100).toFixed(1)+'<span class="metric-unit"> %</span>';
+        // update EQ bars
+        updateBar('pitch',  pitchPct,  avg>0?Math.round(avg)+' Hz':'--');
+        updateBar('jitter', jitterPct, (jitter*100).toFixed(1)+'%');
+        updateBar('pause',  pausePct,  Math.round(pauseRatio*100)+'%');
+        updateBar('rate',   ratePct,   speechRate.toFixed(1));
+        updateBar('volume', volPct,    Math.round(volPct)+'%');
+        updateBar('breath', breathPct, Math.round(breathPct)+'%');
+
+        // save for summary
+        if(avg>0) sumPitch.push(Math.round(avg));
+        sumJitter.push(Math.round(jitterPct));
+        sumPause.push(Math.round(pausePct));
+        sumRate.push(Math.round(ratePct));
+        sumVolume.push(Math.round(volPct));
+        sumBreath.push(Math.round(breathPct));
+
+        prevCred=credibility;
+        credibility=computeCred({pitchVar:variance,pauseRatio,speechRate,jitter,volume:rms});
+        updateArc(credibility);
+        checkAlert(credibility,prevCred);
       }
     };
 
     histInterval=setInterval(()=>{
-      if(!calibrating){ historyData.push(credibility); if(historyData.length>60)historyData.shift(); drawHistory(); }
+      if(!calibrating){historyData.push(credibility);if(historyData.length>60)historyData.shift();drawHistory();}
       callDuration=Math.floor((Date.now()-startTime)/1000);
-      document.getElementById('histDuration').textContent=formatTime(callDuration);
+      document.getElementById('histDur').textContent=formatTime(callDuration);
     },2000);
 
-    durationInterval=setInterval(()=>{
-      callDuration=Math.floor((Date.now()-startTime)/1000);
-      document.getElementById('waveStatus').textContent=formatTime(callDuration);
-    },1000);
+    durInterval=setInterval(()=>{callDuration=Math.floor((Date.now()-startTime)/1000);},1000);
 
     active=true;
     document.getElementById('mainBtn').textContent=t('stopBtn');
-    document.getElementById('mainBtn').className='main-btn stop';
-    resizeCanvases(); drawWave(); drawHistory();
+    document.getElementById('mainBtn').className='main-btn btn-stop';
+    resizeCanvases(); drawHistory();
 
   }catch(err){
     console.error(err);
@@ -635,42 +789,28 @@ function stopAnalysis(){
   if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
   if(audioCtx){audioCtx.close();audioCtx=null;}
   if(histInterval){clearInterval(histInterval);histInterval=null;}
-  if(durationInterval){clearInterval(durationInterval);durationInterval=null;}
-  if(waveAnimId){cancelAnimationFrame(waveAnimId);waveAnimId=null;}
+  if(durInterval){clearInterval(durInterval);durInterval=null;}
 
   active=false;calibrating=false;
-  document.getElementById('calibBadge').classList.remove('show');
-  document.getElementById('statusDot').className='status-dot';
-  document.getElementById('statusText').textContent=t('standby');
+  document.getElementById('calibTag').classList.remove('show');
+  document.getElementById('sdot').className='sdot';
+  document.getElementById('statusTxt').textContent=t('standby');
   document.getElementById('mainBtn').textContent=t('startBtn');
-  document.getElementById('mainBtn').className='main-btn start';
+  document.getElementById('mainBtn').className='main-btn btn-start';
   document.getElementById('markBtn').disabled=true;
-  document.getElementById('alertBanner').classList.remove('show');
-  document.getElementById('waveStatus').textContent='—';
-  ['cardPitch','cardRate','cardPause','cardJitter'].forEach(id=>document.getElementById(id).classList.remove('active'));
-  ['mPitch','mRate','mPause','mJitter'].forEach(id=>{document.getElementById(id).classList.remove('live');document.getElementById(id).textContent='---';});
-  resetGauge();
-  showSummary();
-  ['waveCanvas','histCanvas'].forEach(id=>{
-    const c=document.getElementById(id);
-    c.getContext('2d').fillStyle='#111827';
-    c.getContext('2d').fillRect(0,0,c.width,c.height);
+  document.getElementById('alertBox').classList.remove('show');
+  resetArc();
+  // reset bars
+  ['pitch','jitter','pause','rate','volume','breath'].forEach(n=>{
+    const f=document.getElementById('fill-'+n);
+    if(f){f.style.height='3px';f.style.background='#10b981';}
+    const v=document.getElementById('val-'+n); if(v) v.textContent='--';
   });
-}
-
-function showSummary(){
-  if(historyData.length<3)return;
-  const avg=Math.round(historyData.reduce((a,b)=>a+b,0)/historyData.length);
-  const min=Math.round(Math.min(...historyData));
-  const max=Math.round(Math.max(...historyData));
-  document.getElementById('sumAvg').textContent=avg+'%'; document.getElementById('sumAvg').style.color=credColor(avg);
-  document.getElementById('sumMin').textContent=min+'%'; document.getElementById('sumMin').style.color=credColor(min);
-  document.getElementById('sumMax').textContent=max+'%'; document.getElementById('sumMax').style.color=credColor(max);
-  document.getElementById('sumDur').textContent=formatTime(callDuration);
-  document.getElementById('sumMarks').textContent=markCounter>0?markCounter:t('noMarks');
-  const ml=document.getElementById('sumMarksList'); ml.innerHTML='';
-  markTimes.forEach(ti=>{ const s=document.createElement('span'); s.className='mark-item'; s.textContent='🚩 '+formatTime(ti); ml.appendChild(s); });
-  document.getElementById('summaryPanel').classList.add('show');
+  // auto show summary
+  if(historyData.length>3){
+    summaryVisible=true; buildSummary();
+    document.getElementById('summaryPanel').classList.add('show');
+  }
 }
 
 window.addEventListener('load',()=>{ resizeCanvases(); drawHistory(); });
