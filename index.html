@@ -51,6 +51,7 @@ body{
   display:flex;flex-direction:column;align-items:center;
   padding:20px 18px 0;
 }
+.score-wrap.hidden-live{opacity:0;pointer-events:none;height:0;padding:0;overflow:hidden;}
 .arc-container{position:relative;width:180px;height:100px;}
 #arcSvg{overflow:visible;}
 .arc-center{
@@ -229,7 +230,7 @@ body{
 </div>
 
 <!-- SCORE ARC -->
-<div class="score-wrap">
+<div class="score-wrap" id="scoreWrap">
   <div class="arc-container">
     <svg id="arcSvg" width="180" height="100" viewBox="0 0 180 100">
       <path id="arcBg" fill="none" stroke="#1c2d42" stroke-width="9" stroke-linecap="round"/>
@@ -375,6 +376,16 @@ const T = {
     credDesc:(s)=> s>65?'הדובר מציג מאפייני קול יציבים ועקביים.': s>38?'זוהו מספר מאפיינים חשודים. מומלץ לשים לב.':'מאפייני קול מרובים מעידים על מתח גבוה.',
     metricNorm:'תקין', metricHigh:'גבוה', metricLow:'נמוך', metricAlert:'חריגה',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
+    expPrefix:'הסבר: ',
+    expSep:', ',
+    expJitter:'רעידת קול גבוהה',
+    expJitterMid:'רעידת קול בינונית',
+    expPause:'פאוזות חשודות תכופות באמצע משפט',
+    expPauseMid:'פאוזות קצרות באמצע דיבור',
+    expRate:'שינוי עקבי בקצב הדיבור',
+    expPitch:'עלייה בגובה הקול',
+    expVolume:'תנודות חדה בעוצמת הקול',
+    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.',
   },
   en:{
     waiting:'Waiting', calibrating:'⏳ Calibrating...', eqTitle:'Real-Time Voice Feature Analysis',
@@ -392,6 +403,16 @@ const T = {
     credDesc:(s)=> s>65?'Speaker shows stable and consistent voice features.': s>38?'Several suspicious features detected. Pay attention.':'Multiple voice features indicate high stress levels.',
     metricNorm:'Normal', metricHigh:'High', metricLow:'Low', metricAlert:'Alert',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
+    expPrefix:'הסבר: ',
+    expSep:', ',
+    expJitter:'רעידת קול גבוהה',
+    expJitterMid:'רעידת קול בינונית',
+    expPause:'פאוזות חשודות תכופות באמצע משפט',
+    expPauseMid:'פאוזות קצרות באמצע דיבור',
+    expRate:'שינוי עקבי בקצב הדיבור',
+    expPitch:'עלייה בגובה הקול',
+    expVolume:'תנודות חדה בעוצמת הקול',
+    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.',
   },
   ar:{
     waiting:'انتظار',
@@ -425,6 +446,16 @@ const T = {
     metricLow:'منخفض',
     metricAlert:'تنبيه',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
+    expPrefix:'السبب: ',
+    expSep:'، ',
+    expJitter:'اهتزاز صوتي مرتفع',
+    expJitterMid:'اهتزاز صوتي متوسط',
+    expPause:'توقفات مشبوهة وسط الجملة',
+    expPauseMid:'توقفات قصيرة أثناء الكلام',
+    expRate:'تغيير متسق في سرعة الكلام',
+    expPitch:'ارتفاع في طبقة الصوت',
+    expVolume:'تغييرات حادة في مستوى الصوت',
+    expNone:'لم ترصد شذوذات مهمة — مميزات الصوت مستقرة.',
   }
 };
 let lang='he';
@@ -544,14 +575,52 @@ function detectPitch(buf,sr){
   return (bC>0.9&&bO>0)?sr/bO:0;
 }
 
+// ── SPEECH RATE TREND TRACKING ──
+let rateHistory = [];        // last N speech rate readings
+let midSentencePauses = 0;   // pauses detected mid-sentence
+let lastVoiceFrame = 0;      // last frame with voice
+let shortPauseCount = 0;     // pauses < 800ms (mid-sentence)
+let longPauseCount = 0;      // pauses > 1200ms (sentence end - normal)
+let inPause = false;
+let pauseStartFrame = 0;
+
 // ── CREDIBILITY ──
-function computeCred({pitchVar,pauseRatio,speechRate,jitter,volume}){
-  const p=Math.max(0,100-pitchVar*2.5);
-  const pa=Math.max(0,100-pauseRatio*120);
-  const r=speechRate>0?Math.max(0,100-Math.abs(speechRate-3.5)*18):60;
-  const j=Math.max(0,100-jitter*400);
-  const v=Math.max(0,100-Math.abs(volume-0.08)*400);
-  return Math.min(100,Math.max(0,p*0.25+pa*0.2+r*0.2+j*0.2+v*0.15));
+function computeCred({pitchVar, pauseRatio, speechRate, jitter, volume, midPauseScore, rateTrendScore}){
+  // Pitch instability (30%)
+  const p = Math.max(0, 100 - pitchVar * 2.5);
+  // Jitter (25%)
+  const j = Math.max(0, 100 - jitter * 400);
+  // Volume instability (15%)
+  const v = Math.max(0, 100 - Math.abs(volume - 0.08) * 400);
+  // Mid-sentence pause penalty (20%) — only punish short unexpected pauses
+  const pa = Math.max(0, 100 - midPauseScore * 3);
+  // Speech rate trend (10%) — only punish consistent directional change 3+ times
+  const r = Math.max(0, 100 - rateTrendScore * 15);
+  return Math.min(100, Math.max(0, p*0.30 + j*0.25 + v*0.15 + pa*0.20 + r*0.10));
+}
+
+// ── RATE TREND DETECTOR ──
+// Returns penalty score 0-5 based on consistent direction changes
+function computeRateTrend(history){
+  if(history.length < 4) return 0;
+  const recent = history.slice(-6);
+  let sameDir = 0;
+  let prevDir = 0;
+  for(let i=1;i<recent.length;i++){
+    const dir = recent[i] > recent[i-1] ? 1 : recent[i] < recent[i-1] ? -1 : 0;
+    if(dir !== 0 && dir === prevDir) sameDir++;
+    prevDir = dir || prevDir;
+  }
+  // 3+ consistent changes = suspicious
+  return Math.min(5, Math.max(0, sameDir - 2));
+}
+
+// ── MID-SENTENCE PAUSE DETECTOR ──
+// Returns score 0-20 based on short unexpected pauses
+function computeMidPauseScore(shortPauses, longPauses){
+  // Long pauses (sentence end) are normal — don't penalise
+  // Short pauses mid-sentence are suspicious
+  return Math.min(20, shortPauses * 2);
 }
 
 // ── HISTORY CHART ──
@@ -655,12 +724,15 @@ function buildSummary(){
   const score=Math.round(historyData.reduce((a,b)=>a+b,0)/historyData.length);
   const col=credColor(score);
 
+  // Show arc with final score
+  document.getElementById('scoreWrap').classList.remove('hidden-live');
+  updateArc(score);
+
   // verdict
   document.getElementById('verdictScore').textContent=score+'%';
   document.getElementById('verdictScore').style.color=col;
   document.getElementById('verdictLabel').textContent=credLabel(score);
   document.getElementById('verdictLabel').style.color=col;
-  document.getElementById('verdictDesc').textContent=t('credDesc',score);
   document.getElementById('verdictBox').style.borderColor=col+'50';
   document.getElementById('verdictBox').style.background=col+'10';
 
@@ -673,10 +745,24 @@ function buildSummary(){
   };
   setCard('sPitch','sPitchNote',ap,' Hz', ap>200?t('metricHigh'):t('metricNorm'));
   setCard('sJitter','sJitterNote',aj,'%',aj>60?t('metricAlert'):aj>30?t('metricHigh'):t('metricNorm'));
-  setCard('sPause','sPauseNote',apa,'%',apa>55?t('metricAlert'):apa>30?t('metricHigh'):t('metricNorm'));
-  setCard('sRate','sRateNote',ar,'%',ar>65?t('metricAlert'):ar>40?t('metricHigh'):t('metricNorm'));
+  setCard('sPause','sPauseNote',apa,'',apa>8?t('metricAlert'):apa>3?t('metricHigh'):t('metricNorm'));
+  setCard('sRate','sRateNote',ar,'%',ar>60?t('metricAlert'):ar>30?t('metricHigh'):t('metricNorm'));
   setCard('sVolume','sVolumeNote',av,'%',av>75?t('metricAlert'):t('metricNorm'));
   setCard('sBreath','sBreathNote',ab,'%',ab>60?t('metricAlert'):t('metricNorm'));
+
+  // ── Explanation of score ──
+  const reasons = [];
+  if(aj>60) reasons.push(t('expJitter'));
+  else if(aj>30) reasons.push(t('expJitterMid'));
+  if(apa>8) reasons.push(t('expPause'));
+  else if(apa>3) reasons.push(t('expPauseMid'));
+  if(ar>60) reasons.push(t('expRate'));
+  if(ap>200) reasons.push(t('expPitch'));
+  if(av>75) reasons.push(t('expVolume'));
+  const explanation = reasons.length > 0
+    ? t('expPrefix') + reasons.join(t('expSep'))
+    : t('expNone');
+  document.getElementById('verdictDesc').textContent=explanation;
 
   document.getElementById('sDur').textContent=formatTime(callDuration);
   document.getElementById('sMarks').textContent=markCounter||t('noMarks');
@@ -706,6 +792,8 @@ async function startAnalysis(){
     historyData=[];marks=[];markTimes=[];markCounter=0;
     alertCooldown=false;alertCooldownBars={};
     sumPitch=[];sumJitter=[];sumPause=[];sumRate=[];sumVolume=[];sumBreath=[];
+    rateHistory=[];midSentencePauses=0;shortPauseCount=0;longPauseCount=0;
+    inPause=false;pauseStartFrame=0;lastVoiceFrame=0;
     startTime=Date.now();calibrating=true;
 
     document.getElementById('calibTag').textContent=t('calibrating');
@@ -734,7 +822,24 @@ async function startAnalysis(){
         if(pitchHist.length>80) pitchHist.shift();
         if(lastPitch>0){jitterAcc+=Math.abs(pitch-lastPitch)/Math.max(pitch,lastPitch);sampleCount++;}
         lastPitch=pitch;
-      } else { lastPitch=0; }
+        // Mid-sentence pause detection: was in pause → now voice resumed
+        if(inPause){
+          const pauseLen = totalFrames - pauseStartFrame;
+          // Short pause (< ~15 frames = ~700ms) mid-sentence = suspicious
+          if(pauseLen < 15) shortPauseCount++;
+          // Long pause (> 25 frames) = natural sentence end = ignore
+          else if(pauseLen > 25) longPauseCount++;
+          inPause=false;
+        }
+        lastVoiceFrame=totalFrames;
+      } else {
+        lastPitch=0;
+        // Start tracking pause only if we were just speaking (within 3 frames)
+        if(!inPause && totalFrames-lastVoiceFrame <= 3 && lastVoiceFrame>0){
+          inPause=true;
+          pauseStartFrame=totalFrames;
+        }
+      }
 
       if(totalFrames%15===0){
         if(totalFrames<90)return;
@@ -746,26 +851,34 @@ async function startAnalysis(){
           document.getElementById('markBtn').disabled=false;
           document.getElementById('sumBtn').disabled=false;
           document.getElementById('sumBtn').classList.add('highlight');
+          // Hide arc during live analysis
+          document.getElementById('scoreWrap').classList.add('hidden-live');
         }
 
         const avg=pitchHist.length>0?pitchHist.reduce((a,b)=>a+b,0)/pitchHist.length:0;
         const variance=pitchHist.length>1?Math.sqrt(pitchHist.reduce((a,p)=>a+(p-avg)**2,0)/pitchHist.length):0;
-        const pauseRatio=totalFrames>0?(totalFrames-voiceFrames)/totalFrames:0;
         const speechRate=voiceFrames/(totalFrames/21.5);
         const jitter=sampleCount>0?jitterAcc/sampleCount:0;
+
+        // Track speech rate history for trend detection
+        rateHistory.push(speechRate);
+        if(rateHistory.length>10) rateHistory.shift();
+
+        const rateTrendScore = computeRateTrend(rateHistory);
+        const midPauseScore = computeMidPauseScore(shortPauseCount, longPauseCount);
 
         // compute bar percentages
         const pitchPct=Math.min(100,Math.max(0,(avg-80)/3.2));
         const jitterPct=Math.min(100,jitter*800);
-        const pausePct=Math.min(100,pauseRatio*100);
-        const ratePct=Math.min(100,Math.abs(speechRate-3.5)*20);
+        const pausePct=Math.min(100,(shortPauseCount/Math.max(1,totalFrames/21.5))*300);
+        const ratePct=Math.min(100,rateTrendScore*20);
         const volPct=Math.min(100,rms*500);
         const breathPct=Math.min(100,breathEnergy*2000);
 
         // update EQ bars
         updateBar('pitch',  pitchPct,  avg>0?Math.round(avg)+' Hz':'--');
         updateBar('jitter', jitterPct, (jitter*100).toFixed(1)+'%');
-        updateBar('pause',  pausePct,  Math.round(pauseRatio*100)+'%');
+        updateBar('pause',  pausePct,  shortPauseCount+' '+t('pauses'));
         updateBar('rate',   ratePct,   speechRate.toFixed(1));
         updateBar('volume', volPct,    Math.round(volPct)+'%');
         updateBar('breath', breathPct, Math.round(breathPct)+'%');
@@ -773,14 +886,14 @@ async function startAnalysis(){
         // save for summary
         if(avg>0) sumPitch.push(Math.round(avg));
         sumJitter.push(Math.round(jitterPct));
-        sumPause.push(Math.round(pausePct));
-        sumRate.push(Math.round(ratePct));
+        sumPause.push(shortPauseCount);
+        sumRate.push(Math.round(rateTrendScore*20));
         sumVolume.push(Math.round(volPct));
         sumBreath.push(Math.round(breathPct));
 
         prevCred=credibility;
-        credibility=computeCred({pitchVar:variance,pauseRatio,speechRate,jitter,volume:rms});
-        updateArc(credibility);
+        credibility=computeCred({pitchVar:variance,pauseRatio:0,speechRate,jitter,volume:rms,midPauseScore,rateTrendScore});
+        // Don't update arc live — only used in summary
         checkAlert(credibility,prevCred);
       }
     };
@@ -822,6 +935,7 @@ function stopAnalysis(){
   document.getElementById('markBtn').disabled=true;
   document.getElementById('alertBox').classList.remove('show');
   resetArc();
+  document.getElementById('scoreWrap').classList.remove('hidden-live');
   // reset bars
   ['pitch','jitter','pause','rate','volume','breath'].forEach(n=>{
     const f=document.getElementById('fill-'+n);
