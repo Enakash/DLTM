@@ -294,6 +294,13 @@ body{
       <div class="arc-lbl" id="arcLbl" data-key="waiting">ממתין</div>
     </div>
   </div>
+  <div class="gain-row" style="display:flex;align-items:center;gap:10px;margin-top:10px;width:100%;max-width:280px;">
+    <span style="font-size:10px;color:var(--muted);font-family:var(--mono);white-space:nowrap;" data-key="gainLabel">רגישות</span>
+    <input type="range" id="gainSlider" min="1" max="12" value="4" step="0.5"
+      oninput="updateGain(this.value)"
+      style="flex:1;accent-color:var(--accent);cursor:pointer;height:4px;">
+    <span id="gainVal" style="font-size:11px;color:var(--accent);font-family:var(--mono);min-width:28px;">x4</span>
+  </div>
   <div class="calib-tag" id="calibTag" data-key="calibrating">⏳ מכייל...</div>
 </div>
 
@@ -547,6 +554,17 @@ function deleteContact(){
 
 // ── SAVE SHEET ──
 var pendingSaveData=null;
+var gainLevel=4;
+var gainNode=null;
+function updateGain(val){
+  gainLevel=parseFloat(val);
+  document.getElementById('gainVal').textContent='x'+gainLevel;
+  // Update live if active
+  if(typeof gainNode!=='undefined'&&gainNode){
+    try{gainNode.gain.value=gainLevel;}catch(e){}
+  }
+}
+
 function openSaveSheet(){
   var contacts=loadContacts(), keys=Object.keys(contacts);
   document.getElementById('saveSheetSub').textContent=
@@ -623,7 +641,7 @@ const T = {
     credDesc:(s)=> s>65?'הדובר מציג מאפייני קול יציבים ועקביים.': s>38?'זוהו מספר מאפיינים חשודים. מומלץ לשים לב.':'מאפייני קול מרובים מעידים על מתח גבוה.',
     metricNorm:'תקין', metricHigh:'גבוה', metricLow:'נמוך', metricAlert:'חריגה',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
-    contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
+    gainLabel:'רגישות', contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
     saveScoreLabel:'ציון: ', savedMsg:'נשמר', saveInputPlaceholder:'שם חדש...',
     expPrefix:'הסבר: ',
     expSep:', ',
@@ -652,7 +670,7 @@ const T = {
     credDesc:(s)=> s>65?'Speaker shows stable and consistent voice features.': s>38?'Several suspicious features detected. Pay attention.':'Multiple voice features indicate high stress levels.',
     metricNorm:'Normal', metricHigh:'High', metricLow:'Low', metricAlert:'Alert',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
-    contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
+    gainLabel:'רגישות', contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
     saveScoreLabel:'ציון: ', savedMsg:'נשמר', saveInputPlaceholder:'שם חדש...',
     expPrefix:'הסבר: ',
     expSep:', ',
@@ -697,7 +715,7 @@ const T = {
     metricLow:'منخفض',
     metricAlert:'تنبيه',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
-    contactsUnit:'أشخاص', contactsEmpty:'لا توجد مكالمات.', sessionsUnit:'مكالمات', avgLabel:'متوسط',
+    gainLabel:'الحساسية', contactsUnit:'أشخاص', contactsEmpty:'لا توجد مكالمات.', sessionsUnit:'مكالمات', avgLabel:'متوسط',
     saveScoreLabel:'الدرجة: ', savedMsg:'تم الحفظ', saveInputPlaceholder:'اسم...',
     expPrefix:'السبب: ',
     expSep:'، ',
@@ -1054,7 +1072,7 @@ function _stopAll(){
   if(audioCtx){audioCtx.close();audioCtx=null;}
   if(histInterval){clearInterval(histInterval);histInterval=null;}
   if(durInterval){clearInterval(durInterval);durInterval=null;}
-  active=false; calibrating=false;
+  active=false; calibrating=false; gainNode=null;
 }
 
 function _resetUI(){
@@ -1081,13 +1099,26 @@ async function startAnalysis(){
   pendingSaveData=null;
   summaryVisible=false;
   try{
-    stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    stream=await navigator.mediaDevices.getUserMedia({
+      audio:{
+        echoCancellation:false,
+        noiseSuppression:false,
+        autoGainControl:false,
+        channelCount:1,
+        sampleRate:44100
+      },
+      video:false
+    });
     audioCtx=new(window.AudioContext||window.webkitAudioContext)();
     const src=audioCtx.createMediaStreamSource(stream);
     analyser=audioCtx.createAnalyser(); analyser.fftSize=2048;
-    src.connect(analyser);
+    // Boost input gain for speaker pickup
+    gainNode=audioCtx.createGain();
+    gainNode.gain.value=gainLevel;
+    src.connect(gainNode);
+    gainNode.connect(analyser);
     processor=audioCtx.createScriptProcessor(2048,1,1);
-    src.connect(processor); processor.connect(audioCtx.destination);
+    gainNode.connect(processor); processor.connect(audioCtx.destination);
 
     pitchHist=[];voiceFrames=0;totalFrames=0;
     lastPitch=0;jitterAcc=0;sampleCount=0;
