@@ -77,6 +77,55 @@ body{
 .alert.show{display:flex;}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-5px);}to{opacity:1;transform:none;}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+.nav-tabs{width:100%;display:flex;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:57px;z-index:19;}
+.nav-tab{flex:1;padding:11px 0;font-size:12px;font-weight:600;text-align:center;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:var(--font);border-bottom:2px solid transparent;transition:all 0.2s;}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.screen{width:100%;display:none;flex-direction:column;align-items:center;}
+.screen.active{display:flex;}
+.contacts-wrap{width:calc(100% - 36px);max-width:424px;margin-top:16px;}
+.contacts-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.contacts-title{font-size:13px;font-weight:600;color:var(--muted2);}
+.contacts-count{font-size:11px;font-family:var(--mono);color:var(--muted);}
+.contacts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.contact-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 12px;cursor:pointer;transition:border-color 0.2s,transform 0.15s;overflow:hidden;}
+.contact-card:active{transform:scale(0.97);}
+.contact-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.contact-meta{font-size:10px;color:var(--muted);margin-bottom:8px;font-family:var(--mono);}
+.contact-score-badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:10px;font-size:11px;font-weight:700;font-family:var(--mono);margin-bottom:8px;}
+.contact-mini-chart{width:100%;height:36px;display:block;border-radius:4px;}
+.contacts-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;line-height:1.7;grid-column:span 2;}
+.detail-overlay{position:fixed;inset:0;background:#000000cc;z-index:100;display:none;align-items:flex-end;justify-content:center;}
+.detail-overlay.show{display:flex;}
+.detail-sheet{width:100%;max-width:480px;background:var(--surface);border-radius:20px 20px 0 0;padding:20px 20px 40px;max-height:85vh;overflow-y:auto;}
+.detail-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px;}
+.detail-title{font-size:18px;font-weight:700;margin-bottom:4px;}
+.detail-meta{font-size:12px;color:var(--muted);margin-bottom:16px;font-family:var(--mono);}
+.session-list{display:flex;flex-direction:column;gap:10px;}
+.session-row{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;}
+.session-date{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.session-score{font-size:18px;font-weight:700;font-family:var(--mono);}
+.session-dur{font-size:11px;color:var(--muted);}
+.detail-close{width:100%;padding:13px;margin-top:16px;border-radius:10px;border:1px solid var(--border2);background:var(--surface2);color:var(--muted2);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;}
+.detail-delete{width:100%;padding:10px;margin-top:8px;border-radius:10px;border:1px solid #ef444430;background:#ef444410;color:#fca5a5;font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;}
+.save-sheet{position:fixed;inset:0;background:#000000cc;z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.save-sheet.show{display:flex;}
+.save-sheet-box{width:100%;max-width:480px;background:var(--surface);border-radius:20px 20px 0 0;padding:20px 20px 40px;max-height:80vh;overflow-y:auto;}
+.save-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 14px;}
+.save-sheet-title{font-size:15px;font-weight:700;margin-bottom:4px;}
+.save-sheet-sub{font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:16px;}
+.save-new-row{display:flex;gap:10px;margin-bottom:14px;}
+.save-new-input{flex:1;padding:10px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;outline:none;}
+.save-new-input:focus{border-color:var(--accent);}
+.save-add-btn{padding:10px 16px;border-radius:8px;border:none;background:var(--accent);color:white;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.save-divider{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.save-contact-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.save-contact-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color 0.15s;}
+.save-contact-row:active{border-color:var(--accent);}
+.scr-name{font-size:14px;font-weight:600;}
+.scr-meta{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.scr-score{font-size:14px;font-weight:700;font-family:var(--mono);}
+.save-cancel-btn{width:100%;padding:13px;border-radius:10px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-family:var(--font);font-size:14px;cursor:pointer;}
+.save-sum-btn{width:100%;padding:14px;margin-top:14px;border-radius:10px;border:none;background:var(--accent);color:white;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;display:none;}
 
 /* ── EQ BARS SECTION ── */
 .eq-section{
@@ -228,6 +277,8 @@ body{
     </div>
   </div>
 </div>
+<div class="nav-tabs"><button class="nav-tab active" id="tabAnalyze" onclick="switchTab('analyze')">ניתוח</button><button class="nav-tab" id="tabContacts" onclick="switchTab('contacts')">אנשי קשר</button></div>
+<div class="screen active" id="screenAnalyze">
 
 <!-- SCORE ARC -->
 <div class="score-wrap" id="scoreWrap">
@@ -348,16 +399,212 @@ body{
   <div class="sum-row"><span class="sum-key" data-key="sumDurLabel">משך שיחה</span><span class="sum-val" id="sDur">—</span></div>
   <div class="sum-row"><span class="sum-key" data-key="sumMarksLabel">רגעים מסומנים</span><span class="sum-val" id="sMarks">—</span></div>
   <div class="mark-chips" id="markChips"></div>
+  <button class="save-sum-btn" id="saveSumBtn" onclick="openSaveSheet()">שמור שיחה</button>
 </div>
 
 <!-- BUTTONS -->
 <div class="btn-row" id="btnRow">
   <button class="main-btn btn-start" id="mainBtn" onclick="toggleAnalysis()" data-key="startBtn">התחל ניתוח</button>
-  <button class="main-btn btn-summary" id="sumBtn" onclick="toggleSummary()" data-key="summaryBtn" disabled>סיכום</button>
+  <button class="main-btn btn-summary" id="sumBtn" onclick="finishAndSummarize()" data-key="summaryBtn" disabled>סיכום</button>
 </div>
 <div class="err-msg" id="errMsg" data-key="errMsg">לא ניתן לגשת למיקרופון.</div>
+</div><!-- /screenAnalyze -->
+
+<!-- CONTACTS SCREEN -->
+<div class="screen" id="screenContacts">
+  <div class="contacts-wrap">
+    <div class="contacts-header">
+      <span class="contacts-title">אנשי קשר</span>
+      <span class="contacts-count" id="contactsCount"></span>
+    </div>
+    <div class="contacts-grid" id="contactsGrid">
+      <div class="contacts-empty" id="contactsEmpty">עדיין אין שיחות שמורות.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT DETAIL -->
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetailOverlay(event)">
+  <div class="detail-sheet">
+    <div class="detail-handle"></div>
+    <div class="detail-title" id="detailName"></div>
+    <div class="detail-meta" id="detailMeta"></div>
+    <div class="session-list" id="detailSessions"></div>
+    <button class="detail-close" onclick="closeDetail()">סגור</button>
+    <button class="detail-delete" onclick="deleteContact()">מחק איש קשר</button>
+  </div>
+</div>
+
+<!-- SAVE SHEET -->
+<div class="save-sheet" id="saveSheet" onclick="closeSaveOverlay(event)">
+  <div class="save-sheet-box">
+    <div class="save-handle"></div>
+    <div class="save-sheet-title">שמור שיחה</div>
+    <div class="save-sheet-sub" id="saveSheetSub"></div>
+    <div class="save-new-row">
+      <input class="save-new-input" id="saveNewInput" maxlength="40" placeholder="שם חדש..."/>
+      <button class="save-add-btn" onclick="saveToNew()">הוסף</button>
+    </div>
+    <div class="save-divider" id="saveDivider" style="display:none">או בחר קיים</div>
+    <div class="save-contact-list" id="saveContactList"></div>
+    <button class="save-cancel-btn" onclick="closeSaveSheet()">בטל</button>
+  </div>
+</div>
 
 <script>
+
+// ── STORAGE ──
+function loadContacts(){try{return JSON.parse(localStorage.getItem('liedar_c')||'{}');}catch(e){return {};}}
+function saveContacts(d){try{localStorage.setItem('liedar_c',JSON.stringify(d));}catch(e){}}
+
+// ── TABS ──
+function switchTab(tab){
+  document.getElementById('screenAnalyze').classList.toggle('active',tab==='analyze');
+  document.getElementById('screenContacts').classList.toggle('active',tab==='contacts');
+  document.getElementById('tabAnalyze').classList.toggle('active',tab==='analyze');
+  document.getElementById('tabContacts').classList.toggle('active',tab==='contacts');
+  if(tab==='contacts') renderContacts();
+}
+
+// ── MINI CHART ──
+function drawMiniChart(canvas,scores){
+  var dpr=window.devicePixelRatio||1;
+  canvas.width=canvas.offsetWidth*dpr; canvas.height=36*dpr;
+  var ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,pd=3;
+  ctx.fillStyle='#080c14'; ctx.fillRect(0,0,w,h);
+  if(!scores||scores.length<2) return;
+  for(var i=1;i<scores.length;i++){
+    var v=scores[i],pv=scores[i-1];
+    var x=pd+(i/(scores.length-1))*(w-pd*2), y=h-pd-(v/100)*(h-pd*2);
+    var px2=pd+((i-1)/(scores.length-1))*(w-pd*2), py2=h-pd-(pv/100)*(h-pd*2);
+    var col=v>65?'#10b981':v>38?'#f59e0b':'#ef4444';
+    ctx.strokeStyle=col; ctx.lineWidth=2; ctx.shadowColor=col; ctx.shadowBlur=2;
+    ctx.beginPath(); ctx.moveTo(px2,py2); ctx.lineTo(x,y); ctx.stroke();
+  }
+}
+
+// ── RENDER CONTACTS ──
+var currentContactKey=null;
+function renderContacts(){
+  var contacts=loadContacts(), keys=Object.keys(contacts);
+  var grid=document.getElementById('contactsGrid');
+  var cnt=document.getElementById('contactsCount');
+  cnt.textContent=keys.length>0?keys.length+' '+t('contactsUnit'):'';
+  if(keys.length===0){
+    grid.innerHTML='<div class="contacts-empty">'+t('contactsEmpty')+'</div>';
+    return;
+  }
+  grid.innerHTML='';
+  keys.sort(function(a,b){
+    var la=(contacts[a].sessions.slice(-1)[0]||{date:0}).date;
+    var lb=(contacts[b].sessions.slice(-1)[0]||{date:0}).date;
+    return lb-la;
+  }).forEach(function(key){
+    var ct=contacts[key], ss=ct.sessions||[];
+    var avg=ss.length?Math.round(ss.reduce(function(s,x){return s+x.score;},0)/ss.length):0;
+    var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
+    var last=ss.length?new Date(ss.slice(-1)[0].date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit'}):'';
+    var col=avg>65?'#10b981':avg>38?'#f59e0b':'#ef4444';
+    var card=document.createElement('div');
+    card.className='contact-card';
+    card.innerHTML='<div class="contact-name">'+ct.name+'</div>'
+      +'<div class="contact-meta">'+ss.length+' '+t('sessionsUnit')+' · '+last+'</div>'
+      +'<div class="contact-score-badge" style="background:'+col+'18;color:'+col+'">'+avg+'% '+t('avgLabel')+'</div>'
+      +'<canvas class="contact-mini-chart" id="mc-'+key+'"></canvas>';
+    (function(k,scores){
+      card.onclick=function(){openDetail(k);};
+      setTimeout(function(){var mc=document.getElementById('mc-'+k);if(mc)drawMiniChart(mc,scores);},60);
+    })(key, ss.map(function(s){return s.score;}));
+    grid.appendChild(card);
+  });
+}
+
+// ── CONTACT DETAIL ──
+function openDetail(key){
+  currentContactKey=key;
+  var ct=loadContacts()[key]; if(!ct) return;
+  document.getElementById('detailName').textContent=ct.name;
+  document.getElementById('detailMeta').textContent=ct.sessions.length+' '+t('sessionsUnit');
+  var list=document.getElementById('detailSessions'); list.innerHTML='';
+  var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
+  ct.sessions.slice().reverse().forEach(function(s){
+    var col=s.score>65?'#10b981':s.score>38?'#f59e0b':'#ef4444';
+    var dt=new Date(s.date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+    var row=document.createElement('div'); row.className='session-row';
+    row.innerHTML='<div><div class="session-date">'+dt+'</div><div class="session-dur">'+(s.duration||'')+'</div></div>'
+      +'<div class="session-score" style="color:'+col+'">'+s.score+'%</div>';
+    list.appendChild(row);
+  });
+  document.getElementById('detailOverlay').classList.add('show');
+}
+function closeDetail(){document.getElementById('detailOverlay').classList.remove('show');}
+function closeDetailOverlay(e){if(e.target===document.getElementById('detailOverlay'))closeDetail();}
+function deleteContact(){
+  if(!currentContactKey) return;
+  var ct=loadContacts(); delete ct[currentContactKey]; saveContacts(ct);
+  closeDetail(); renderContacts();
+}
+
+// ── SAVE SHEET ──
+var pendingSaveData=null;
+function openSaveSheet(){
+  var contacts=loadContacts(), keys=Object.keys(contacts);
+  document.getElementById('saveSheetSub').textContent=
+    pendingSaveData?t('saveScoreLabel')+pendingSaveData.score+'% · '+pendingSaveData.duration:'';
+  var list=document.getElementById('saveContactList');
+  var div=document.getElementById('saveDivider');
+  list.innerHTML='';
+  if(keys.length>0){
+    div.style.display='block';
+    var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
+    keys.forEach(function(key){
+      var ct=contacts[key], ss=ct.sessions||[];
+      var avg=ss.length?Math.round(ss.reduce(function(s,x){return s+x.score;},0)/ss.length):0;
+      var last=ss.length?new Date(ss.slice(-1)[0].date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit'}):'';
+      var col=avg>65?'#10b981':avg>38?'#f59e0b':'#ef4444';
+      var row=document.createElement('div'); row.className='save-contact-row';
+      row.innerHTML='<div><div class="scr-name">'+ct.name+'</div>'
+        +'<div class="scr-meta">'+ss.length+' '+t('sessionsUnit')+' · '+last+'</div></div>'
+        +'<div class="scr-score" style="color:'+col+'">'+avg+'%</div>';
+      (function(k){row.onclick=function(){saveToExisting(k);};})(key);
+      list.appendChild(row);
+    });
+  } else { div.style.display='none'; }
+  document.getElementById('saveNewInput').value='';
+  document.getElementById('saveSheet').style.display='flex';
+  setTimeout(function(){document.getElementById('saveNewInput').focus();},150);
+}
+function closeSaveSheet(){document.getElementById('saveSheet').style.display='none';}
+function closeSaveOverlay(e){if(e.target===document.getElementById('saveSheet'))closeSaveSheet();}
+function _doSave(name,key){
+  var contacts=loadContacts();
+  if(!contacts[key]) contacts[key]={name:name,sessions:[]};
+  contacts[key].sessions.push({
+    date:Date.now(),
+    score:pendingSaveData?pendingSaveData.score:0,
+    duration:pendingSaveData?pendingSaveData.duration:''
+  });
+  saveContacts(contacts);
+  closeSaveSheet();
+  pendingSaveData=null;
+  showAlert('✓ '+name+' - '+t('savedMsg'),2000);
+}
+function saveToNew(){
+  var name=document.getElementById('saveNewInput').value.trim();
+  if(!name){
+    document.getElementById('saveNewInput').style.borderColor='var(--danger)';
+    setTimeout(function(){document.getElementById('saveNewInput').style.borderColor='';},1200);
+    return;
+  }
+  var contacts=loadContacts();
+  var existKey=Object.keys(contacts).find(function(k){return contacts[k].name===name;});
+  _doSave(name, existKey||('k'+Date.now()));
+}
+function saveToExisting(key){
+  var contacts=loadContacts(); if(!contacts[key]) return;
+  _doSave(contacts[key].name, key);
+}
+
 // ── TRANSLATIONS ──
 const T = {
   he:{
@@ -365,9 +612,9 @@ const T = {
     pitch:'גובה קול', jitter:'רעידת קול', pauses:'פאוזות',
     rate:'קצב דיבור', volume:'עוצמת קול', breath:'קצב נשימה',
     markBtn:'סמן רגע חשוד', history:'היסטוריה',
-    summaryTitle:'סיכום שיחה', summaryBtn:'סיכום',
+    summaryTitle:'סיכום שיחה', summaryBtn:'סיים וסכם',
     sumDurLabel:'משך שיחה', sumMarksLabel:'רגעים מסומנים',
-    startBtn:'התחל ניתוח', stopBtn:'עצור ניתוח',
+    startBtn:'התחל ניתוח', stopBtn:'ביטול', finishBtn:'סיים וסכם',
     errMsg:'לא ניתן לגשת למיקרופון — בדוק הרשאות.',
     noMarks:'אין', waitingData:'ממתין לנתונים...',
     alertDrop:'ירידה חדה באמינות',
@@ -376,6 +623,8 @@ const T = {
     credDesc:(s)=> s>65?'הדובר מציג מאפייני קול יציבים ועקביים.': s>38?'זוהו מספר מאפיינים חשודים. מומלץ לשים לב.':'מאפייני קול מרובים מעידים על מתח גבוה.',
     metricNorm:'תקין', metricHigh:'גבוה', metricLow:'נמוך', metricAlert:'חריגה',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
+    contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
+    saveScoreLabel:'ציון: ', savedMsg:'נשמר', saveInputPlaceholder:'שם חדש...',
     expPrefix:'הסבר: ',
     expSep:', ',
     expJitter:'רעידת קול גבוהה',
@@ -392,9 +641,9 @@ const T = {
     pitch:'Pitch', jitter:'Jitter', pauses:'Pauses',
     rate:'Speech Rate', volume:'Volume', breath:'Breath Rate',
     markBtn:'Mark Suspicious Moment', history:'History',
-    summaryTitle:'Call Summary', summaryBtn:'Summary',
+    summaryTitle:'Call Summary', summaryBtn:'Finish & Summarize',
     sumDurLabel:'Call Duration', sumMarksLabel:'Marked Moments',
-    startBtn:'Start Analysis', stopBtn:'Stop Analysis',
+    startBtn:'Start Analysis', stopBtn:'Cancel', finishBtn:'Finish & Summarize',
     errMsg:'Microphone access denied — check permissions.',
     noMarks:'None', waitingData:'Waiting for data...',
     alertDrop:'Sharp drop in credibility',
@@ -403,6 +652,8 @@ const T = {
     credDesc:(s)=> s>65?'Speaker shows stable and consistent voice features.': s>38?'Several suspicious features detected. Pay attention.':'Multiple voice features indicate high stress levels.',
     metricNorm:'Normal', metricHigh:'High', metricLow:'Low', metricAlert:'Alert',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
+    contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
+    saveScoreLabel:'ציון: ', savedMsg:'נשמר', saveInputPlaceholder:'שם חדש...',
     expPrefix:'הסבר: ',
     expSep:', ',
     expJitter:'רעידת קול גבוהה',
@@ -427,11 +678,11 @@ const T = {
     markBtn:'تحديد لحظة مشبوهة',
     history:'السجل',
     summaryTitle:'ملخص المكالمة',
-    summaryBtn:'ملخص',
+    summaryBtn:'إنهاء وتلخيص',
     sumDurLabel:'مدة المكالمة',
     sumMarksLabel:'اللحظات المحددة',
     startBtn:'بدء التحليل',
-    stopBtn:'إيقاف التحليل',
+    stopBtn:'إلغاء', finishBtn:'إنهاء وتلخيص',
     errMsg:'تعذّر الوصول إلى الميكروفون — تحقّق من الأذونات.',
     noMarks:'لا يوجد',
     waitingData:'في انتظار البيانات...',
@@ -446,6 +697,8 @@ const T = {
     metricLow:'منخفض',
     metricAlert:'تنبيه',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
+    contactsUnit:'أشخاص', contactsEmpty:'لا توجد مكالمات.', sessionsUnit:'مكالمات', avgLabel:'متوسط',
+    saveScoreLabel:'الدرجة: ', savedMsg:'تم الحفظ', saveInputPlaceholder:'اسم...',
     expPrefix:'السبب: ',
     expSep:'، ',
     expJitter:'اهتزاز صوتي مرتفع',
@@ -771,11 +1024,61 @@ function buildSummary(){
 }
 
 // ── START / STOP ──
-async function toggleAnalysis(){ if(active)stopAnalysis(); else await startAnalysis(); }
+async function toggleAnalysis(){ if(active)cancelAnalysis(); else await startAnalysis(); }
+
+function cancelAnalysis(){
+  _stopAll();
+  _resetUI();
+  historyData=[];
+  document.getElementById('summaryPanel').classList.remove('show');
+  document.getElementById('saveSumBtn').style.display='none';
+}
+
+function finishAndSummarize(){
+  if(!active) return;
+  _stopAll();
+  _resetUI();
+  if(historyData.length>3){
+    buildSummary();
+    document.getElementById('summaryPanel').classList.add('show');
+    var fs=Math.round(historyData.reduce(function(a,b){return a+b;},0)/historyData.length);
+    pendingSaveData={score:fs, duration:formatTime(callDuration)};
+    document.getElementById('saveSumBtn').style.display='block';
+  }
+}
+
+function _stopAll(){
+  if(processor){processor.disconnect();processor=null;}
+  if(analyser){analyser.disconnect();analyser=null;}
+  if(stream){stream.getTracks().forEach(function(tk){tk.stop();});stream=null;}
+  if(audioCtx){audioCtx.close();audioCtx=null;}
+  if(histInterval){clearInterval(histInterval);histInterval=null;}
+  if(durInterval){clearInterval(durInterval);durInterval=null;}
+  active=false; calibrating=false;
+}
+
+function _resetUI(){
+  document.getElementById('calibTag').classList.remove('show');
+  document.getElementById('sdot').className='sdot';
+  document.getElementById('statusTxt').textContent=t('standby');
+  document.getElementById('mainBtn').textContent=t('startBtn');
+  document.getElementById('mainBtn').className='main-btn btn-start';
+  document.getElementById('markBtn').disabled=true;
+  document.getElementById('sumBtn').disabled=true;
+  document.getElementById('alertBox').classList.remove('show');
+  resetArc();
+  document.getElementById('scoreWrap').classList.remove('hidden-live');
+  ['pitch','jitter','pause','rate','volume','breath'].forEach(function(n){
+    var f=document.getElementById('fill-'+n),v=document.getElementById('val-'+n);
+    if(f){f.style.height='3px';f.style.background='#10b981';} if(v) v.textContent='--';
+  });
+}
 
 async function startAnalysis(){
   document.getElementById('errMsg').classList.remove('show');
   document.getElementById('summaryPanel').classList.remove('show');
+  document.getElementById('saveSumBtn').style.display='none';
+  pendingSaveData=null;
   summaryVisible=false;
   try{
     stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
@@ -918,36 +1221,7 @@ async function startAnalysis(){
   }
 }
 
-function stopAnalysis(){
-  if(processor){processor.disconnect();processor=null;}
-  if(analyser){analyser.disconnect();analyser=null;}
-  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
-  if(audioCtx){audioCtx.close();audioCtx=null;}
-  if(histInterval){clearInterval(histInterval);histInterval=null;}
-  if(durInterval){clearInterval(durInterval);durInterval=null;}
-
-  active=false;calibrating=false;
-  document.getElementById('calibTag').classList.remove('show');
-  document.getElementById('sdot').className='sdot';
-  document.getElementById('statusTxt').textContent=t('standby');
-  document.getElementById('mainBtn').textContent=t('startBtn');
-  document.getElementById('mainBtn').className='main-btn btn-start';
-  document.getElementById('markBtn').disabled=true;
-  document.getElementById('alertBox').classList.remove('show');
-  resetArc();
-  document.getElementById('scoreWrap').classList.remove('hidden-live');
-  // reset bars
-  ['pitch','jitter','pause','rate','volume','breath'].forEach(n=>{
-    const f=document.getElementById('fill-'+n);
-    if(f){f.style.height='3px';f.style.background='#10b981';}
-    const v=document.getElementById('val-'+n); if(v) v.textContent='--';
-  });
-  // auto show summary
-  if(historyData.length>3){
-    summaryVisible=true; buildSummary();
-    document.getElementById('summaryPanel').classList.add('show');
-  }
-}
+function stopAnalysis(){ finishAndSummarize(); }
 
 window.addEventListener('load',()=>{ resizeCanvases(); drawHistory(); });
 window.addEventListener('resize', resizeCanvases);
