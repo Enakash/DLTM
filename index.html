@@ -241,6 +241,7 @@ body{
 </head>
 <body>
 
+<!-- TOPBAR -->
 <div class="topbar">
   <div class="logo-svg">
       <svg viewBox="0 0 220 52" width="110" height="26" xmlns="http://www.w3.org/2000/svg">
@@ -276,14 +277,10 @@ body{
     </div>
   </div>
 </div>
-
-<div class="nav-tabs">
-  <button class="nav-tab active" id="tabAnalyze" onclick="switchTab('analyze')">ניתוח</button>
-  <button class="nav-tab" id="tabContacts" onclick="switchTab('contacts')">אנשי קשר</button>
-</div>
-
+<div class="nav-tabs"><button class="nav-tab active" id="tabAnalyze" onclick="switchTab('analyze')">ניתוח</button><button class="nav-tab" id="tabContacts" onclick="switchTab('contacts')">אנשי קשר</button></div>
 <div class="screen active" id="screenAnalyze">
 
+<!-- SCORE ARC -->
 <div class="score-wrap" id="scoreWrap">
   <div class="arc-container">
     <svg id="arcSvg" width="180" height="100" viewBox="0 0 180 100">
@@ -299,19 +296,24 @@ body{
   </div>
   <div class="gain-row" style="display:flex;align-items:center;gap:10px;margin-top:10px;width:100%;max-width:280px;">
     <span style="font-size:10px;color:var(--muted);font-family:var(--mono);white-space:nowrap;" data-key="gainLabel">רגישות</span>
-    <input type="range" id="gainSlider" min="1" max="12" value="4" step="0.5" oninput="updateGain(this.value)" style="flex:1;accent-color:var(--accent);cursor:pointer;height:4px;">
+    <input type="range" id="gainSlider" min="1" max="12" value="4" step="0.5"
+      oninput="updateGain(this.value)"
+      style="flex:1;accent-color:var(--accent);cursor:pointer;height:4px;">
     <span id="gainVal" style="font-size:11px;color:var(--accent);font-family:var(--mono);min-width:28px;">x4</span>
   </div>
   <div class="calib-tag" id="calibTag" data-key="calibrating">⏳ מכייל...</div>
 </div>
 
+<!-- ALERT -->
 <div class="alert" id="alertBox">
   <span>⚠️</span><span id="alertTxt"></span>
 </div>
 
+<!-- EQ BARS -->
 <div class="eq-section">
   <div class="eq-section-title" data-key="eqTitle">ניתוח מאפייני קול בזמן אמת</div>
   <div class="eq-grid">
+    <!-- pitch -->
     <div class="eq-col">
       <div class="eq-bar-wrap" id="bar-pitch">
         <div class="eq-threshold" style="bottom:70%"></div>
@@ -320,6 +322,7 @@ body{
       <div class="eq-label" data-key="pitch">גובה<br>קול</div>
       <div class="eq-value" id="val-pitch">--</div>
     </div>
+    <!-- jitter -->
     <div class="eq-col">
       <div class="eq-bar-wrap" id="bar-jitter">
         <div class="eq-threshold" style="bottom:60%"></div>
@@ -328,6 +331,7 @@ body{
       <div class="eq-label" data-key="jitter">רעידת<br>קול</div>
       <div class="eq-value" id="val-jitter">--</div>
     </div>
+    <!-- pause -->
     <div class="eq-col">
       <div class="eq-bar-wrap" id="bar-pause">
         <div class="eq-threshold" style="bottom:55%"></div>
@@ -336,6 +340,7 @@ body{
       <div class="eq-label" data-key="pauses">פאוזות</div>
       <div class="eq-value" id="val-pause">--</div>
     </div>
+    <!-- rate -->
     <div class="eq-col">
       <div class="eq-bar-wrap" id="bar-rate">
         <div class="eq-threshold" style="bottom:65%"></div>
@@ -344,6 +349,7 @@ body{
       <div class="eq-label" data-key="rate">קצב<br>דיבור</div>
       <div class="eq-value" id="val-rate">--</div>
     </div>
+    <!-- volume -->
     <div class="eq-col">
       <div class="eq-bar-wrap" id="bar-volume">
         <div class="eq-threshold" style="bottom:75%"></div>
@@ -352,6 +358,7 @@ body{
       <div class="eq-label" data-key="volume">עוצמת<br>קול</div>
       <div class="eq-value" id="val-volume">--</div>
     </div>
+    <!-- breath -->
     <div class="eq-col">
       <div class="eq-bar-wrap" id="bar-breath">
         <div class="eq-threshold" style="bottom:60%"></div>
@@ -363,6 +370,7 @@ body{
   </div>
 </div>
 
+<!-- MARK -->
 <div class="mark-wrap">
   <button class="mark-btn" id="markBtn" onclick="markMoment()" disabled>
     <span>🚩</span> <span data-key="markBtn">סמן רגע חשוד</span>
@@ -370,6 +378,7 @@ body{
   </button>
 </div>
 
+<!-- HISTORY -->
 <div class="hist-section">
   <div class="sec-header">
     <span class="sec-title" data-key="history">היסטוריה</span>
@@ -378,6 +387,7 @@ body{
   <canvas id="histCanvas"></canvas>
 </div>
 
+<!-- SUMMARY PANEL -->
 <div class="summary" id="summaryPanel">
   <div class="sum-title" data-key="summaryTitle">סיכום שיחה</div>
   <div class="verdict-box" id="verdictBox">
@@ -396,15 +406,19 @@ body{
   <div class="sum-row"><span class="sum-key" data-key="sumDurLabel">משך שיחה</span><span class="sum-val" id="sDur">—</span></div>
   <div class="sum-row"><span class="sum-key" data-key="sumMarksLabel">רגעים מסומנים</span><span class="sum-val" id="sMarks">—</span></div>
   <div class="mark-chips" id="markChips"></div>
-  <button class="save-sum-btn" id="saveSumBtn" style="display:block;" onclick="openSaveSheet()">שמור שיחה</button>
+  <button class="save-sum-btn" id="saveSumBtn" onclick="openSaveSheet()">שמור שיחה</button>
 </div>
 
+<!-- BUTTONS -->
 <div class="btn-row" id="btnRow">
   <button class="main-btn btn-start" id="mainBtn" onclick="toggleAnalysis()" data-key="startBtn">התחל ניתוח</button>
   <button class="main-btn btn-summary" id="sumBtn" onclick="finishAndSummarize()" data-key="summaryBtn" disabled>סיכום</button>
 </div>
 <div class="err-msg" id="errMsg" data-key="errMsg">לא ניתן לגשת למיקרופון.</div>
-</div><div class="screen" id="screenContacts">
+</div><!-- /screenAnalyze -->
+
+<!-- CONTACTS SCREEN -->
+<div class="screen" id="screenContacts">
   <div class="contacts-wrap">
     <div class="contacts-header">
       <span class="contacts-title">אנשי קשר</span>
@@ -416,6 +430,7 @@ body{
   </div>
 </div>
 
+<!-- CONTACT DETAIL -->
 <div class="detail-overlay" id="detailOverlay" onclick="closeDetailOverlay(event)">
   <div class="detail-sheet">
     <div class="detail-handle"></div>
@@ -427,6 +442,7 @@ body{
   </div>
 </div>
 
+<!-- SAVE SHEET -->
 <div class="save-sheet" id="saveSheet" onclick="closeSaveOverlay(event)">
   <div class="save-sheet-box">
     <div class="save-handle"></div>
@@ -443,6 +459,7 @@ body{
 </div>
 
 <script>
+
 // ── STORAGE ──
 function loadContacts(){try{return JSON.parse(localStorage.getItem('liedar_c')||'{}');}catch(e){return {};}}
 function saveContacts(d){try{localStorage.setItem('liedar_c',JSON.stringify(d));}catch(e){}}
@@ -459,25 +476,17 @@ function switchTab(tab){
 // ── MINI CHART ──
 function drawMiniChart(canvas,scores){
   var dpr=window.devicePixelRatio||1;
-  canvas.width=canvas.offsetWidth*dpr;
-  canvas.height=36*dpr;
+  canvas.width=canvas.offsetWidth*dpr; canvas.height=36*dpr;
   var ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,pd=3;
-  ctx.fillStyle='#080c14';
-  ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='#080c14'; ctx.fillRect(0,0,w,h);
   if(!scores||scores.length<2) return;
   for(var i=1;i<scores.length;i++){
     var v=scores[i],pv=scores[i-1];
     var x=pd+(i/(scores.length-1))*(w-pd*2), y=h-pd-(v/100)*(h-pd*2);
     var px2=pd+((i-1)/(scores.length-1))*(w-pd*2), py2=h-pd-(pv/100)*(h-pd*2);
     var col=v>65?'#10b981':v>38?'#f59e0b':'#ef4444';
-    ctx.strokeStyle=col;
-    ctx.lineWidth=2;
-    ctx.shadowColor=col;
-    ctx.shadowBlur=2;
-    ctx.beginPath();
-    ctx.moveTo(px2,py2);
-    ctx.lineTo(x,y);
-    ctx.stroke();
+    ctx.strokeStyle=col; ctx.lineWidth=2; ctx.shadowColor=col; ctx.shadowBlur=2;
+    ctx.beginPath(); ctx.moveTo(px2,py2); ctx.lineTo(x,y); ctx.stroke();
   }
 }
 
@@ -499,561 +508,754 @@ function renderContacts(){
     return lb-la;
   }).forEach(function(key){
     var ct=contacts[key], ss=ct.sessions||[];
-    if(!ss.length) return;
-    var lastS=ss[ss.length-1];
-    
+    var avg=ss.length?Math.round(ss.reduce(function(s,x){return s+x.score;},0)/ss.length):0;
+    var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
+    var last=ss.length?new Date(ss.slice(-1)[0].date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit'}):'';
+    var col=avg>65?'#10b981':avg>38?'#f59e0b':'#ef4444';
     var card=document.createElement('div');
     card.className='contact-card';
-    card.onclick=function(){ openDetail(key); };
-    
-    var nameDiv=document.createElement('div');
-    nameDiv.className='contact-name';
-    nameDiv.textContent=key;
-    
-    var metaDiv=document.createElement('div');
-    metaDiv.className='contact-meta';
-    metaDiv.textContent=new Date(lastS.date).toLocaleDateString() + ' • ' + ss.length + ' ' + t('callsUnit');
-    
-    var badge=document.createElement('div');
-    badge.className='contact-score-badge';
-    badge.textContent=lastS.score+'%';
-    var c=lastS.score>65?'#10b981':lastS.score>38?'#f59e0b':'#ef4444';
-    badge.style.background=c+'15';
-    badge.style.color=c;
-    badge.style.border='1px solid '+c+'30';
-    
-    var canvas=document.createElement('canvas');
-    canvas.className='contact-mini-chart';
-    
-    card.appendChild(nameDiv);
-    card.appendChild(metaDiv);
-    card.appendChild(badge);
-    card.appendChild(canvas);
+    card.innerHTML='<div class="contact-name">'+ct.name+'</div>'
+      +'<div class="contact-meta">'+ss.length+' '+t('sessionsUnit')+' · '+last+'</div>'
+      +'<div class="contact-score-badge" style="background:'+col+'18;color:'+col+'">'+avg+'% '+t('avgLabel')+'</div>'
+      +'<canvas class="contact-mini-chart" id="mc-'+key+'"></canvas>';
+    (function(k,scores){
+      card.onclick=function(){openDetail(k);};
+      setTimeout(function(){var mc=document.getElementById('mc-'+k);if(mc)drawMiniChart(mc,scores);},60);
+    })(key, ss.map(function(s){return s.score;}));
     grid.appendChild(card);
-    
-    var historyData = ss.map(s => s.score);
-    setTimeout(()=>drawMiniChart(canvas, historyData), 50);
   });
 }
 
-// ── LANGS & TRANSLATIONS ──
-var currentLang='he';
-var translations={
-  he:{
-    waiting:"ממתין", calibrating:"⏳ מכייל...", gainLabel:"רגישות", eqTitle:"ניתוח מאפייני קול בזמן אמת",
-    pitch:"גובה קול", jitter:"רעידת קול", pauses:"פאוזות", rate:"קצב דיבור", volume:"עוצמת קול", breath:"קצב נשימה",
-    markBtn:"סמן רגע חשוד", history:"היסטוריה", summaryTitle:"סיכום שיחה", sumDurLabel:"משך שיחה", sumMarksLabel:"רגעים מסומנים",
-    startBtn:"התחל ניתוח", stopBtn:"עצור בדיקה", summaryBtn:"סיכום", errMsg:"לא ניתן לגשת למיקרופון.",
-    contactsEmpty:"עדיין אין שיחות שמורות.", contactsUnit:"אנשי קשר", callsUnit:"שיחות",
-    vHigh:"אמינות גבוהה", vMid:"חשד בינוני", vLow:"חשד גבוה לרמייה",
-    descHigh:"הפרמטרים הקוליים נמצאים בטווח היציב והנורמטיבי. הדובר מציג ביטחון ועקביות.",
-    descMid:"זוהו תנודות קלות ושינויי קצב המעידים על התרגשות או חוסר נוחות נקודתיים.",
-    descLow:"אזהרה: זוהו חריגות קיצוניות במספר מדדים במקביל (רעידות, פאוזות לא מוסברות ולחץ נשימתי).",
-    noteNormal:"תקין ויציב", noteElevated:"חריגה קלה", noteHigh:"חריגה קיצונית",
-    alertPitch:"שינוי גובה פתאומי!", alertJitter:"רעידת קול חריגה!", alertPause:"שתיקה ממושכת/חשודה!", alertRate:"שינוי קצב דיבור חריג!", alertBreath:"שינוי קיצוני בקצב נשימה!"
-  },
-  en:{
-    waiting:"WAITING", calibrating:"⏳ CALIBRATING...", gainLabel:"SENSITIVITY", eqTitle:"REAL-TIME VOICE ANALYSIS",
-    pitch:"PITCH", jitter:"JITTER", pauses:"PAUSES", rate:"SPEECH RATE", volume:"VOLUME", breath:"BREATH RATE",
-    markBtn:"MARK SUSPICIOUS MOMENT", history:"HISTORY", summaryTitle:"CALL SUMMARY", sumDurLabel:"DURATION", sumMarksLabel:"MARKED MOMENTS",
-    startBtn:"START ANALYSIS", stopBtn:"STOP ANALYSIS", summaryBtn:"SUMMARY", errMsg:"Cannot access microphone.",
-    contactsEmpty:"No saved conversations yet.", contactsUnit:"contacts", callsUnit:"calls",
-    vHigh:"HIGH CREDIBILITY", vMid:"MEDIUM SUSPICION", vLow:"HIGH DECEPTION RISK",
-    descHigh:"Vocal parameters are within a stable, normal baseline. Speaker exhibits confidence and consistency.",
-    descMid:"Minor fluctuations and rate shifts detected, indicating brief excitement or discomfort.",
-    descLow:"WARNING: Critical anomalies detected across multiple metrics simultaneously (jitter, unnatural pauses, breath stress).",
-    noteNormal:"Normal & Stable", noteElevated:"Mild Deviation", noteHigh:"Critical Anomaly",
-    alertPitch:"Sudden pitch jump!", alertJitter:"Abnormal voice jitter!", alertPause:"Suspiciously long silence!", alertRate:"Abnormal speech rate change!", alertBreath:"Extreme breath rate variation!"
-  },
-  ar:{
-    waiting:"في الانتظار", calibrating:"⏳ جاري المعايرة...", gainLabel:"الحساسية", eqTitle:"تحليل خصائص الصوت في الوقت الحقيقي",
-    pitch:"طبقة الصوت", jitter:"ارتجاف الصوت", pauses:"סوقفات", rate:"معدل الكلام", volume:"حجم الصوت", breath:"معدل التنفس",
-    markBtn:"تحديد لحظة مشبوهة", history:"السجل", summaryTitle:"ملخص المكالمة", sumDurLabel:"مدة المكالمة", sumMarksLabel:"اللحظات المحددة",
-    startBtn:"بدء التحليل", stopBtn:"إيقاف التحليل", summaryBtn:"ملخص", errMsg:"لا يمكن الوصول إلى الميكروفون.",
-    contactsEmpty:"لا توجد محادثات محفوظة بعد.", contactsUnit:"جهات الاتصال", callsUnit:"مكالمات",
-    vHigh:"مصداقية عالية", vMid:"اشتباه متوسط", vLow:"خطر خداع مرتفع",
-    descHigh:"المؤشرات الصوتية ضمن النطاق الطبيعي والمستقر. يظهر المتحدث ثقة واتساقاً.",
-    descMid:"تم اكتشاف تقلبات طفيفة وتغييرات في المعدل تشير إلى إثارة أو عدم ارتياح مؤقت.",
-    descLow:"تحذير: تم اكتشاف شذوذ حاد في مؤشرات متعددة بالتزامن (ارتجاف، توقفات غير مبررة وضغط تنفسي).",
-    noteNormal:"طبيعي ومستقر", noteElevated:"انحراف طفيف", noteHigh:"انحراف حاد",
-    alertPitch:"تغير مفاجئ في الطبقة!", alertJitter:"ارتجاف صوتي غير طبيعي!", alertPause:"صمت طويل/مشبوه!", alertRate:"تغير غير طبيعي في معدل الكلام!", alertBreath:"تغير حاد في معدل التنفس!"
-  }
-};
-
-function t(key){return (translations[currentLang]||translations['he'])[key]||'';}
-
-function setLang(lang){
-  currentLang=lang;
-  document.getElementById('btnHe').classList.toggle('active',lang==='he');
-  document.getElementById('btnEn').classList.toggle('active',lang==='en');
-  document.getElementById('btnAr').classList.toggle('active',lang==='ar');
-  document.dir=lang==='en'?'ltr':'rtl';
-  
-  // Update UI Elements
-  document.querySelectorAll('[data-key]').forEach(el => {
-    var k=el.getAttribute('data-key');
-    if(k==='startBtn' && active) { el.textContent=t('stopBtn'); }
-    else { el.textContent=t(k); }
+// ── CONTACT DETAIL ──
+function openDetail(key){
+  currentContactKey=key;
+  var ct=loadContacts()[key]; if(!ct) return;
+  document.getElementById('detailName').textContent=ct.name;
+  document.getElementById('detailMeta').textContent=ct.sessions.length+' '+t('sessionsUnit');
+  var list=document.getElementById('detailSessions'); list.innerHTML='';
+  var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
+  ct.sessions.slice().reverse().forEach(function(s){
+    var col=s.score>65?'#10b981':s.score>38?'#f59e0b':'#ef4444';
+    var dt=new Date(s.date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+    var row=document.createElement('div'); row.className='session-row';
+    row.innerHTML='<div><div class="session-date">'+dt+'</div><div class="session-dur">'+(s.duration||'')+'</div></div>'
+      +'<div class="session-score" style="color:'+col+'">'+s.score+'%</div>';
+    list.appendChild(row);
   });
-  if(!active && !summaryMode) document.getElementById('arcLbl').textContent=t('waiting');
-  if(calibrating) document.getElementById('arcLbl').textContent=t('calibrating');
-  if(summaryMode) finishAndSummarize();
+  document.getElementById('detailOverlay').classList.add('show');
+}
+function closeDetail(){document.getElementById('detailOverlay').classList.remove('show');}
+function closeDetailOverlay(e){if(e.target===document.getElementById('detailOverlay'))closeDetail();}
+function deleteContact(){
+  if(!currentContactKey) return;
+  var ct=loadContacts(); delete ct[currentContactKey]; saveContacts(ct);
+  closeDetail(); renderContacts();
 }
 
-// ── CORE AUDIO VARIABLES ──
-var audioCtx=null, stream=null, sourceNode=null, analyser=null, javascriptNode=null;
-var active=false, calibrating=false, summaryMode=false;
-var credibility=100, prevCred=100, gainValue=4;
-var startTime=0, callDuration=0, histInterval=null, durInterval=null;
-var historyData=[], markedMoments=[], sumPitch=[], sumJitter=[], sumPause=[], sumRate=[], sumVolume=[], sumBreath=[];
-
-// Real-time feature vars
-var lastPitch=150, pauseCounter=0, speechTokens=0;
-
+// ── SAVE SHEET ──
+var pendingSaveData=null;
+var gainLevel=4;
+var gainNode=null;
 function updateGain(val){
-  gainValue=parseFloat(val);
-  document.getElementById('gainVal').textContent='x'+val;
-}
-
-// ── CANVAS DRAWING ──
-var canvas=document.getElementById('histCanvas');
-var ctx=canvas.getContext('2d');
-function resizeCanvases(){
-  var dpr=window.devicePixelRatio||1;
-  canvas.width=canvas.offsetWidth*dpr;
-  canvas.height=canvas.offsetHeight*dpr;
-  ctx.scale(dpr,dpr);
-}
-window.addEventListener('resize', resizeCanvases);
-
-function drawHistory(){
-  var w=canvas.width/(window.devicePixelRatio||1);
-  var h=canvas.height/(window.devicePixelRatio||1);
-  ctx.fillStyle='#0f1623';
-  ctx.fillRect(0,0,w,h);
-  if(historyData.length===0) return;
-  
-  ctx.lineWidth=2.5;
-  ctx.shadowBlur=4;
-  
-  for(var i=1;i<historyData.length;i++){
-    var v=historyData[i], pv=historyData[i-1];
-    var x1=((i-1)/(60-1))*w, y1=h - 5 - (pv/100)*(h-10);
-    var x2=(i/(60-1))*w, y2=h - 5 - (v/100)*(h-10);
-    var col=v>65?'#10b981':v>38?'#f59e0b':'#ef4444';
-    
-    ctx.strokeStyle=col;
-    ctx.shadowColor=col;
-    ctx.beginPath();
-    ctx.moveTo(x1,y1);
-    ctx.lineTo(x2,y2);
-    ctx.stroke();
+  gainLevel=parseFloat(val);
+  document.getElementById('gainVal').textContent='x'+gainLevel;
+  // Update live if active
+  if(typeof gainNode!=='undefined'&&gainNode){
+    try{gainNode.gain.value=gainLevel;}catch(e){}
   }
-  ctx.shadowBlur=0;
-}
-
-function initArc(){
-  var bg=document.getElementById('arcBg'), fill=document.getElementById('arcFill');
-  // Semi-circle path
-  bg.setAttribute('d', 'M 15 90 A 75 75 0 0 1 165 90');
-  fill.setAttribute('d', 'M 15 90 A 75 75 0 0 1 165 90');
-  // Calculate perimeter for dasharray
-  var r=75, perimeter=Math.PI*r;
-  fill.style.strokeDasharray=perimeter;
-  fill.style.strokeDashoffset=perimeter;
-}
-initArc();
-
-function updateArc(val){
-  var fill=document.getElementById('arcFill'), needle=document.getElementById('arcNeedle'), hub=document.getElementById('arcHub');
-  var num=document.getElementById('arcNum'), lbl=document.getElementById('arcLbl');
-  
-  if(val===null){
-    fill.style.display='none'; needle.style.display='none'; hub.style.display='none';
-    num.textContent='--'; num.className='arc-num'; lbl.textContent=t('waiting'); lbl.className='arc-lbl';
-    return;
-  }
-  
-  fill.style.display='block'; needle.style.display='block'; hub.style.display='block';
-  num.textContent=Math.round(val)+'%';
-  num.className='arc-num live';
-  
-  var col=val>65?'#10b981':val>38?'#f59e0b':'#ef4444';
-  document.getElementById('scoreWrap').style.setProperty('--cc', col);
-  
-  var r=75, perimeter=Math.PI*r;
-  fill.style.strokeDashoffset=perimeter - (val/100)*perimeter;
-  fill.style.stroke=col;
-  needle.style.stroke=col;
-  hub.style.stroke=col;
-  
-  var angle=-90 + (val/100)*180;
-  needle.style.transform='rotate('+angle+'deg)';
-  
-  var labelText=val>65?t('vHigh'):val>38?t('vMid'):t('vLow');
-  lbl.textContent=labelText;
-  lbl.className='arc-lbl live';
-}
-
-function formatTime(s){
-  var m=Math.floor(s/60), sec=s%60;
-  return (m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;
-}
-
-// ── ANALYSIS ENGINE LOOP ──
-function toggleAnalysis(){
-  if(active){
-    stopAnalysis();
-    return;
-  }
-  
-  document.getElementById('errMsg').style.display='none';
-  document.getElementById('summaryPanel').style.style='none';
-  document.getElementById('summaryPanel').classList.remove('show');
-  summaryMode=false;
-  
-  navigator.mediaDevices.getUserMedia({audio:true, video:false})
-  .then(function(sStream){
-    stream=sStream;
-    audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-    analyser=audioCtx.createAnalyser();
-    analyser.fftSize=1024;
-    sourceNode=audioCtx.createMediaStreamSource(stream);
-    sourceNode.connect(analyser);
-    
-    javascriptNode=audioCtx.createScriptProcessor(1024,1,1);
-    analyser.connect(javascriptNode);
-    javascriptNode.connect(audioCtx.destination);
-    
-    active=true;
-    calibrating=true;
-    document.getElementById('calibTag').classList.add('show');
-    document.getElementById('sdot').className='sdot calib';
-    document.getElementById('statusTxt').textContent='CALIBRATING';
-    document.getElementById('mainBtn').textContent=t('stopBtn');
-    document.getElementById('mainBtn').className='main-btn btn-stop';
-    document.getElementById('markBtn').disabled=false;
-    document.getElementById('sumBtn').disabled=true;
-    
-    startTime=Date.now();
-    historyData=[];
-    markedMoments=[];
-    sumPitch=[]; sumJitter=[]; sumPause=[]; sumRate=[]; sumVolume=[]; sumBreath=[];
-    document.getElementById('markCnt').textContent='0';
-    document.getElementById('markCnt').classList.remove('show');
-    
-    resizeCanvases();
-    
-    setTimeout(function(){
-      if(active){
-        calibrating=false;
-        document.getElementById('calibTag').classList.remove('show');
-        document.getElementById('sdot').className='sdot live';
-        document.getElementById('statusTxt').textContent='LIVE';
-        document.getElementById('sumBtn').disabled=false;
-      }
-    }, 4000);
-    
-    javascriptNode.onaudioprocess=function(){
-      if(!active) return;
-      var buffer=new Float32Array(analyser.fftSize);
-      analyser.getFloatTimeDomainData(buffer);
-      
-      // Compute RMS (Volume)
-      var sum=0;
-      for(var i=0; i<buffer.length; i++) sum += buffer[i]*buffer[i];
-      var rms=Math.sqrt(sum/buffer.length)*gainValue;
-      var volPct=Math.min(100, rms*300);
-      
-      if(volPct<2){
-        // Silence/Pause tracking
-        pauseCounter++;
-        updateRealtimeUI(0, 0, 100, 0, volPct, 0);
-        return;
-      }
-      
-      // Simple Pitch / Zero crossing estimate
-      var crossings=0;
-      for(var i=1; i<buffer.length; i++){
-        if((buffer[i-1]>=0 && buffer[i]<0) || (buffer[i-1]<0 && buffer[i]>=0)) crossings++;
-      }
-      var pitchEst=(cross crossings*audioCtx.sampleRate)/(2*buffer.length);
-      if(pitchEst<50 || pitchEst>500) pitchEst=lastPitch;
-      
-      // Jitter (variation from previous frame)
-      var jitter=Math.abs(pitchEst-lastPitch);
-      var jitterPct=Math.min(100, (jitter/lastPitch)*400);
-      lastPitch=pitchEst;
-      
-      var pitchNormalized=Math.min(100, Math.max(0, (pitchEst-80)/3));
-      var pausePct=Math.max(0, Math.min(100, (pauseCounter>30?80:10)));
-      if(pauseCounter>0 && volPct>10) { pauseCounter=0; speechTokens++; }
-      
-      var rateTrend=Math.min(100, (speechTokens%15)*7 + 20);
-      var breathPct=Math.min(100, Math.abs(Math.sin(Date.now()/2000))*40 + (jitterPct*0.3));
-      
-      updateRealtimeUI(pitchNormalized, jitterPct, pausePct, rateTrend, volPct, breathPct);
-      
-      if(!calibrating){
-        sumPitch.push(pitchNormalized);
-        sumJitter.push(jitterPct);
-        sumPause.push(pausePct);
-        sumRate.push(rateTrend);
-        sumVolume.push(volPct);
-        sumBreath.push(breathPct);
-        
-        // Credibility formula logic
-        var penalty = (jitterPct*0.25) + (pausePct*0.2) + (Math.abs(volPct-45)*0.15) + (breathPct*0.15);
-        credibility = Math.max(5, Math.min(100, 100 - penalty));
-        
-        updateArc(credibility);
-        checkAlerts(jitterPct, pausePct, breathPct);
-      }
-    };
-    
-    histInterval=setInterval(function(){
-      if(active && !calibrating){
-        historyData.push(credibility);
-        if(historyData.length>60) historyData.shift();
-        drawHistory();
-      }
-      callDuration=Math.floor((Date.now()-startTime)/1000);
-      document.getElementById('histDur').textContent=formatTime(callDuration);
-    }, 1000);
-    
-  })
-  .catch(function(err){
-    console.error(err);
-    document.getElementById('errMsg').style.display='block';
-  });
-}
-
-function updateRealtimeUI(p, j, pa, r, v, b){
-  document.getElementById('fill-pitch').style.height=p+'%';
-  document.getElementById('val-pitch').textContent=Math.round(p);
-  
-  document.getElementById('fill-jitter').style.height=j+'%';
-  document.getElementById('val-jitter').textContent=Math.round(j);
-  
-  document.getElementById('fill-pause').style.height=pa+'%';
-  document.getElementById('val-pause').textContent=Math.round(pa);
-  
-  document.getElementById('fill-rate').style.height=r+'%';
-  document.getElementById('val-rate').textContent=Math.round(r);
-  
-  document.getElementById('fill-volume').style.height=v+'%';
-  document.getElementById('val-volume').textContent=Math.round(v);
-  
-  document.getElementById('fill-breath').style.height=b+'%';
-  document.getElementById('val-breath').textContent=Math.round(b);
-}
-
-function checkAlerts(j, pa, b){
-  var alertBox=document.getElementById('alertBox');
-  var alertTxt=document.getElementById('alertTxt');
-  
-  if(j>65){
-    alertTxt.textContent=t('alertJitter');
-    alertBox.classList.add('show');
-  } else if(pa>75){
-    alertTxt.textContent=t('alertPause');
-    alertBox.classList.add('show');
-  } else if(b>70){
-    alertTxt.textContent=t('alertBreath');
-    alertBox.classList.add('show');
-  } else {
-    alertBox.classList.remove('show');
-  }
-}
-
-function stopAnalysis(){
-  active=false;
-  calibrating=false;
-  if(histInterval) clearInterval(histInterval);
-  if(stream){
-    stream.getTracks().forEach(t => t.stop());
-  }
-  if(audioCtx) audioCtx.close();
-  
-  document.getElementById('sdot').className='sdot';
-  document.getElementById('statusTxt').textContent='STANDBY';
-  document.getElementById('mainBtn').textContent=t('startBtn');
-  document.getElementById('mainBtn').className='main-btn btn-start';
-  document.getElementById('calibTag').classList.remove('show');
-  document.getElementById('alertBox').classList.remove('show');
-}
-
-function markMoment(){
-  if(!active) return;
-  var timestamp=Math.floor((Date.now()-startTime)/1000);
-  markedMoments.push(timestamp);
-  var btn=document.getElementById('markCnt');
-  btn.textContent=markedMoments.length;
-  btn.classList.add('show');
-}
-
-// ── SUMMARY & SAVING SYSTEM ──
-function finishAndSummarize(){
-  stopAnalysis();
-  summaryMode=true;
-  
-  var avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):0;
-  
-  var ap=avg(sumPitch), aj=avg(sumJitter), apa=avg(sumPause), ar=avg(sumRate), av=avg(sumVolume), ab=avg(sumBreath);
-  
-  document.getElementById('sPitch').textContent=ap;
-  document.getElementById('sPitchNote').textContent=ap>60?t('noteElevated'):t('noteNormal');
-  
-  document.getElementById('sJitter').textContent=aj;
-  document.getElementById('sJitterNote').textContent=aj>50?t('noteHigh'):t('noteNormal');
-  
-  document.getElementById('sPause').textContent=apa;
-  document.getElementById('sPauseNote').textContent=apa>40?t('noteElevated'):t('noteNormal');
-  
-  document.getElementById('sRate').textContent=ar;
-  document.getElementById('sRateNote').textContent=t('noteNormal');
-  
-  document.getElementById('sVolume').textContent=av;
-  document.getElementById('sVolumeNote').textContent=t('noteNormal');
-  
-  document.getElementById('sBreath').textContent=ab;
-  document.getElementById('sBreathNote').textContent=ab>55?t('noteElevated'):t('noteNormal');
-  
-  var finalScore=Math.round(credibility);
-  document.getElementById('verdictScore').textContent=finalScore+'%';
-  
-  var vBox=document.getElementById('verdictBox');
-  var vLabel=document.getElementById('verdictLabel');
-  var vDesc=document.getElementById('verdictDesc');
-  
-  var col=finalScore>65?'#10b981':finalScore>38?'#f59e0b':'#ef4444';
-  vBox.style.borderColor=col;
-  vBox.style.color=col;
-  vBox.style.background=col+'08';
-  
-  vLabel.textContent=finalScore>65?t('vHigh'):finalScore>38?t('vMid'):t('vLow');
-  vDesc.textContent=finalScore>65?t('descHigh'):finalScore>38?t('descMid'):t('descLow');
-  
-  document.getElementById('sDur').textContent=formatTime(callDuration);
-  document.getElementById('sMarks').textContent=markedMoments.length;
-  
-  var chips=document.getElementById('markChips');
-  chips.innerHTML='';
-  markedMoments.forEach(m => {
-    var chip=document.createElement('span');
-    chip.className='chip';
-    chip.textContent='⏱️ '+formatTime(m);
-    chips.appendChild(chip);
-  });
-  
-  document.getElementById('summaryPanel').style.display='block';
-  document.getElementById('summaryPanel').classList.add('show');
 }
 
 function openSaveSheet(){
-  var sheet=document.getElementById('saveSheet');
-  sheet.classList.add('show');
-  document.getElementById('saveSheetSub').textContent=t('history')+': '+formatTime(callDuration)+' • '+Math.round(credibility)+'%';
-  
-  var list=document.getElementById('saveContactList');
   var contacts=loadContacts(), keys=Object.keys(contacts);
-  
+  document.getElementById('saveSheetSub').textContent=
+    pendingSaveData?t('saveScoreLabel')+pendingSaveData.score+'% · '+pendingSaveData.duration:'';
+  var list=document.getElementById('saveContactList');
+  var div=document.getElementById('saveDivider');
+  list.innerHTML='';
   if(keys.length>0){
-    document.getElementById('saveDivider').style.display='block';
-    list.innerHTML='';
-    keys.forEach(k => {
-      var row=document.createElement('div');
-      row.className='save-contact-row';
-      row.onclick=function(){ saveToExisting(k); };
-      row.innerHTML='<div><div class="scr-name">'+k+'</div><div class="scr-meta">'+contacts[k].sessions.length+' שיחות</div></div><div class="scr-score">'+contacts[k].sessions[contacts[k].sessions.length-1].score+'%</div>';
+    div.style.display='block';
+    var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
+    keys.forEach(function(key){
+      var ct=contacts[key], ss=ct.sessions||[];
+      var avg=ss.length?Math.round(ss.reduce(function(s,x){return s+x.score;},0)/ss.length):0;
+      var last=ss.length?new Date(ss.slice(-1)[0].date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit'}):'';
+      var col=avg>65?'#10b981':avg>38?'#f59e0b':'#ef4444';
+      var row=document.createElement('div'); row.className='save-contact-row';
+      row.innerHTML='<div><div class="scr-name">'+ct.name+'</div>'
+        +'<div class="scr-meta">'+ss.length+' '+t('sessionsUnit')+' · '+last+'</div></div>'
+        +'<div class="scr-score" style="color:'+col+'">'+avg+'%</div>';
+      (function(k){row.onclick=function(){saveToExisting(k);};})(key);
       list.appendChild(row);
     });
-  } else {
-    document.getElementById('saveDivider').style.display='none';
-    list.innerHTML='';
+  } else { div.style.display='none'; }
+  document.getElementById('saveNewInput').value='';
+  document.getElementById('saveSheet').style.display='flex';
+  setTimeout(function(){document.getElementById('saveNewInput').focus();},150);
+}
+function closeSaveSheet(){document.getElementById('saveSheet').style.display='none';}
+function closeSaveOverlay(e){if(e.target===document.getElementById('saveSheet'))closeSaveSheet();}
+function _doSave(name,key){
+  var contacts=loadContacts();
+  if(!contacts[key]) contacts[key]={name:name,sessions:[]};
+  contacts[key].sessions.push({
+    date:Date.now(),
+    score:pendingSaveData?pendingSaveData.score:0,
+    duration:pendingSaveData?pendingSaveData.duration:''
+  });
+  saveContacts(contacts);
+  closeSaveSheet();
+  pendingSaveData=null;
+  showAlert('✓ '+name+' - '+t('savedMsg'),2000);
+}
+function saveToNew(){
+  var name=document.getElementById('saveNewInput').value.trim();
+  if(!name){
+    document.getElementById('saveNewInput').style.borderColor='var(--danger)';
+    setTimeout(function(){document.getElementById('saveNewInput').style.borderColor='';},1200);
+    return;
+  }
+  var contacts=loadContacts();
+  var existKey=Object.keys(contacts).find(function(k){return contacts[k].name===name;});
+  _doSave(name, existKey||('k'+Date.now()));
+}
+function saveToExisting(key){
+  var contacts=loadContacts(); if(!contacts[key]) return;
+  _doSave(contacts[key].name, key);
+}
+
+// ── TRANSLATIONS ──
+const T = {
+  he:{
+    waiting:'ממתין', calibrating:'⏳ מכייל...', eqTitle:'ניתוח מאפייני קול בזמן אמת',
+    pitch:'גובה קול', jitter:'רעידת קול', pauses:'פאוזות',
+    rate:'קצב דיבור', volume:'עוצמת קול', breath:'קצב נשימה',
+    markBtn:'סמן רגע חשוד', history:'היסטוריה',
+    summaryTitle:'סיכום שיחה', summaryBtn:'סיים וסכם',
+    sumDurLabel:'משך שיחה', sumMarksLabel:'רגעים מסומנים',
+    startBtn:'התחל ניתוח', stopBtn:'ביטול', finishBtn:'סיים וסכם',
+    errMsg:'לא ניתן לגשת למיקרופון — בדוק הרשאות.',
+    noMarks:'אין', waitingData:'ממתין לנתונים...',
+    alertDrop:'ירידה חדה באמינות',
+    markedAt:(t)=>'🚩 רגע מסומן — '+t,
+    credible:'אמין', suspicious:'חשוד', unreliable:'לא אמין',
+    credDesc:(s)=> s>65?'הדובר מציג מאפייני קול יציבים ועקביים.': s>38?'זוהו מספר מאפיינים חשודים. מומלץ לשים לב.':'מאפייני קול מרובים מעידים על מתח גבוה.',
+    metricNorm:'תקין', metricHigh:'גבוה', metricLow:'נמוך', metricAlert:'חריגה',
+    standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
+    gainLabel:'רגישות', contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
+    saveScoreLabel:'ציון: ', savedMsg:'נשמר', saveInputPlaceholder:'שם חדש...',
+    expPrefix:'הסבר: ',
+    expSep:', ',
+    expJitter:'רעידת קול גבוהה',
+    expJitterMid:'רעידת קול בינונית',
+    expPause:'פאוזות חשודות תכופות באמצע משפט',
+    expPauseMid:'פאוזות קצרות באמצע דיבור',
+    expRate:'שינוי עקבי בקצב הדיבור',
+    expPitch:'עלייה בגובה הקול',
+    expVolume:'תנודות חדה בעוצמת הקול',
+    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.',
+  },
+  en:{
+    waiting:'Waiting', calibrating:'⏳ Calibrating...', eqTitle:'Real-Time Voice Feature Analysis',
+    pitch:'Pitch', jitter:'Jitter', pauses:'Pauses',
+    rate:'Speech Rate', volume:'Volume', breath:'Breath Rate',
+    markBtn:'Mark Suspicious Moment', history:'History',
+    summaryTitle:'Call Summary', summaryBtn:'Finish & Summarize',
+    sumDurLabel:'Call Duration', sumMarksLabel:'Marked Moments',
+    startBtn:'Start Analysis', stopBtn:'Cancel', finishBtn:'Finish & Summarize',
+    errMsg:'Microphone access denied — check permissions.',
+    noMarks:'None', waitingData:'Waiting for data...',
+    alertDrop:'Sharp drop in credibility',
+    markedAt:(t)=>'🚩 Marked — '+t,
+    credible:'Credible', suspicious:'Suspicious', unreliable:'Unreliable',
+    credDesc:(s)=> s>65?'Speaker shows stable and consistent voice features.': s>38?'Several suspicious features detected. Pay attention.':'Multiple voice features indicate high stress levels.',
+    metricNorm:'Normal', metricHigh:'High', metricLow:'Low', metricAlert:'Alert',
+    standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
+    gainLabel:'רגישות', contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
+    saveScoreLabel:'ציון: ', savedMsg:'נשמר', saveInputPlaceholder:'שם חדש...',
+    expPrefix:'הסבר: ',
+    expSep:', ',
+    expJitter:'רעידת קול גבוהה',
+    expJitterMid:'רעידת קול בינונית',
+    expPause:'פאוזות חשודות תכופות באמצע משפט',
+    expPauseMid:'פאוזות קצרות באמצע דיבור',
+    expRate:'שינוי עקבי בקצב הדיבור',
+    expPitch:'עלייה בגובה הקול',
+    expVolume:'תנודות חדה בעוצמת הקול',
+    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.',
+  },
+  ar:{
+    waiting:'انتظار',
+    calibrating:'⏳ معايرة...',
+    eqTitle:'تحليل مميزات صوتية حية',
+    pitch:'طبقة الصوت',
+    jitter:'اهتزاز الصوت',
+    pauses:'توقفات',
+    rate:'سرعة الكلام',
+    volume:'مستوى الصوت',
+    breath:'معدل التنفس',
+    markBtn:'تحديد لحظة مشبوهة',
+    history:'السجل',
+    summaryTitle:'ملخص المكالمة',
+    summaryBtn:'إنهاء وتلخيص',
+    sumDurLabel:'مدة المكالمة',
+    sumMarksLabel:'اللحظات المحددة',
+    startBtn:'بدء التحليل',
+    stopBtn:'إلغاء', finishBtn:'إنهاء وتلخيص',
+    errMsg:'تعذّر الوصول إلى الميكروفون — تحقّق من الأذونات.',
+    noMarks:'لا يوجد',
+    waitingData:'في انتظار البيانات...',
+    alertDrop:'انخفاض حاد في المصداقية',
+    markedAt:(t)=>'⚠️ تم التحديد — '+t,
+    credible:'موثوق',
+    suspicious:'مشبوه',
+    unreliable:'غير موثوق',
+    credDesc:(s)=> s>65?'مميزات صوتية مستقرة ومتسقة.': s>38?'تم رصد عدة مميزات مشبوهة. يُنصح بالانتباه.':'مؤشرات تدل على توتر مرتفع.',
+    metricNorm:'طبيعي',
+    metricHigh:'مرتفع',
+    metricLow:'منخفض',
+    metricAlert:'تنبيه',
+    standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
+    gainLabel:'الحساسية', contactsUnit:'أشخاص', contactsEmpty:'لا توجد مكالمات.', sessionsUnit:'مكالمات', avgLabel:'متوسط',
+    saveScoreLabel:'الدرجة: ', savedMsg:'تم الحفظ', saveInputPlaceholder:'اسم...',
+    expPrefix:'السبب: ',
+    expSep:'، ',
+    expJitter:'اهتزاز صوتي مرتفع',
+    expJitterMid:'اهتزاز صوتي متوسط',
+    expPause:'توقفات مشبوهة وسط الجملة',
+    expPauseMid:'توقفات قصيرة أثناء الكلام',
+    expRate:'تغيير متسق في سرعة الكلام',
+    expPitch:'ارتفاع في طبقة الصوت',
+    expVolume:'تغييرات حادة في مستوى الصوت',
+    expNone:'لم ترصد شذوذات مهمة — مميزات الصوت مستقرة.',
+  }
+};
+let lang='he';
+function t(k,a){ const v=T[lang][k]; return typeof v==='function'?v(a):v; }
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l;
+  document.documentElement.dir=(l==='he'||l==='ar')?'rtl':'ltr';
+  document.getElementById('btnHe').classList.toggle('active',l==='he');
+  document.getElementById('btnEn').classList.toggle('active',l==='en');
+  document.getElementById('btnAr').classList.toggle('active',l==='ar');
+  document.body.style.fontFamily=l==='ar'?"'Noto Sans Arabic',sans-serif":"'Inter',-apple-system,sans-serif";
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    const k=el.getAttribute('data-key');
+    if(T[l][k]&&typeof T[l][k]==='string'){
+      if(el.id==='mainBtn') el.textContent=active?t('stopBtn'):t('startBtn');
+      else el.textContent=T[l][k];
+    }
+  });
+  if(active) updateArc(credibility);
+  else document.getElementById('arcLbl').textContent=t('waiting');
+}
+
+// ── GAUGE SETUP ──
+const ACX=90,ACY=90,AR=62;
+const ASA=Math.PI*0.85, AEA=Math.PI*2.15, ATA=AEA-ASA;
+function apt(a,r){return [ACX+r*Math.cos(a),ACY+r*Math.sin(a)];}
+function apath(f,to){
+  const lg=(to-f)>Math.PI?1:0;
+  const [x1,y1]=apt(f,AR),[x2,y2]=apt(to,AR);
+  return 'M'+x1+' '+y1+' A'+AR+' '+AR+' 0 '+lg+' 1 '+x2+' '+y2;
+}
+document.getElementById('arcBg').setAttribute('d',apath(ASA,AEA));
+
+function credColor(v){return v>65?'#10b981':v>38?'#f59e0b':'#ef4444';}
+function credLabel(v){return v>65?t('credible'):v>38?t('suspicious'):t('unreliable');}
+
+function updateArc(v){
+  const col=credColor(v);
+  document.documentElement.style.setProperty('--cc',col);
+  const fr=v/100,ang=ASA+fr*ATA;
+  document.getElementById('arcFill').setAttribute('d',apath(ASA,ang));
+  document.getElementById('arcFill').setAttribute('stroke',col);
+  document.getElementById('arcFill').style.filter='drop-shadow(0 0 5px '+col+'99)';
+  document.getElementById('arcFill').style.display='';
+  const deg=((ang-(Math.PI*1.5))*(180/Math.PI));
+  document.getElementById('arcNeedle').style.transform='rotate('+deg+'deg)';
+  document.getElementById('arcNeedle').setAttribute('stroke',col);
+  document.getElementById('arcNeedle').style.display='';
+  document.getElementById('arcHub').setAttribute('stroke',col);
+  document.getElementById('arcHub').style.display='';
+  const an=document.getElementById('arcNum'),al=document.getElementById('arcLbl');
+  an.textContent=Math.round(v); an.style.color=col; an.classList.add('live');
+  al.textContent=credLabel(v); al.style.color=col; al.classList.add('live');
+}
+function resetArc(){
+  ['arcFill','arcNeedle','arcHub'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('arcNum').textContent='--'; document.getElementById('arcNum').classList.remove('live');
+  document.getElementById('arcLbl').textContent=t('waiting'); document.getElementById('arcLbl').classList.remove('live');
+}
+
+// ── EQ BAR UPDATER ──
+// Each bar: value 0-100, threshold, color logic
+const BAR_THRESHOLDS = {pitch:70, jitter:60, pause:55, rate:65, volume:75, breath:60};
+let alertCooldownBars = {};
+
+function updateBar(name, pct, displayVal){
+  const fill=document.getElementById('fill-'+name);
+  const valEl=document.getElementById('val-'+name);
+  const wrap=document.getElementById('bar-'+name);
+  if(!fill) return;
+
+  const thresh=BAR_THRESHOLDS[name]||65;
+  let col;
+  if(pct>thresh){ col='#ef4444'; }
+  else if(pct>thresh*0.75){ col='#f59e0b'; }
+  else { col='#10b981'; }
+
+  fill.style.height=Math.max(3,pct)+'%';
+  fill.style.background=col;
+  fill.style.boxShadow=pct>thresh?'0 0 8px '+col+'88':'none';
+  if(valEl) valEl.textContent=displayVal||Math.round(pct)+'%';
+
+  // flash on threshold breach
+  if(pct>thresh && !alertCooldownBars[name]){
+    alertCooldownBars[name]=true;
+    wrap.classList.add('alert-flash');
+    setTimeout(()=>{ wrap.classList.remove('alert-flash'); alertCooldownBars[name]=false; },2000);
   }
 }
 
-function closeSaveSheet(){
-  document.getElementById('saveSheet').classList.remove('show');
-}
-function closeSaveOverlay(e){
-  if(e.target.id==='saveSheet') closeSaveSheet();
+// ── STATE ──
+let active=false,calibrating=false;
+let audioCtx,analyser,processor,stream;
+let pitchHist=[],voiceFrames=0,totalFrames=0;
+let lastPitch=0,jitterAcc=0,sampleCount=0;
+let credibility=50,prevCred=50;
+let historyData=[],markTimes=[],marks=[];
+let histInterval=null,waveAnimId=null,durInterval=null;
+let startTime=null,callDuration=0;
+let alertCooldown=false,markCounter=0;
+let summaryVisible=false;
+
+// running averages for summary
+let sumPitch=[],sumJitter=[],sumPause=[],sumRate=[],sumVolume=[],sumBreath=[];
+
+// ── PITCH ──
+function detectPitch(buf,sr){
+  const S=buf.length,M=Math.floor(S/2);
+  let rms=0; for(let i=0;i<S;i++) rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/S);
+  if(rms<0.01) return 0;
+  let bO=-1,bC=0,lC=1;
+  for(let o=20;o<M;o++){
+    let c=0; for(let i=0;i<M;i++) c+=Math.abs(buf[i]-buf[i+o]);
+    c=1-c/M; if(c>0.9&&c>lC){bC=c;bO=o;} lC=c;
+  }
+  return (bC>0.9&&bO>0)?sr/bO:0;
 }
 
-function saveToNew(){
-  var input=document.getElementById('saveNewInput');
-  var name=input.value.trim();
-  if(!name) return;
-  var contacts=loadContacts();
-  if(!contacts[name]) contacts[name]={sessions:[]};
-  
-  contacts[name].sessions.push({
-    date: Date.now(),
-    score: Math.round(credibility),
-    duration: callDuration,
-    marks: markedMoments.length
+// ── SPEECH RATE TREND TRACKING ──
+let rateHistory = [];        // last N speech rate readings
+let midSentencePauses = 0;   // pauses detected mid-sentence
+let lastVoiceFrame = 0;      // last frame with voice
+let shortPauseCount = 0;     // pauses < 800ms (mid-sentence)
+let longPauseCount = 0;      // pauses > 1200ms (sentence end - normal)
+let inPause = false;
+let pauseStartFrame = 0;
+
+// ── CREDIBILITY ──
+function computeCred({pitchVar, pauseRatio, speechRate, jitter, volume, midPauseScore, rateTrendScore}){
+  // Pitch instability (30%)
+  const p = Math.max(0, 100 - pitchVar * 2.5);
+  // Jitter (25%)
+  const j = Math.max(0, 100 - jitter * 400);
+  // Volume instability (15%)
+  const v = Math.max(0, 100 - Math.abs(volume - 0.08) * 400);
+  // Mid-sentence pause penalty (20%) — only punish short unexpected pauses
+  const pa = Math.max(0, 100 - midPauseScore * 3);
+  // Speech rate trend (10%) — only punish consistent directional change 3+ times
+  const r = Math.max(0, 100 - rateTrendScore * 15);
+  return Math.min(100, Math.max(0, p*0.30 + j*0.25 + v*0.15 + pa*0.20 + r*0.10));
+}
+
+// ── RATE TREND DETECTOR ──
+// Returns penalty score 0-5 based on consistent direction changes
+function computeRateTrend(history){
+  if(history.length < 4) return 0;
+  const recent = history.slice(-6);
+  let sameDir = 0;
+  let prevDir = 0;
+  for(let i=1;i<recent.length;i++){
+    const dir = recent[i] > recent[i-1] ? 1 : recent[i] < recent[i-1] ? -1 : 0;
+    if(dir !== 0 && dir === prevDir) sameDir++;
+    prevDir = dir || prevDir;
+  }
+  // 3+ consistent changes = suspicious
+  return Math.min(5, Math.max(0, sameDir - 2));
+}
+
+// ── MID-SENTENCE PAUSE DETECTOR ──
+// Returns score 0-20 based on short unexpected pauses
+function computeMidPauseScore(shortPauses, longPauses){
+  // Long pauses (sentence end) are normal — don't penalise
+  // Short pauses mid-sentence are suspicious
+  return Math.min(20, shortPauses * 2);
+}
+
+// ── HISTORY CHART ──
+function drawHistory(){
+  const c=document.getElementById('histCanvas'),ctx=c.getContext('2d');
+  const w=c.width,h=c.height,pd=8;
+  ctx.fillStyle='#0f1623'; ctx.fillRect(0,0,w,h);
+  [38,65].forEach(v=>{
+    const y=h-pd-(v/100)*(h-pd*2);
+    ctx.strokeStyle='#1c2d42';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(pd,y);ctx.lineTo(w-pd,y);ctx.stroke();
   });
-  
-  saveContacts(contacts);
-  input.value='';
-  closeSaveSheet();
-  switchTab('contacts');
-}
-
-function saveToExisting(name){
-  var contacts=loadContacts();
-  contacts[name].sessions.push({
-    date: Date.now(),
-    score: Math.round(credibility),
-    duration: callDuration,
-    marks: markedMoments.length
+  ctx.setLineDash([]);
+  if(historyData.length<2){
+    ctx.fillStyle='#2a4060';ctx.font='11px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText(t('waitingData'),w/2,h/2+4);return;
+  }
+  marks.forEach(mi=>{
+    if(mi>=0&&mi<historyData.length){
+      const x=pd+(mi/(historyData.length-1))*(w-pd*2);
+      ctx.strokeStyle='#ef444450';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+      ctx.beginPath();ctx.moveTo(x,pd);ctx.lineTo(x,h-pd);ctx.stroke();ctx.setLineDash([]);
+    }
   });
-  saveContacts(contacts);
-  closeSaveSheet();
-  switchTab('contacts');
-}
-
-// ── DETAIL SCREEN FUNCTIONS ──
-function openDetail(key){
-  currentContactKey=key;
-  var contacts=loadContacts(), ct=contacts[key];
-  if(!ct) return;
-  
-  document.getElementById('detailName').textContent=key;
-  document.getElementById('detailMeta').textContent=ct.sessions.length + ' ' + t('callsUnit');
-  
-  var container=document.getElementById('detailSessions');
-  container.innerHTML='';
-  
-  ct.sessions.forEach((s, idx) => {
-    var row=document.createElement('div');
-    row.className='session-row';
-    
-    var col=s.score>65?'#10b981':s.score>38?'#f59e0b':'#ef4444';
-    
-    row.innerHTML='<div><div class="session-date">'+new Date(s.date).toLocaleString()+'</div><div class="session-dur">'+t('sumDurLabel')+': '+formatTime(s.duration)+' | 🚩 '+s.marks+'</div></div><div class="session-score" style="color:'+col+'">'+s.score+'%</div>';
-    container.appendChild(row);
+  historyData.forEach((v,i)=>{
+    if(i===0)return;
+    const prev=historyData[i-1];
+    const x=pd+(i/(historyData.length-1))*(w-pd*2);
+    const y=h-pd-(v/100)*(h-pd*2);
+    const px=pd+((i-1)/(historyData.length-1))*(w-pd*2);
+    const py=h-pd-(prev/100)*(h-pd*2);
+    ctx.strokeStyle=credColor(v);ctx.lineWidth=2;ctx.shadowColor=credColor(v);ctx.shadowBlur=2;
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(x,y);ctx.stroke();
   });
-  
-  document.getElementById('detailOverlay').classList.add('show');
+  marks.forEach(mi=>{
+    if(mi>=0&&mi<historyData.length){
+      const x=pd+(mi/(historyData.length-1))*(w-pd*2);
+      const y=h-pd-(historyData[mi]/100)*(h-pd*2);
+      ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle='#ef4444';ctx.shadowBlur=0;ctx.fill();
+    }
+  });
 }
 
-function closeDetail(){
-  document.getElementById('detailOverlay').classList.remove('show');
-}
-function closeDetailOverlay(e){
-  if(e.target.id==='detailOverlay') closeDetail();
+function resizeCanvases(){
+  const c=document.getElementById('histCanvas'),dpr=window.devicePixelRatio||1;
+  c.width=c.offsetWidth*dpr; c.height=c.offsetHeight*dpr;
+  c.getContext('2d').scale(dpr,dpr);
 }
 
-function deleteContact(){
-  if(!currentContactKey) return;
-  var contacts=loadContacts();
-  delete contacts[currentContactKey];
-  saveContacts(contacts);
-  closeDetail();
-  renderContacts();
+function formatTime(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+
+// ── MARK ──
+function markMoment(){
+  if(!active)return;
+  markCounter++;
+  const el=Math.floor((Date.now()-startTime)/1000);
+  marks.push(historyData.length);
+  markTimes.push(el);
+  document.getElementById('markCnt').textContent=markCounter;
+  document.getElementById('markCnt').classList.add('show');
+  showAlert(t('markedAt',formatTime(el)),2500);
+  if(navigator.vibrate) navigator.vibrate([60,40,60]);
+  drawHistory();
 }
+
+// ── ALERT ──
+let alertTimer=null;
+function showAlert(msg,dur){
+  clearTimeout(alertTimer);
+  document.getElementById('alertTxt').textContent=msg;
+  document.getElementById('alertBox').classList.add('show');
+  alertTimer=setTimeout(()=>document.getElementById('alertBox').classList.remove('show'),dur||3000);
+}
+
+function checkAlert(nv,pv){
+  if(alertCooldown)return;
+  if(pv-nv>18&&nv<50){
+    alertCooldown=true;
+    showAlert(t('alertDrop'),3500);
+    if(navigator.vibrate) navigator.vibrate([100,50,100,50,200]);
+    setTimeout(()=>alertCooldown=false,4000);
+  }
+}
+
+// ── SUMMARY ──
+function toggleSummary(){
+  const p=document.getElementById('summaryPanel');
+  summaryVisible=!summaryVisible;
+  if(summaryVisible){ buildSummary(); p.classList.add('show'); }
+  else p.classList.remove('show');
+}
+
+function metricNote(v,lowOk,highBad){
+  if(lowOk){return v<30?t('metricNorm'):v<60?t('metricHigh'):t('metricAlert');}
+  return v<30?t('metricNorm'):v<60?t('metricHigh'):t('metricAlert');
+}
+
+function buildSummary(){
+  if(historyData.length<2)return;
+  const avg=v=>v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length):0;
+  const score=Math.round(historyData.reduce((a,b)=>a+b,0)/historyData.length);
+  const col=credColor(score);
+
+  // Show arc with final score
+  document.getElementById('scoreWrap').classList.remove('hidden-live');
+  updateArc(score);
+
+  // verdict
+  document.getElementById('verdictScore').textContent=score+'%';
+  document.getElementById('verdictScore').style.color=col;
+  document.getElementById('verdictLabel').textContent=credLabel(score);
+  document.getElementById('verdictLabel').style.color=col;
+  document.getElementById('verdictBox').style.borderColor=col+'50';
+  document.getElementById('verdictBox').style.background=col+'10';
+
+  // metric cards
+  const ap=avg(sumPitch),aj=avg(sumJitter),apa=avg(sumPause),ar=avg(sumRate),av=avg(sumVolume),ab=avg(sumBreath);
+  const setCard=(id,noteId,val,unit,note)=>{
+    document.getElementById(id).textContent=val+unit;
+    document.getElementById(id).style.color=note===t('metricAlert')?'#ef4444':note===t('metricHigh')?'#f59e0b':'#10b981';
+    document.getElementById(noteId).textContent=note;
+  };
+  setCard('sPitch','sPitchNote',ap,' Hz', ap>200?t('metricHigh'):t('metricNorm'));
+  setCard('sJitter','sJitterNote',aj,'%',aj>60?t('metricAlert'):aj>30?t('metricHigh'):t('metricNorm'));
+  setCard('sPause','sPauseNote',apa,'',apa>8?t('metricAlert'):apa>3?t('metricHigh'):t('metricNorm'));
+  setCard('sRate','sRateNote',ar,'%',ar>60?t('metricAlert'):ar>30?t('metricHigh'):t('metricNorm'));
+  setCard('sVolume','sVolumeNote',av,'%',av>75?t('metricAlert'):t('metricNorm'));
+  setCard('sBreath','sBreathNote',ab,'%',ab>60?t('metricAlert'):t('metricNorm'));
+
+  // ── Explanation of score ──
+  const reasons = [];
+  if(aj>60) reasons.push(t('expJitter'));
+  else if(aj>30) reasons.push(t('expJitterMid'));
+  if(apa>8) reasons.push(t('expPause'));
+  else if(apa>3) reasons.push(t('expPauseMid'));
+  if(ar>60) reasons.push(t('expRate'));
+  if(ap>200) reasons.push(t('expPitch'));
+  if(av>75) reasons.push(t('expVolume'));
+  const explanation = reasons.length > 0
+    ? t('expPrefix') + reasons.join(t('expSep'))
+    : t('expNone');
+  document.getElementById('verdictDesc').textContent=explanation;
+
+  document.getElementById('sDur').textContent=formatTime(callDuration);
+  document.getElementById('sMarks').textContent=markCounter||t('noMarks');
+  const chips=document.getElementById('markChips'); chips.innerHTML='';
+  markTimes.forEach(ti=>{ const s=document.createElement('span'); s.className='chip'; s.textContent='🚩 '+formatTime(ti); chips.appendChild(s); });
+}
+
+// ── START / STOP ──
+async function toggleAnalysis(){ if(active)cancelAnalysis(); else await startAnalysis(); }
+
+function cancelAnalysis(){
+  _stopAll();
+  _resetUI();
+  historyData=[];
+  document.getElementById('summaryPanel').classList.remove('show');
+  document.getElementById('saveSumBtn').style.display='none';
+}
+
+function finishAndSummarize(){
+  if(!active) return;
+  _stopAll();
+  _resetUI();
+  if(historyData.length>3){
+    buildSummary();
+    document.getElementById('summaryPanel').classList.add('show');
+    var fs=Math.round(historyData.reduce(function(a,b){return a+b;},0)/historyData.length);
+    pendingSaveData={score:fs, duration:formatTime(callDuration)};
+    document.getElementById('saveSumBtn').style.display='block';
+  }
+}
+
+function _stopAll(){
+  if(processor){processor.disconnect();processor=null;}
+  if(analyser){analyser.disconnect();analyser=null;}
+  if(stream){stream.getTracks().forEach(function(tk){tk.stop();});stream=null;}
+  if(audioCtx){audioCtx.close();audioCtx=null;}
+  if(histInterval){clearInterval(histInterval);histInterval=null;}
+  if(durInterval){clearInterval(durInterval);durInterval=null;}
+  active=false; calibrating=false; gainNode=null;
+}
+
+function _resetUI(){
+  document.getElementById('calibTag').classList.remove('show');
+  document.getElementById('sdot').className='sdot';
+  document.getElementById('statusTxt').textContent=t('standby');
+  document.getElementById('mainBtn').textContent=t('startBtn');
+  document.getElementById('mainBtn').className='main-btn btn-start';
+  document.getElementById('markBtn').disabled=true;
+  document.getElementById('sumBtn').disabled=true;
+  document.getElementById('alertBox').classList.remove('show');
+  resetArc();
+  document.getElementById('scoreWrap').classList.remove('hidden-live');
+  ['pitch','jitter','pause','rate','volume','breath'].forEach(function(n){
+    var f=document.getElementById('fill-'+n),v=document.getElementById('val-'+n);
+    if(f){f.style.height='3px';f.style.background='#10b981';} if(v) v.textContent='--';
+  });
+}
+
+async function startAnalysis(){
+  document.getElementById('errMsg').classList.remove('show');
+  document.getElementById('summaryPanel').classList.remove('show');
+  document.getElementById('saveSumBtn').style.display='none';
+  pendingSaveData=null;
+  summaryVisible=false;
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({
+      audio:{
+        echoCancellation:false,
+        noiseSuppression:false,
+        autoGainControl:false,
+        channelCount:1,
+        sampleRate:44100
+      },
+      video:false
+    });
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const src=audioCtx.createMediaStreamSource(stream);
+    analyser=audioCtx.createAnalyser(); analyser.fftSize=2048;
+    // Boost input gain for speaker pickup
+    gainNode=audioCtx.createGain();
+    gainNode.gain.value=gainLevel;
+    src.connect(gainNode);
+    gainNode.connect(analyser);
+    processor=audioCtx.createScriptProcessor(2048,1,1);
+    gainNode.connect(processor); processor.connect(audioCtx.destination);
+
+    pitchHist=[];voiceFrames=0;totalFrames=0;
+    lastPitch=0;jitterAcc=0;sampleCount=0;
+    credibility=50;prevCred=50;
+    historyData=[];marks=[];markTimes=[];markCounter=0;
+    alertCooldown=false;alertCooldownBars={};
+    sumPitch=[];sumJitter=[];sumPause=[];sumRate=[];sumVolume=[];sumBreath=[];
+    rateHistory=[];midSentencePauses=0;shortPauseCount=0;longPauseCount=0;
+    inPause=false;pauseStartFrame=0;lastVoiceFrame=0;
+    startTime=Date.now();calibrating=true;
+
+    document.getElementById('calibTag').textContent=t('calibrating');
+    document.getElementById('calibTag').classList.add('show');
+    document.getElementById('sdot').className='sdot calib';
+    document.getElementById('statusTxt').textContent=t('calib');
+    document.getElementById('markCnt').classList.remove('show');
+    document.getElementById('markCnt').textContent='0';
+    document.getElementById('sumBtn').disabled=true;
+
+    processor.onaudioprocess=(e)=>{
+      const buf=Array.from(e.inputBuffer.getChannelData(0));
+      const pitch=detectPitch(buf,audioCtx.sampleRate);
+      totalFrames++;
+
+      // RMS volume
+      let rms=0; for(let i=0;i<buf.length;i++) rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/buf.length);
+
+      // breath: low-frequency energy (envelope changes)
+      let breathEnergy=0;
+      for(let i=1;i<buf.length;i++) breathEnergy+=Math.abs(buf[i]-buf[i-1]);
+      breathEnergy/=buf.length;
+
+      if(pitch>80&&pitch<400){
+        voiceFrames++; pitchHist.push(pitch);
+        if(pitchHist.length>80) pitchHist.shift();
+        if(lastPitch>0){jitterAcc+=Math.abs(pitch-lastPitch)/Math.max(pitch,lastPitch);sampleCount++;}
+        lastPitch=pitch;
+        // Mid-sentence pause detection: was in pause → now voice resumed
+        if(inPause){
+          const pauseLen = totalFrames - pauseStartFrame;
+          // Short pause (< ~15 frames = ~700ms) mid-sentence = suspicious
+          if(pauseLen < 15) shortPauseCount++;
+          // Long pause (> 25 frames) = natural sentence end = ignore
+          else if(pauseLen > 25) longPauseCount++;
+          inPause=false;
+        }
+        lastVoiceFrame=totalFrames;
+      } else {
+        lastPitch=0;
+        // Start tracking pause only if we were just speaking (within 3 frames)
+        if(!inPause && totalFrames-lastVoiceFrame <= 3 && lastVoiceFrame>0){
+          inPause=true;
+          pauseStartFrame=totalFrames;
+        }
+      }
+
+      if(totalFrames%15===0){
+        if(totalFrames<90)return;
+        if(calibrating){
+          calibrating=false;
+          document.getElementById('calibTag').classList.remove('show');
+          document.getElementById('sdot').className='sdot live';
+          document.getElementById('statusTxt').textContent=t('live');
+          document.getElementById('markBtn').disabled=false;
+          document.getElementById('sumBtn').disabled=false;
+          document.getElementById('sumBtn').classList.add('highlight');
+          // Hide arc during live analysis
+          document.getElementById('scoreWrap').classList.add('hidden-live');
+        }
+
+        const avg=pitchHist.length>0?pitchHist.reduce((a,b)=>a+b,0)/pitchHist.length:0;
+        const variance=pitchHist.length>1?Math.sqrt(pitchHist.reduce((a,p)=>a+(p-avg)**2,0)/pitchHist.length):0;
+        const speechRate=voiceFrames/(totalFrames/21.5);
+        const jitter=sampleCount>0?jitterAcc/sampleCount:0;
+
+        // Track speech rate history for trend detection
+        rateHistory.push(speechRate);
+        if(rateHistory.length>10) rateHistory.shift();
+
+        const rateTrendScore = computeRateTrend(rateHistory);
+        const midPauseScore = computeMidPauseScore(shortPauseCount, longPauseCount);
+
+        // compute bar percentages
+        const pitchPct=Math.min(100,Math.max(0,(avg-80)/3.2));
+        const jitterPct=Math.min(100,jitter*800);
+        const pausePct=Math.min(100,(shortPauseCount/Math.max(1,totalFrames/21.5))*300);
+        const ratePct=Math.min(100,rateTrendScore*20);
+        const volPct=Math.min(100,rms*500);
+        const breathPct=Math.min(100,breathEnergy*2000);
+
+        // update EQ bars
+        updateBar('pitch',  pitchPct,  avg>0?Math.round(avg)+' Hz':'--');
+        updateBar('jitter', jitterPct, (jitter*100).toFixed(1)+'%');
+        updateBar('pause',  pausePct,  shortPauseCount+' '+t('pauses'));
+        updateBar('rate',   ratePct,   speechRate.toFixed(1));
+        updateBar('volume', volPct,    Math.round(volPct)+'%');
+        updateBar('breath', breathPct, Math.round(breathPct)+'%');
+
+        // save for summary
+        if(avg>0) sumPitch.push(Math.round(avg));
+        sumJitter.push(Math.round(jitterPct));
+        sumPause.push(shortPauseCount);
+        sumRate.push(Math.round(rateTrendScore*20));
+        sumVolume.push(Math.round(volPct));
+        sumBreath.push(Math.round(breathPct));
+
+        prevCred=credibility;
+        credibility=computeCred({pitchVar:variance,pauseRatio:0,speechRate,jitter,volume:rms,midPauseScore,rateTrendScore});
+        // Don't update arc live — only used in summary
+        checkAlert(credibility,prevCred);
+      }
+    };
+
+    histInterval=setInterval(()=>{
+      if(!calibrating){historyData.push(credibility);if(historyData.length>60)historyData.shift();drawHistory();}
+      callDuration=Math.floor((Date.now()-startTime)/1000);
+      document.getElementById('histDur').textContent=formatTime(callDuration);
+    },2000);
+
+    durInterval=setInterval(()=>{callDuration=Math.floor((Date.now()-startTime)/1000);},1000);
+
+    active=true;
+    document.getElementById('mainBtn').textContent=t('stopBtn');
+    document.getElementById('mainBtn').className='main-btn btn-stop';
+    resizeCanvases(); drawHistory();
+
+  }catch(err){
+    console.error(err);
+    document.getElementById('errMsg').textContent=t('errMsg');
+    document.getElementById('errMsg').classList.add('show');
+  }
+}
+
+function stopAnalysis(){ finishAndSummarize(); }
+
+window.addEventListener('load',()=>{ resizeCanvases(); drawHistory(); });
+window.addEventListener('resize', resizeCanvases);
 </script>
 </body>
 </html>
