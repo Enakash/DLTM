@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -1044,12 +1045,99 @@ function buildSummary(){
 // ── START / STOP ──
 async function toggleAnalysis(){ if(active)cancelAnalysis(); else await startAnalysis(); }
 
-function cancelAnalysis(){
-  _stopAll();
-  _resetUI();
-  historyData=[];
-  document.getElementById('summaryPanel').classList.remove('show');
-  document.getElementById('saveSumBtn').style.display='none';
+async function toggleAnalysis() {
+  if (active) {
+    stopAnalysis();
+    return;
+  }
+
+  // איפוס משתנים ולוגיקת פתיחה מקורית של LIEDAR
+  calibrating = true;
+  document.getElementById('calibBox').style.display = 'block';
+  document.getElementById('calibProgress').style.width = '0%';
+  document.getElementById('calibState').textContent = 'מייצב סביבה וקול רמקול...';
+  
+  historyData = [];
+  sumPitch = []; sumJitter = []; sumPause = []; sumRate = []; sumVolume = []; sumBreath = [];
+  startTime = Date.now();
+  calibStartTime = Date.now();
+
+  try {
+    // 1. הגדרות מיקרופון חומרתיות לביטול הד ורעשים במצב רמקול
+    const constraints = {
+      audio: {
+        echoCancellation: true,    // מונע מהמיקרופון לקלוט את השמע שיוצא מהרמקול של הטלפון
+        noiseSuppression: true,    // מסנן רעשי רקע קבועים מהסביבה
+        autoGainControl: false     // כבוי כדי לשמור על דיוק חישובי ה-Volume וה-Jitter שלך
+      }
+    };
+
+    // פנייה למיקרופון עם המאפיינים החדשים
+    stream = await navigator.mediaDevices.getUserMedia(constraints);
+    
+    // אתחול ה-AudioContext
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const source = audioContext.createMediaStreamAudioSource(stream);
+
+    // 2. מסנן תדרים נמוכים (High-Pass Filter) - חותך רעשי עמימות ורוח מתחת ל-85 הרץ
+    const hpFilter = audioContext.createBiquadFilter();
+    hpFilter.type = "highpass";
+    hpFilter.frequency.value = 85; 
+
+    // 3. מסנן תדרים גבוהים (Low-Pass Filter) - חותך צפצופים ורעש סטטי מעל 3400 הרץ
+    const lpFilter = audioContext.createBiquadFilter();
+    lpFilter.type = "lowpass";
+    lpFilter.frequency.value = 3400; 
+
+    // 4. יצירת ה-Gain Node לשליטה ברגישות (מתוך הקוד המקורי שלך)
+    gainNode = audioContext.createGain();
+    gainNode.gain.value = parseFloat(document.getElementById('gainSlider').value) || 4; 
+
+    // אתחול ה-Analyser המקורי של המערכת
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    
+    // 5. חיבור שרשרת השמע החדשה והמסוננת של LIEDAR
+    // המיקרופון -> מסנן נמוכים -> מסנן גבוהים -> מנחת הגבר (Gain) -> המנתח (Analyser)
+    source.connect(hpFilter);
+    hpFilter.connect(lpFilter);
+    lpFilter.connect(gainNode);
+    gainNode.connect(analyser);
+
+    // מערכים לעיבוד אותות (מתוך הקוד המקורי שלך)
+    const bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+    floatArray = new Float32Array(bufferLength);
+
+    // הפעלת לולאת הניתוח באנימציה בזמן אמת
+    animationFrameId = requestAnimationFrame(analysisLoop);
+
+    // ניהול זמני כיול והיסטוריה (מתוך הקוד המקורי שלך)
+    histInterval = setInterval(() => {
+      if (!calibrating) {
+        historyData.push(credibility);
+        if (historyData.length > 60) historyData.shift();
+        drawHistory();
+      }
+      callDuration = Math.floor((Date.now() - startTime) / 1000);
+      document.getElementById('histDur').textContent = formatTime(callDuration);
+    }, 2000);
+
+    durInterval = setInterval(() => {
+      callDuration = Math.floor((Date.now() - startTime) / 1000);
+    }, 1000);
+
+    active = true;
+    document.getElementById('mainBtn').textContent = t('stopBtn');
+    document.getElementById('mainBtn').className = 'main-btn btn-stop';
+    resizeCanvases(); 
+    drawHistory();
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('errMsg').textContent = t('errMsg');
+    document.getElementById('errMsg').classList.add('show');
+  }
 }
 
 function finishAndSummarize(){
