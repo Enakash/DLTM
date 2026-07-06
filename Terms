@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIEDAR — Terms of Use</title>
+<style>
+  :root{
+    --bg:#080c14; --surface:#0f1623; --border:#1c2d42; --border2:#243248;
+    --text:#e2e8f0; --muted:#4a6080; --muted2:#7a98b8; --accent:#60a5fa; --danger:#ef4444;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+    line-height:1.7;
+  }
+  .topbar{
+    background:var(--surface); border-bottom:1px solid var(--border);
+    padding:18px 20px; display:flex; align-items:center; gap:10px;
+  }
+  .logo{font-weight:900; font-size:20px; color:var(--accent); letter-spacing:0.5px;}
+  .wrap{max-width:760px; margin:0 auto; padding:36px 20px 80px;}
+  h1{font-size:26px; margin:0 0 6px; color:#fff;}
+  .updated{color:var(--muted); font-size:13px; margin-bottom:32px; font-family:monospace;}
+  h2{font-size:18px; color:var(--accent); margin-top:36px; margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:8px;}
+  p{color:#cbd5e1; font-size:14.5px; margin:10px 0;}
+  ul{margin:10px 0; padding-left:22px;}
+  li{color:#cbd5e1; font-size:14.5px; margin-bottom:6px;}
+  strong{color:#fff;}
+  .warning{
+    background:#1a0e0e; border:1px solid #5b1f1f; border-left:4px solid var(--danger);
+    border-radius:8px; padding:16px 18px; margin:20px 0; font-size:14px; color:#fca5a5; font-weight:600;
+  }
+  .legal{
+    font-size:13px; color:var(--muted2); background:#0d1628; border:1px solid var(--border2);
+    border-radius:8px; padding:14px 16px; margin:14px 0;
+  }
+  .contact-box{
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:18px 20px; margin-top:14px;
+  }
+  .contact-box p{margin:4px 0;}
+  footer{
+    text-align:center; color:var(--muted); font-size:12px; padding:24px;
+    border-top:1px solid var(--border); margin-top:40px;
+  }
+  a{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="logo">LIEDAR</span>
+</div>
+
+<div class="wrap">
+  <h1>Terms of Use</h1>
+  <div class="updated">Last updated: June 30, 2026</div>
+
+  <p>These Terms of Use (&ldquo;Terms&rdquo;) govern your use of the LIEDAR mobile application (&ldquo;the App&rdquo;), developed and distributed by an independent developer operating as an exempt dealer in Israel under the business name MusicMee Autocyc (&ldquo;we,&rdquo; &ldquo;our,&rdquo; &ldquo;developer&rdquo;). By downloading, installing, or using the App, you agree to be bound by these Terms.</p>
+
+  <h2>1. What LIEDAR Is &mdash; and What It Is Not</h2>
+  <p>LIEDAR analyzes acoustic features of voice audio in real time &mdash; including pitch, micro-tremor (jitter), pause patterns, speech rate, volume, and breathing rate &mdash; and presents a composite &ldquo;credibility&rdquo; score along with a plain-language explanation of which features contributed to that score.</p>
+
+  <div class="warning">
+    IMPORTANT: LIEDAR is NOT a scientifically validated lie-detection device. No acoustic or physiological signal &mdash; including those measured by this App &mdash; has been scientifically proven to reliably distinguish truthful statements from false ones. Voice stress analysis technology, including the techniques used in this App, is widely regarded by researchers and forensic bodies as having insufficient scientific reliability for use as evidence of deception.
+  </div>
+
+  <p>The App is intended as a personal self-awareness and speech-practice tool. Example uses include:</p>
+  <ul>
+    <li>Practicing presentations, interviews, or public speaking and reviewing your own vocal stability.</li>
+    <li>Becoming more aware of your own stress indicators while speaking.</li>
+    <li>Informal, non-evidentiary self-reflection on your communication patterns.</li>
+  </ul>
+
+  <p>LIEDAR must not be used, and may not be relied upon, for:</p>
+  <ul>
+    <li>Determining the truthfulness of any statement made by yourself or another person.</li>
+    <li>Employment screening, background checks, or any hiring/firing decision.</li>
+    <li>Legal proceedings, evidence gathering, investigations, or law enforcement purposes.</li>
+    <li>Medical, psychological, or psychiatric diagnosis of any kind.</li>
+    <li>Any decision with legal, financial, medical, or safety consequences for yourself or another person.</li>
+  </ul>
+
+  <h2>2. Recording and Privacy of Other People</h2>
+  <p>LIEDAR is designed for analyzing your own voice. The App does not record or store audio under any circumstances &mdash; all analysis happens transiently, in memory, on your device.</p>
+  <p>If you use the App in a way that captures another person&rsquo;s voice (for example, placing your phone near a speaker during a call), you are solely responsible for complying with all applicable laws in your jurisdiction, including wiretapping, eavesdropping, two-party consent, and privacy laws. The developer does not encourage, endorse, or take responsibility for using this App to analyze another person without their knowledge or consent. We strongly recommend obtaining consent from anyone whose voice may be captured.</p>
+
+  <h2>3. No Warranty</h2>
+  <p class="legal">THE APP IS PROVIDED &ldquo;AS IS&rdquo; AND &ldquo;AS AVAILABLE,&rdquo; WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, ACCURACY, OR NON-INFRINGEMENT. We do not warrant that the App&rsquo;s analysis, scores, or explanations are accurate, complete, or suitable for any particular purpose.</p>
+
+  <h2>4. Limitation of Liability</h2>
+  <p class="legal">TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE DEVELOPER SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, CONSEQUENTIAL, SPECIAL, OR PUNITIVE DAMAGES ARISING FROM OR RELATED TO YOUR USE OF, OR INABILITY TO USE, THE APP &mdash; INCLUDING ANY DECISIONS MADE OR ACTIONS TAKEN IN RELIANCE ON THE APP&rsquo;S OUTPUT, OR ANY CONSEQUENCES ARISING FROM RECORDING OR ANALYZING ANOTHER PERSON&rsquo;S VOICE WITHOUT PROPER CONSENT.</p>
+
+  <h2>5. User Responsibilities</h2>
+  <ul>
+    <li>You must be legally permitted to use voice-analysis software in your jurisdiction.</li>
+    <li>You agree not to use the App to harass, stalk, defame, or harm any other person.</li>
+    <li>You agree not to misrepresent the App&rsquo;s output as scientifically validated lie-detection evidence to any third party.</li>
+    <li>You are responsible for any contact names or labels you choose to enter and store locally within the App.</li>
+  </ul>
+
+  <h2>6. Local Data Storage</h2>
+  <p>Session summaries you choose to save (score, duration, timestamp, and a contact label you provide) are stored only in local app storage on your device and are never transmitted anywhere. See the <a href="privacy.html">Privacy Policy</a> for full details. You may delete this data at any time within the App or by uninstalling it.</p>
+
+  <h2>7. Intellectual Property</h2>
+  <p>The App, including its design, algorithms, branding, and content, is the property of the developer. You may not copy, reverse-engineer, redistribute, or create derivative works from the App without prior written permission.</p>
+
+  <h2>8. Changes to the App and Terms</h2>
+  <p>We may update, modify, or discontinue the App, or these Terms, at any time. Continued use of the App after changes take effect constitutes acceptance of the revised Terms.</p>
+
+  <h2>9. Governing Law</h2>
+  <p>These Terms are governed by the laws of the State of Israel, without regard to conflict-of-law principles, except where mandatory consumer-protection law in your jurisdiction provides otherwise.</p>
+
+  <h2>10. Contact</h2>
+  <div class="contact-box">
+    <p><strong>service@liedar.store</strong></p>
+    <p>Business File Number: 031376551</p>
+    <p>Israel</p>
+  </div>
+
+</div>
+
+<footer>LIEDAR &middot; <a href="privacy.html">Privacy Policy</a> &middot; <a href="https://enakash.github.io/DLTM">Back to App</a></footer>
+
+</body>
+</html>
