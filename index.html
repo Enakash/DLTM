@@ -266,6 +266,7 @@ body{
       </svg>
     </div>
   <div class="topbar-right">
+    <span data-key="langLabel" style="font-size:11px;color:var(--muted);font-family:var(--mono);padding-left:4px;">שפה</span>
     <div class="lang-toggle">
       <button class="lang-btn active" id="btnHe" onclick="setLang('he')">עב</button>
       <button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button>
@@ -277,7 +278,7 @@ body{
     </div>
   </div>
 </div>
-<div class="nav-tabs"><button class="nav-tab active" id="tabAnalyze" onclick="switchTab('analyze')">ניתוח</button><button class="nav-tab" id="tabContacts" onclick="switchTab('contacts')">אנשי קשר</button></div>
+<div class="nav-tabs"><button class="nav-tab active" id="tabAnalyze" onclick="switchTab('analyze')" data-key="tabAnalyze">ניתוח</button><button class="nav-tab" id="tabContacts" onclick="switchTab('contacts')" data-key="tabContacts">אנשי קשר</button></div>
 <div class="screen active" id="screenAnalyze">
 
 <!-- SCORE ARC -->
@@ -406,7 +407,7 @@ body{
   <div class="sum-row"><span class="sum-key" data-key="sumDurLabel">משך שיחה</span><span class="sum-val" id="sDur">—</span></div>
   <div class="sum-row"><span class="sum-key" data-key="sumMarksLabel">רגעים מסומנים</span><span class="sum-val" id="sMarks">—</span></div>
   <div class="mark-chips" id="markChips"></div>
-  <button class="save-sum-btn" id="saveSumBtn" onclick="openSaveSheet()">שמור שיחה</button>
+  <button class="save-sum-btn" id="saveSumBtn" onclick="openSaveSheet()" data-key="saveSumBtnLabel">שמור שיחה</button>
 </div>
 
 <!-- BUTTONS -->
@@ -421,7 +422,7 @@ body{
 <div class="screen" id="screenContacts">
   <div class="contacts-wrap">
     <div class="contacts-header">
-      <span class="contacts-title">אנשי קשר</span>
+      <span class="contacts-title" data-key="tabContacts">אנשי קשר</span>
       <span class="contacts-count" id="contactsCount"></span>
     </div>
     <div class="contacts-grid" id="contactsGrid">
@@ -437,8 +438,8 @@ body{
     <div class="detail-title" id="detailName"></div>
     <div class="detail-meta" id="detailMeta"></div>
     <div class="session-list" id="detailSessions"></div>
-    <button class="detail-close" onclick="closeDetail()">סגור</button>
-    <button class="detail-delete" onclick="deleteContact()">מחק איש קשר</button>
+    <button class="detail-close" onclick="closeDetail()" data-key="modalClose">סגור</button>
+    <button class="detail-delete" onclick="deleteContact()" data-key="modalDelete">מחק איש קשר</button>
   </div>
 </div>
 
@@ -446,15 +447,15 @@ body{
 <div class="save-sheet" id="saveSheet" onclick="closeSaveOverlay(event)">
   <div class="save-sheet-box">
     <div class="save-handle"></div>
-    <div class="save-sheet-title">שמור שיחה</div>
+    <div class="save-sheet-title" data-key="saveTitle">שמור שיחה</div>
     <div class="save-sheet-sub" id="saveSheetSub"></div>
     <div class="save-new-row">
       <input class="save-new-input" id="saveNewInput" maxlength="40" placeholder="שם חדש..."/>
-      <button class="save-add-btn" onclick="saveToNew()">הוסף</button>
+      <button class="save-add-btn" onclick="saveToNew()" data-key="saveConfirm">הוסף</button>
     </div>
-    <div class="save-divider" id="saveDivider" style="display:none">או בחר קיים</div>
+    <div class="save-divider" id="saveDivider" style="display:none" data-key="saveExistingLabel">או בחר קיים</div>
     <div class="save-contact-list" id="saveContactList"></div>
-    <button class="save-cancel-btn" onclick="closeSaveSheet()">בטל</button>
+    <button class="save-cancel-btn" onclick="closeSaveSheet()" data-key="saveSkip">בטל</button>
   </div>
 </div>
 
@@ -589,6 +590,7 @@ function openSaveSheet(){
     });
   } else { div.style.display='none'; }
   document.getElementById('saveNewInput').value='';
+  document.getElementById('saveNewInput').placeholder=t('saveInputPlaceholder');
   document.getElementById('saveSheet').style.display='flex';
   setTimeout(function(){document.getElementById('saveNewInput').focus();},150);
 }
@@ -641,9 +643,9 @@ const T = {
     credDesc:(s)=> s>65?'הדובר מציג מאפייני קול יציבים ועקביים.': s>38?'זוהו מספר מאפיינים חשודים. מומלץ לשים לב.':'מאפייני קול מרובים מעידים על מתח גבוה.',
     metricNorm:'תקין', metricHigh:'גבוה', metricLow:'נמוך', metricAlert:'חריגה',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
-    gainLabel:'רגישות', contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
-    saveScoreLabel:'ציון: ', savedMsg:'נשמר', saveInputPlaceholder:'שם חדש...',
-    expPrefix:'הסבר: ',
+    gainLabel:'רגישות', langLabel:'שפה:', contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
+    saveScoreLabel:'ציון: ', savedMsg:'נשמר', tabAnalyze:'ניתוח', tabContacts:'אנשי קשר', saveTitle:'שמור שיחה', saveConfirm:'הוסף', saveSkip:'בטל', saveExistingLabel:'או בחר קיים', saveSumBtnLabel:'שמור שיחה', modalClose:'סגור', modalDelete:'מחק איש קשר', saveInputPlaceholder:'שם חדש...',
+    expPrefix:'Reason: ',
     expSep:', ',
     expJitter:'רעידת קול גבוהה',
     expJitterMid:'רעידת קול בינונית',
@@ -670,8 +672,8 @@ const T = {
     credDesc:(s)=> s>65?'Speaker shows stable and consistent voice features.': s>38?'Several suspicious features detected. Pay attention.':'Multiple voice features indicate high stress levels.',
     metricNorm:'Normal', metricHigh:'High', metricLow:'Low', metricAlert:'Alert',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
-    gainLabel:'רגישות', contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
-    saveScoreLabel:'ציון: ', savedMsg:'נשמר', saveInputPlaceholder:'שם חדש...',
+    gainLabel:'Sensitivity', langLabel:'Language:', contactsUnit:'people', contactsEmpty:'No saved calls yet.', sessionsUnit:'calls', avgLabel:'avg',
+    saveScoreLabel:'Score: ', savedMsg:'Saved', tabAnalyze:'Analysis', tabContacts:'Contacts', saveTitle:'Save Call', saveConfirm:'Add', saveSkip:'Cancel', saveExistingLabel:'Or pick existing', saveSumBtnLabel:'Save Call', modalClose:'Close', modalDelete:'Delete Contact', saveInputPlaceholder:'New name...',
     expPrefix:'הסבר: ',
     expSep:', ',
     expJitter:'רעידת קול גבוהה',
@@ -715,8 +717,8 @@ const T = {
     metricLow:'منخفض',
     metricAlert:'تنبيه',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
-    gainLabel:'الحساسية', contactsUnit:'أشخاص', contactsEmpty:'لا توجد مكالمات.', sessionsUnit:'مكالمات', avgLabel:'متوسط',
-    saveScoreLabel:'الدرجة: ', savedMsg:'تم الحفظ', saveInputPlaceholder:'اسم...',
+    gainLabel:'الحساسية', langLabel:'اللغة:', contactsUnit:'أشخاص', contactsEmpty:'لا توجد مكالمات.', sessionsUnit:'مكالمات', avgLabel:'متوسط',
+    saveScoreLabel:'الدرجة: ', savedMsg:'تم الحفظ', tabAnalyze:'تحليل', tabContacts:'جهات الاتصال', saveTitle:'حفظ المكالمة', saveConfirm:'إضافة', saveSkip:'إلغاء', saveExistingLabel:'أو اختر موجوداً', saveSumBtnLabel:'حفظ المكالمة', modalClose:'إغلاق', modalDelete:'حذف جهة الاتصال', saveInputPlaceholder:'اسم...',
     expPrefix:'السبب: ',
     expSep:'، ',
     expJitter:'اهتزاز صوتي مرتفع',
@@ -746,10 +748,12 @@ function setLang(l){
       else el.textContent=T[l][k];
     }
   });
+  // Update placeholders
+  const inp=document.getElementById('saveNewInput');
+  if(inp) inp.placeholder=t('saveInputPlaceholder');
   if(active) updateArc(credibility);
   else document.getElementById('arcLbl').textContent=t('waiting');
 }
-
 // ── GAUGE SETUP ──
 const ACX=90,ACY=90,AR=62;
 const ASA=Math.PI*0.85, AEA=Math.PI*2.15, ATA=AEA-ASA;
