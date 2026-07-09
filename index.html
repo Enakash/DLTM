@@ -295,13 +295,6 @@ body{
       <div class="arc-lbl" id="arcLbl" data-key="waiting">ממתין</div>
     </div>
   </div>
-  <div class="gain-row" style="display:flex;align-items:center;gap:10px;margin-top:10px;width:100%;max-width:280px;">
-    <span style="font-size:10px;color:var(--muted);font-family:var(--mono);white-space:nowrap;" data-key="gainLabel">רגישות</span>
-    <input type="range" id="gainSlider" min="1" max="12" value="4" step="0.5"
-      oninput="updateGain(this.value)"
-      style="flex:1;accent-color:var(--accent);cursor:pointer;height:4px;">
-    <span id="gainVal" style="font-size:11px;color:var(--accent);font-family:var(--mono);min-width:28px;">x4</span>
-  </div>
   <div class="calib-tag" id="calibTag" data-key="calibrating">⏳ מכייל...</div>
 </div>
 
@@ -309,6 +302,14 @@ body{
 <div class="alert" id="alertBox">
   <span>⚠️</span><span id="alertTxt"></span>
 </div>
+
+  <div class="gain-row" style="display:flex;align-items:center;gap:10px;margin-top:10px;width:100%;max-width:280px;">
+    <span style="font-size:10px;color:var(--muted);font-family:var(--mono);white-space:nowrap;" data-key="gainLabel">רגישות</span>
+    <input type="range" id="gainSlider" min="1" max="12" value="4" step="0.5"
+      oninput="updateGain(this.value)"
+      style="flex:1;accent-color:var(--accent);cursor:pointer;height:4px;">
+    <span id="gainVal" style="font-size:11px;color:var(--accent);font-family:var(--mono);min-width:28px;">x4</span>
+  </div>
 
 <!-- EQ BARS -->
 <div class="eq-section">
@@ -637,7 +638,7 @@ const T = {
     startBtn:'התחל ניתוח', stopBtn:'ביטול', finishBtn:'סיים וסכם',
     errMsg:'לא ניתן לגשת למיקרופון — בדוק הרשאות.',
     noMarks:'אין', waitingData:'ממתין לנתונים...',
-    alertDrop:'ירידה חדה באמינות',
+    alertDrop:'ירידה חדה באמינות', autoMarkDrop:'סומן אוטומטי — ירידה חדה', autoMarkLow:'סומן אוטומטי — ציון נמוך מתמשך',
     markedAt:(t)=>'🚩 רגע מסומן — '+t,
     credible:'אמין', suspicious:'חשוד', unreliable:'לא אמין',
     credDesc:(s)=> s>65?'הדובר מציג מאפייני קול יציבים ועקביים.': s>38?'זוהו מספר מאפיינים חשודים. מומלץ לשים לב.':'מאפייני קול מרובים מעידים על מתח גבוה.',
@@ -666,7 +667,7 @@ const T = {
     startBtn:'Start Analysis', stopBtn:'Cancel', finishBtn:'Finish & Summarize',
     errMsg:'Microphone access denied — check permissions.',
     noMarks:'None', waitingData:'Waiting for data...',
-    alertDrop:'Sharp drop in credibility',
+    alertDrop:'Sharp drop in credibility', autoMarkDrop:'Auto-marked — sharp drop detected', autoMarkLow:'Auto-marked — sustained low score',
     markedAt:(t)=>'🚩 Marked — '+t,
     credible:'Credible', suspicious:'Suspicious', unreliable:'Unreliable',
     credDesc:(s)=> s>65?'Speaker shows stable and consistent voice features.': s>38?'Several suspicious features detected. Pay attention.':'Multiple voice features indicate high stress levels.',
@@ -706,7 +707,7 @@ const T = {
     errMsg:'تعذّر الوصول إلى الميكروفون — تحقّق من الأذونات.',
     noMarks:'لا يوجد',
     waitingData:'في انتظار البيانات...',
-    alertDrop:'انخفاض حاد في المصداقية',
+    alertDrop:'انخفاض حاد في المصداقية', autoMarkDrop:'تحديد تلقائي — انخفاض حاد', autoMarkLow:'تحديد تلقائي — درجة منخفضة مستمرة',
     markedAt:(t)=>'⚠️ تم التحديد — '+t,
     credible:'موثوق',
     suspicious:'مشبوه',
@@ -748,6 +749,9 @@ function setLang(l){
       else el.textContent=T[l][k];
     }
   });
+  // Update sMarks if summary is visible
+  var sMarksEl=document.getElementById('sMarks');
+  if(sMarksEl && !markCounter) sMarksEl.textContent=t('noMarks');
   // Update placeholders
   const inp=document.getElementById('saveNewInput');
   if(inp) inp.placeholder=t('saveInputPlaceholder');
@@ -832,6 +836,7 @@ let historyData=[],markTimes=[],marks=[];
 let histInterval=null,waveAnimId=null,durInterval=null;
 let startTime=null,callDuration=0;
 let alertCooldown=false,markCounter=0;
+let lowScoreStreak=0,autoMarkCooldown=false;
 let summaryVisible=false;
 
 // running averages for summary
@@ -971,6 +976,33 @@ function showAlert(msg,dur){
 }
 
 function checkAlert(nv,pv){
+  // Track low-score streak
+  if(nv<40) lowScoreStreak++; else lowScoreStreak=0;
+
+  // Auto-mark: sharp drop (15+ pts in one step)
+  const sharpDrop = (pv-nv)>=15 && nv<55;
+  // Auto-mark: sustained low score (3+ consecutive readings below 40)
+  const sustainedLow = lowScoreStreak>=3;
+
+  if((sharpDrop||sustainedLow) && !autoMarkCooldown){
+    autoMarkCooldown=true;
+    // Add mark to graph
+    marks.push(historyData.length);
+    const el=Math.floor((Date.now()-startTime)/1000);
+    markTimes.push(el);
+    markCounter++;
+    document.getElementById('markCnt').textContent=markCounter;
+    document.getElementById('markCnt').classList.add('show');
+    // Show alert banner
+    const reason = sharpDrop ? t('autoMarkDrop') : t('autoMarkLow');
+    showAlert('🚩 '+reason, 4000);
+    // Vibrate
+    if(navigator.vibrate) navigator.vibrate([80,40,80,40,300]);
+    // Cooldown 5s to avoid spam
+    setTimeout(()=>{ autoMarkCooldown=false; }, 5000);
+  }
+
+  // Existing alert for very sharp drops (kept separate)
   if(alertCooldown)return;
   if(pv-nv>18&&nv<50){
     alertCooldown=true;
@@ -1129,6 +1161,7 @@ async function startAnalysis(){
     credibility=50;prevCred=50;
     historyData=[];marks=[];markTimes=[];markCounter=0;
     alertCooldown=false;alertCooldownBars={};
+    lowScoreStreak=0;autoMarkCooldown=false;
     sumPitch=[];sumJitter=[];sumPause=[];sumRate=[];sumVolume=[];sumBreath=[];
     rateHistory=[];midSentencePauses=0;shortPauseCount=0;longPauseCount=0;
     inPause=false;pauseStartFrame=0;lastVoiceFrame=0;
