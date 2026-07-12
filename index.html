@@ -1307,7 +1307,7 @@ async function startAnalysis(){
 
 function stopAnalysis(){ finishAndSummarize(); }
 
-window.addEventListener('load',()=>{ resizeCanvases(); drawHistory(); });
+window.addEventListener('load',()=>{ setLang(lang); resizeCanvases(); drawHistory(); });
 window.addEventListener('resize', resizeCanvases);
 </script>
 
