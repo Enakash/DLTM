@@ -37,12 +37,12 @@
       "purpose": "maskable"
     }
   ],
-    "screenshots": [
-      {
-        "src": "/icons/screenshot1.png",
-        "sizes": "730x1587",
-        "type": "image/png",
-        "form_factor": "narrow"
-      }
-    ]
+"screenshots": [
+  {
+    "src": "/icons/screenshot1.jpg",
+    "sizes": "730x1587",
+    "type": "image/jpeg",
+    "form_factor": "narrow"
+  }
+]
 }
