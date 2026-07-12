@@ -1,6 +1,7 @@
 {
   "name": "LIEDAR",
   "short_name": "LIEDAR",
+  "id": "https://liedar.store/",
   "description": "ניתוח קול ומהימנות בזמן אמת",
   "display": "standalone",
   "orientation": "portrait",
