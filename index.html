@@ -735,10 +735,23 @@ const T = {
     expNone:'لم ترصد شذوذات مهمة — مميزات الصوت مستقرة.',
   }
 };
-let lang='he';
+// ── LANGUAGE DETECTION & PERSISTENCE ──
+const LANG_KEY='liedar_lang';
+const SUPPORTED_LANGS=['he','en','ar'];
+function getInitialLang(){
+  try{
+    const saved=localStorage.getItem(LANG_KEY);
+    if(saved && SUPPORTED_LANGS.indexOf(saved)!==-1) return saved;
+  }catch(e){}
+  const nav=(navigator.language||(navigator.languages&&navigator.languages[0])||'en').toLowerCase();
+  const short=nav.slice(0,2);
+  return SUPPORTED_LANGS.indexOf(short)!==-1 ? short : 'en';
+}
+let lang=getInitialLang();
 function t(k,a){ const v=T[lang][k]; return typeof v==='function'?v(a):v; }
 function setLang(l){
   lang=l;
+  try{localStorage.setItem(LANG_KEY,l);}catch(e){}
   document.documentElement.lang=l;
   document.documentElement.dir=(l==='he'||l==='ar')?'rtl':'ltr';
   document.getElementById('btnHe').classList.toggle('active',l==='he');
