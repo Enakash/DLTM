@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LIEDAR — Privacy Policy</title>
+<title>LIEDAR — מדיניות פרטיות / Privacy Policy</title>
 <style>
   :root{
     --bg:#080c14; --surface:#0f1623; --border:#1c2d42; --border2:#243248;
@@ -13,24 +13,34 @@
   body{
     margin:0; background:var(--bg); color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
-    line-height:1.7;
+    line-height:1.8;
   }
   .topbar{
     background:var(--surface); border-bottom:1px solid var(--border);
-    padding:18px 20px; display:flex; align-items:center; gap:10px;
+    padding:18px 20px; display:flex; align-items:center; justify-content:space-between;
   }
   .logo{font-weight:900; font-size:20px; color:var(--accent); letter-spacing:0.5px;}
+  .lang-toggle{display:flex; gap:8px;}
+  .lang-btn{
+    padding:5px 14px; border-radius:14px; border:1px solid var(--border2);
+    background:transparent; color:var(--muted2); font-size:12px; cursor:pointer;
+    text-decoration:none;
+  }
+  .lang-btn.active{background:var(--accent); color:#fff; border-color:var(--accent);}
   .wrap{max-width:760px; margin:0 auto; padding:36px 20px 80px;}
+  .section{display:none;}
+  .section.active{display:block;}
   h1{font-size:26px; margin:0 0 6px; color:#fff;}
   .updated{color:var(--muted); font-size:13px; margin-bottom:32px; font-family:monospace;}
-  h2{font-size:18px; color:var(--accent); margin-top:36px; margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:8px;}
+  h2{font-size:18px; color:var(--accent); margin-top:36px; margin-bottom:10px;
+     border-bottom:1px solid var(--border); padding-bottom:8px;}
   h3{font-size:15px; color:var(--muted2); margin-top:20px; margin-bottom:6px;}
   p{color:#cbd5e1; font-size:14.5px; margin:10px 0;}
-  ul{margin:10px 0; padding-left:22px;}
+  ul{margin:10px 0; padding-right:22px; padding-left:0;}
   li{color:#cbd5e1; font-size:14.5px; margin-bottom:6px;}
   strong{color:#fff;}
-  .callout{
-    background:#0d1628; border:1px solid var(--border2); border-left:3px solid var(--accent);
+  .note{
+    background:#0d1628; border:1px solid var(--border2); border-right:3px solid var(--accent);
     border-radius:8px; padding:14px 16px; margin:18px 0; font-size:14px; color:#cbd5e1;
   }
   .contact-box{
@@ -43,21 +53,117 @@
     border-top:1px solid var(--border); margin-top:40px;
   }
   a{color:var(--accent);}
+  /* LTR override for English section */
+  .ltr{direction:ltr; text-align:left;}
+  .ltr ul{padding-left:22px; padding-right:0;}
+  .ltr .note{border-right:none; border-left:3px solid var(--accent);}
 </style>
 </head>
 <body>
 
 <div class="topbar">
   <span class="logo">LIEDAR</span>
+  <div class="lang-toggle">
+    <a class="lang-btn active" onclick="showLang('he')" href="#">עברית</a>
+    <a class="lang-btn" onclick="showLang('en')" href="#">English</a>
+  </div>
 </div>
 
 <div class="wrap">
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- HEBREW SECTION                                      -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="section active" id="sec-he">
+  <h1>מדיניות פרטיות</h1>
+  <div class="updated">עודכן לאחרונה: 30 ביוני 2026</div>
+
+  <p>LIEDAR (&ldquo;האפליקציה&rdquo;, &ldquo;אנחנו&rdquo;) היא כלי לניתוח קול אישי, פותחה על ידי מפתח עצמאי הפועל כעוסק פטור בישראל תחת שם העסק MusicMee Autocyc. מדיניות פרטיות זו מסבירה אילו נתונים האפליקציה ניגשת אליהם, כיצד הם מעובדים, וזכויותיך לגביהם.</p>
+
+  <p>האפליקציה מיועדת ככלי אישי לניתוח ועיסוק בדיבור — למשל, תרגול הצגות, מעקב אחר מאפייני קולך האישי, או סקירת דפוסי הדיבור שלך. זאת אינה מכשיר לזיהוי שקרים ואינה טוענת לדיוק מדעי בגילוי אמיתות. ראה <a href="terms.html">תנאי השימוש</a> לאזהרה מלאה.</p>
+
+  <div class="note">
+    <strong>חשוב:</strong> כל עיבוד האודיו מתבצע על מכשירך בלבד, בזמן אמת. לא נשמר, לא מועלה, ולא מועבר שום קובץ קול לשום מקום.
+  </div>
+
+  <h2>1. מידע שאנו אוספים</h2>
+
+  <h3>1.1 אודיו מהמיקרופון</h3>
+  <p>האפליקציה מבקשת גישה למיקרופון המכשיר (הרשאת RECORD_AUDIO) אך ורק לצורך ניתוח מאפייני קול בזמן אמת: גובה קול, רעידת קול (jitter), קצב דיבור, פאוזות, עוצמה וקצב נשימה.</p>
+
+  <h3>1.2 מה שאנו לא עושים</h3>
+  <ul>
+    <li>אנו לא מקליטים, שומרים או מייצאים קובץ אודיו בשום שלב.</li>
+    <li>אנו לא מעבירים אודיו או נתוני ניתוח לשרת כלשהו. כל העיבוד מתבצע על מכשירך.</li>
+    <li>אנו לא משתמשים בשירותי ענן, בפלטפורמות אנליטיקה, רשתות פרסום או כלי מעקב של צד שלישי.</li>
+    <li>אנו לא אוספים שם, אימייל, מיקום, אנשי קשר, או מזהי מכשיר.</li>
+  </ul>
+
+  <h3>1.3 נתונים המאוחסנים מקומית</h3>
+  <p>אם בחרת לשמור סיכום שיחה (ציון מספרי, חותמת זמן ומשך שיחה) ולתייג אותו בשם שהקלדת בעצמך, המידע מאוחסן אך ורק באחסון המקומי של האפליקציה על מכשירך (Android SharedPreferences). נתונים אלה:</p>
+  <ul>
+    <li>לעולם אינם עוזבים את מכשירך.</li>
+    <li>אינם נגישים לנו, למפתח, או לצד שלישי כלשהו.</li>
+    <li>נמחקים אוטומטית עם הסרת האפליקציה, או ידנית בתוך האפליקציה.</li>
+  </ul>
+
+  <h2>2. כיצד נעשה שימוש במידע</h2>
+  <p>כל ניתוח הקול מתבצע על המכשיר בזמן אמת בלבד. התוצאות מוצגות לך באופן מיידי ואינן נשמרות אלא אם בחרת לשמור סיכום שיחה כמתואר בסעיף 1.3.</p>
+
+  <h2>3. שיתוף מידע</h2>
+  <p>אנו לא משתפים, מוכרים, משכירים או מגלים כל מידע לצד שלישי, כיוון שאין מידע שיוצא ממכשירך. אין פלטפורמות אנליטיקה, רשתות פרסום, או ממשקי API חיצוניים משולבים באפליקציה.</p>
+
+  <h2>4. פרטיות קטינים</h2>
+  <p>האפליקציה אינה מיועדת לבני פחות מ-<strong>18</strong> (גיל ההסכמה לפי חוק הגנת הפרטיות הישראלי). אנו לא אוספים ביודעין מידע מקטינים, ובפועל אנו לא אוספים מידע אישי ממשתמש כלשהו.</p>
+
+  <h2>5. ניתוח קול של אנשים אחרים</h2>
+  <p>האפליקציה מיועדת לניתוח קולך האישי. אם השתמשת באפליקציה בסביבה שבה קול של אדם אחר עלול להילקט על ידי המיקרופון, האחריות לקיים את הדין החל עליך — לרבות חוק האזנת סתר הישראלי, חוק הגנת הפרטיות, וכל חוק אחר הרלוונטי — מוטלת עליך בלבד. המפתח מספק כלי זה לשימוש אישי ואינו אחראי לכל שימוש אחר.</p>
+
+  <h2>6. הרשאות בשימוש</h2>
+  <ul>
+    <li><strong>RECORD_AUDIO</strong> — נדרשת לניתוח קול בזמן אמת.</li>
+    <li><strong>FOREGROUND_SERVICE / FOREGROUND_SERVICE_MICROPHONE</strong> — נדרשת להמשך הניתוח בזמן שהאפליקציה פעילה.</li>
+    <li><strong>POST_NOTIFICATIONS</strong> — להצגת התראה רצה בזמן הניתוח, כנדרש על ידי אנדרואיד.</li>
+    <li><strong>VIBRATE</strong> — לאזעקות רטט אופציונליות במהלך הניתוח.</li>
+  </ul>
+
+  <h2>7. אבטחת מידע</h2>
+  <p>מאחר שכל הנתונים נשארים על מכשירך ואינם מועברים, גבול האבטחה העיקרי הוא נעילת המסך והגנות מערכת ההפעלה של מכשירך. אנו ממליצים לשמור על גרסת מערכת הפעלה עדכנית ועל שיטת נעילה מאובטחת.</p>
+
+  <h2>8. זכויותיך לפי חוק הגנת הפרטיות הישראלי</h2>
+  <p>בהתאם לחוק הגנת הפרטיות, התשמ&rdquo;א-1981:</p>
+  <ul>
+    <li><strong>זכות עיון:</strong> אתה רשאי לעיין בכל נתון אישי הנוגע לך השמור באפליקציה. מאחר שהנתונים מאוחסנים מקומית בלבד, תוכל לראות אותם ישירות בתוך האפליקציה בלשונית &ldquo;אנשי קשר&rdquo;.</li>
+    <li><strong>זכות תיקון ומחיקה:</strong> אתה רשאי לתקן או למחוק כל נתון שמור, ישירות מתוך האפליקציה. הסרת האפליקציה מוחקת את כל הנתונים לצמיתות.</li>
+    <li><strong>ביטול הרשאות:</strong> תוכל לשלול את הגישה למיקרופון בכל עת דרך הגדרות אנדרואיד &larr; אפליקציות &larr; LIEDAR &larr; הרשאות.</li>
+  </ul>
+
+  <h2>9. שינויים במדיניות</h2>
+  <p>אנו עשויים לעדכן מדיניות פרטיות זו מעת לעת. שינויים מהותיים יבואו לידי ביטוי בעדכון תאריך &ldquo;עודכן לאחרונה&rdquo; לעיל. המשך השימוש באפליקציה לאחר שינויים מהווה הסכמה למדיניות המעודכנת.</p>
+
+  <h2>10. יצירת קשר</h2>
+  <p>לשאלות בנוגע למדיניות פרטיות זו, צור קשר עם:</p>
+  <div class="contact-box">
+    <p><strong>MusicMee Autocyc</strong> (עוסק פטור)</p>
+    <p>מספר תיק עסקי: 031376551</p>
+    <p>ישראל</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- ENGLISH SECTION                                     -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="section ltr" id="sec-en">
   <h1>Privacy Policy</h1>
   <div class="updated">Last updated: June 30, 2026</div>
 
-  <p>LIEDAR (&ldquo;the App,&rdquo; &ldquo;we,&rdquo; &ldquo;our&rdquo;) is a personal voice-analysis tool developed by an independent developer operating as an exempt dealer (Exempt Dealer) in Israel under the business name MusicMee Autocyc. This Privacy Policy explains what data the App accesses, how it is processed, and your rights regarding that data.</p>
+  <p>LIEDAR (&ldquo;the App,&rdquo; &ldquo;we,&rdquo; &ldquo;our&rdquo;) is a personal voice-analysis tool developed by an independent developer operating as an exempt dealer (עוסק פטור) in Israel under the business name MusicMee Autocyc. This Privacy Policy explains what data the App accesses, how it is processed, and your rights regarding that data.</p>
 
   <p>This App is intended as a personal speech-feedback and self-practice tool &mdash; for example, rehearsing presentations, monitoring your own vocal tone, or reviewing your own speech patterns. It is not a lie-detection device and makes no claims of scientific accuracy in detecting truthfulness. See the <a href="terms.html">Terms of Use</a> for the full disclaimer.</p>
+
+  <div class="note">
+    <strong>Important:</strong> All audio processing happens on your device only, in real time. No audio file is ever saved, uploaded, or transmitted anywhere.
+  </div>
 
   <h2>1. Information We Collect</h2>
 
@@ -73,7 +179,7 @@
   </ul>
 
   <h3>1.3 Locally Stored Data</h3>
-  <p>If you choose to save a session summary (a numeric credibility score, timestamp, and call duration) and label it with a contact name you type in yourself, that information is stored only in the App&rsquo;s local storage on your device, using Android&rsquo;s standard SharedPreferences mechanism. This data:</p>
+  <p>If you choose to save a session summary (a numeric credibility score, timestamp, and call duration) and label it with a contact name you type in yourself, that information is stored only in the App&rsquo;s local storage on your device. This data:</p>
   <ul>
     <li>Never leaves your device.</li>
     <li>Is not accessible to us, to the developer, or to any third party.</li>
@@ -81,33 +187,34 @@
   </ul>
 
   <h2>2. How We Use Information</h2>
-  <p>All voice analysis is performed locally and in real time using on-device signal processing (autocorrelation-based pitch detection and related acoustic measurements). Results are displayed to you immediately and are not retained unless you explicitly choose to save a session summary as described in Section 1.3.</p>
+  <p>All voice analysis is performed locally and in real time. Results are displayed to you immediately and are not retained unless you explicitly choose to save a session summary as described in Section 1.3.</p>
 
   <h2>3. Data Sharing</h2>
   <p>We do not share, sell, rent, or disclose any data to third parties, because no data is ever transmitted off your device. There are no analytics platforms, advertising networks, or external APIs integrated into this App.</p>
 
   <h2>4. Children&rsquo;s Privacy</h2>
-  <p>This App is not directed at children under 13 (or the relevant minimum age in your jurisdiction) and we do not knowingly collect any information from children, as no information is collected from any user.</p>
+  <p>This App is not directed at persons under <strong>18</strong> years of age (in accordance with Israeli Privacy Protection Law, 5741-1981, which sets 18 as the age of independent consent for personal data processing). We do not knowingly collect any information from minors; in practice, we collect no personal information from any user.</p>
 
   <h2>5. Third-Party Voice Analysis</h2>
-  <p>The App is designed for analyzing your own voice as a self-practice and feedback tool. If you use the App in a setting where another person&rsquo;s voice may be picked up by the microphone (for example, during a phone call on speaker), you are responsible for ensuring you have the legal right to do so under the laws applicable to you, including any wiretapping, eavesdropping, or two-party consent laws in your jurisdiction. The developer provides this tool for personal, single-party use and assumes no liability for how it is used. See the Terms of Use for further detail.</p>
+  <p>The App is designed for analyzing your own voice. If you use the App in a setting where another person&rsquo;s voice may be picked up by the microphone, you are solely responsible for complying with all applicable laws, including Israel&rsquo;s Wiretap Law (Listening-In Law, 5739-1979), the Privacy Protection Law, and any equivalent laws in your jurisdiction. The developer provides this tool for personal, single-party use and assumes no liability for other uses.</p>
 
   <h2>6. Permissions Used</h2>
   <ul>
     <li><strong>RECORD_AUDIO</strong> &mdash; required to perform real-time voice analysis.</li>
-    <li><strong>FOREGROUND_SERVICE / FOREGROUND_SERVICE_MICROPHONE</strong> &mdash; required so analysis can continue while the screen is on and the app is active.</li>
-    <li><strong>POST_NOTIFICATIONS</strong> &mdash; used to show a persistent notification while analysis is running, as required by Android for foreground microphone services.</li>
+    <li><strong>FOREGROUND_SERVICE / FOREGROUND_SERVICE_MICROPHONE</strong> &mdash; required so analysis can continue while the app is active.</li>
+    <li><strong>POST_NOTIFICATIONS</strong> &mdash; used to show a persistent notification during analysis, as required by Android.</li>
     <li><strong>VIBRATE</strong> &mdash; used for optional haptic alerts during analysis.</li>
   </ul>
 
   <h2>7. Data Security</h2>
-  <p>Because all data remains on your device and is never transmitted, the primary security boundary is your device&rsquo;s own lock screen and operating system protections. We recommend keeping your device&rsquo;s OS updated and using a secure lock method.</p>
+  <p>Because all data remains on your device and is never transmitted, the primary security boundary is your device&rsquo;s own lock screen and OS protections. We recommend keeping your device&rsquo;s OS updated and using a secure lock method.</p>
 
-  <h2>8. Your Rights and Choices</h2>
+  <h2>8. Your Rights Under Israeli Privacy Protection Law</h2>
+  <p>Under the Israeli Privacy Protection Law, 5741-1981:</p>
   <ul>
-    <li>You can deny or revoke microphone access at any time via Android Settings &rarr; Apps &rarr; LIEDAR &rarr; Permissions.</li>
-    <li>You can delete any saved contact/session data directly within the App.</li>
-    <li>Uninstalling the App permanently removes all locally stored data.</li>
+    <li><strong>Right of access:</strong> You may review any personal data stored within the App. Since data is stored locally only, you can view it directly in the App&rsquo;s &ldquo;Contacts&rdquo; tab.</li>
+    <li><strong>Right to correction and deletion:</strong> You may correct or delete any saved data directly within the App. Uninstalling the App permanently deletes all data.</li>
+    <li><strong>Revoking permissions:</strong> You can revoke microphone access at any time via Android Settings &rarr; Apps &rarr; LIEDAR &rarr; Permissions.</li>
   </ul>
 
   <h2>9. Changes to This Policy</h2>
@@ -116,14 +223,26 @@
   <h2>10. Contact</h2>
   <p>For questions about this Privacy Policy, contact:</p>
   <div class="contact-box">
-    <p><strong>service@liedar.store</strong></p>
-    <p>Business File Number: 031376551(Exempt Dealer)</p>
+    <p><strong>service@liedar.store</strong> </p>
+    <p>Business File Number: 031376551 (Exempt Dealer / עוסק פטור)</p>
     <p>Israel</p>
   </div>
-
 </div>
 
-<footer>LIEDAR &middot; <a href="terms.html">Terms of Use</a> &middot; <a href="https://enakash.github.io/DLTM">Back to App</a></footer>
+</div><!-- /wrap -->
+
+<footer>LIEDAR &middot; <a href="terms.html">Terms of Use / תנאי שימוש</a> &middot; <a href="https://enakash.github.io/DLTM">Back to App</a></footer>
+
+<script>
+function showLang(l){
+  document.getElementById('sec-he').classList.toggle('active', l==='he');
+  document.getElementById('sec-en').classList.toggle('active', l==='en');
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.documentElement.dir = l==='he' ? 'rtl' : 'ltr';
+  document.documentElement.lang = l;
+}
+</script>
 
 </body>
 </html>
