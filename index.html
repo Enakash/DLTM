@@ -367,12 +367,9 @@ body{
 </div>
 
 <div class="topbar">
-  <!-- LEFT: status pill -->
+  <!-- LEFT: user email -->
   <div style="flex:1;display:flex;align-items:center;">
-    <div class="status-pill">
-      <span class="sdot" id="sdot"></span>
-      <span id="statusTxt">STANDBY</span>
-    </div>
+    <span id="userEmail" style="display:none;font-size:11px;color:var(--accent);font-family:var(--mono);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
   </div>
   <!-- CENTER: logo -->
   <div class="logo-svg">
@@ -397,13 +394,16 @@ body{
       <circle cx="79" cy="28" r="1.5" fill="#f59e0b" filter="url(#lg)" opacity="0.8"/>
     </svg>
   </div>
-  <!-- RIGHT: placeholder for balance -->
-  <div style="flex:1;"></div>
+  <!-- RIGHT: status + signout -->
+  <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:10px;">
+    <div class="status-pill">
+      <span class="sdot" id="sdot"></span>
+      <span id="statusTxt">STANDBY</span>
+    </div>
+    <button id="signOutBtn" onclick="signOut()" style="display:none;font-size:11px;padding:4px 12px;border-radius:10px;border:1px solid #ef444440;background:#ef444412;color:#fca5a5;cursor:pointer;font-family:var(--font);white-space:nowrap;" data-key="signOutBtn">יציאה</button>
+  </div>
 </div>
-<div id="userBadge" style="display:none;align-items:center;justify-content:flex-end;gap:10px;padding:6px 18px;background:var(--surface);border-bottom:1px solid var(--border2);position:sticky;top:57px;z-index:21;">
-  <span id="userEmail" style="font-size:11px;color:var(--accent);font-family:var(--mono);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
-  <button onclick="signOut()" style="font-size:11px;padding:4px 12px;border-radius:10px;border:1px solid #ef444440;background:#ef444412;color:#fca5a5;cursor:pointer;font-family:var(--font);white-space:nowrap;" data-key="signOutBtn">יציאה</button>
-</div>
+
 <div class="nav-tabs" style="top:57px;" id="navTabs">
   <button class="nav-tab active" id="tabAnalyze" onclick="switchTab('analyze')" data-key="tabAnalyze">ניתוח</button>
   <button class="nav-tab" id="tabContacts" onclick="switchTab('contacts')" data-key="tabContacts">אנשי קשר</button>
@@ -1610,9 +1610,10 @@ window.addEventListener('DOMContentLoaded', function() {
     } else if (event === 'SIGNED_OUT') {
       _currentUser = null;
       document.getElementById('authOverlay').style.display = 'flex';
-      document.getElementById('userBadge').style.display = 'none';
-    var nt = document.getElementById('navTabs');
-    if (nt) nt.style.top = '57px';
+      var emailEl = document.getElementById('userEmail');
+    if (emailEl) emailEl.style.display = 'none';
+    var soBtn = document.getElementById('signOutBtn');
+    if (soBtn) soBtn.style.display = 'none';
     }
   });
 });
@@ -1621,11 +1622,10 @@ function onUserLoggedIn(user) {
   _currentUser = user;
   console.log('onUserLoggedIn called, email:', user.email);
   document.getElementById('authOverlay').style.display = 'none';
-  var badge = document.getElementById('userBadge');
-  badge.style.display = 'flex';
-  console.log('userBadge display:', badge.style.display);
-  var nt = document.getElementById('navTabs');
-  if (nt) nt.style.top = '91px';
+  var emailEl = document.getElementById('userEmail');
+  if (emailEl) { emailEl.style.display = 'block'; emailEl.textContent = user.email; }
+  var soBtn = document.getElementById('signOutBtn');
+  if (soBtn) soBtn.style.display = 'block';
   var emailEl = document.getElementById('userEmail');
   if (emailEl) emailEl.textContent = user.email;
 }
