@@ -1350,7 +1350,7 @@ function _resetUI(keepSummary){
   });
 }
 
-async function startAnalysis(){
+async function startAnalysis(){document.getElementById('summaryPanel').classList.remove('show');
   document.getElementById('errMsg').classList.remove('show');
   document.getElementById('summaryPanel').classList.remove('show');
   document.getElementById('saveSumBtn').style.display='none';
