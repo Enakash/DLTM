@@ -1614,8 +1614,11 @@ window.addEventListener('DOMContentLoaded', function() {
 
 function onUserLoggedIn(user) {
   _currentUser = user;
+  console.log('onUserLoggedIn called, email:', user.email);
   document.getElementById('authOverlay').style.display = 'none';
-  document.getElementById('userBadge').style.display = 'flex';
+  var badge = document.getElementById('userBadge');
+  badge.style.display = 'flex';
+  console.log('userBadge display:', badge.style.display);
   var nt = document.getElementById('navTabs');
   if (nt) nt.style.top = '91px';
   var emailEl = document.getElementById('userEmail');
