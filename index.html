@@ -1350,9 +1350,9 @@ function _resetUI(keepSummary){
   });
 }
 
-async function startAnalysis(){document.getElementById('summaryPanel').classList.remove('show');
-  document.getElementById('errMsg').classList.remove('show');
+async function startAnalysis(){
   document.getElementById('summaryPanel').classList.remove('show');
+  document.getElementById('errMsg').classList.remove('show');
   document.getElementById('saveSumBtn').style.display='none';
   summaryVisible=false;
   try{
