@@ -1569,8 +1569,8 @@ var lowScoreStreak=0,autoMarkCooldown=false;
 // ── SUPABASE AUTH ──
 // TODO: Replace with your actual Supabase project URL and anon key
 // Get them from: supabase.com → Your Project → Settings → API
-const SUPA_URL = 'https://YOUR_PROJECT.supabase.co';
-const SUPA_KEY = 'YOUR_ANON_KEY';
+const SUPA_URL = 'https://fllqlcofglxvygslfbiy.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbHFsY29mZ2x4dnlnc2xmYml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMjU0MzgsImV4cCI6MjA5OTYwMTQzOH0.mASmyJNF0qqhZbyMPkBbG3eyPMN9b8P87BC_WB-fpNE';
 const _supa = (typeof supabase !== 'undefined' && !SUPA_URL.includes('YOUR_PROJECT') && !SUPA_KEY.includes('YOUR_ANON')) 
   ? supabase.createClient(SUPA_URL, SUPA_KEY) 
   : null;
