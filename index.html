@@ -1338,26 +1338,40 @@ function _resetUI(){
   });
 }
 
-
 async function startAnalysis(){
   document.getElementById('errMsg').classList.remove('show');
   document.getElementById('summaryPanel').classList.remove('show');
   document.getElementById('saveSumBtn').style.display='none';
+  pendingSaveData=null;
   summaryVisible=false;
   try{
-    stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    stream=await navigator.mediaDevices.getUserMedia({
+      audio:{
+        echoCancellation:false,
+        noiseSuppression:false,
+        autoGainControl:false,
+        channelCount:1,
+        sampleRate:44100
+      },
+      video:false
+    });
     audioCtx=new(window.AudioContext||window.webkitAudioContext)();
     const src=audioCtx.createMediaStreamSource(stream);
     analyser=audioCtx.createAnalyser(); analyser.fftSize=2048;
-    src.connect(analyser);
+    // Boost input gain for speaker pickup
+    gainNode=audioCtx.createGain();
+    gainNode.gain.value=gainLevel;
+    src.connect(gainNode);
+    gainNode.connect(analyser);
     processor=audioCtx.createScriptProcessor(2048,1,1);
-    src.connect(processor); processor.connect(audioCtx.destination);
+    gainNode.connect(processor); processor.connect(audioCtx.destination);
 
     pitchHist=[];voiceFrames=0;totalFrames=0;
     lastPitch=0;jitterAcc=0;sampleCount=0;
     credibility=50;prevCred=50;
     historyData=[];marks=[];markTimes=[];markCounter=0;
     alertCooldown=false;alertCooldownBars={};
+    lowScoreStreak=0;autoMarkCooldown=false;
     sumPitch=[];sumJitter=[];sumPause=[];sumRate=[];sumVolume=[];sumBreath=[];
     rateHistory=[];midSentencePauses=0;shortPauseCount=0;longPauseCount=0;
     inPause=false;pauseStartFrame=0;lastVoiceFrame=0;
@@ -1375,6 +1389,7 @@ async function startAnalysis(){
       const buf=Array.from(e.inputBuffer.getChannelData(0));
       const pitch=detectPitch(buf,audioCtx.sampleRate);
       totalFrames++;
+
 
       // RMS volume
       let rms=0; for(let i=0;i<buf.length;i++) rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/buf.length);
