@@ -9,9 +9,6 @@
 <meta name="theme-color" content="#080c14">
 <title>LIEDAR</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="manifest" href="/manifest.json">
-<meta name="apple-mobile-web-app-title" content="LIEDAR">
-<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <style>
 :root {
   --bg:#080c14; --surface:#0f1623; --surface2:#162030;
@@ -80,55 +77,83 @@ body{
 .alert.show{display:flex;}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-5px);}to{opacity:1;transform:none;}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
-.nav-tabs{width:100%;display:flex;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:57px;z-index:19;}
-.nav-tab{flex:1;padding:11px 0;font-size:12px;font-weight:600;text-align:center;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:var(--font);border-bottom:2px solid transparent;transition:all 0.2s;}
-.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-.screen{width:100%;display:none;flex-direction:column;align-items:center;}
-.screen.active{display:flex;}
-.contacts-wrap{width:calc(100% - 36px);max-width:424px;margin-top:16px;}
-.contacts-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
-.contacts-title{font-size:13px;font-weight:600;color:var(--muted2);}
-.contacts-count{font-size:11px;font-family:var(--mono);color:var(--muted);}
-.contacts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.contact-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 12px;cursor:pointer;transition:border-color 0.2s,transform 0.15s;overflow:hidden;}
-.contact-card:active{transform:scale(0.97);}
-.contact-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.contact-meta{font-size:10px;color:var(--muted);margin-bottom:8px;font-family:var(--mono);}
-.contact-score-badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:10px;font-size:11px;font-weight:700;font-family:var(--mono);margin-bottom:8px;}
-.contact-mini-chart{width:100%;height:36px;display:block;border-radius:4px;}
-.contacts-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;line-height:1.7;grid-column:span 2;}
-.detail-overlay{position:fixed;inset:0;background:#000000cc;z-index:100;display:none;align-items:flex-end;justify-content:center;}
-.detail-overlay.show{display:flex;}
-.detail-sheet{width:100%;max-width:480px;background:var(--surface);border-radius:20px 20px 0 0;padding:20px 20px 40px;max-height:85vh;overflow-y:auto;}
-.detail-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px;}
-.detail-title{font-size:18px;font-weight:700;margin-bottom:4px;}
-.detail-meta{font-size:12px;color:var(--muted);margin-bottom:16px;font-family:var(--mono);}
-.session-list{display:flex;flex-direction:column;gap:10px;}
-.session-row{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;}
-.session-date{font-size:11px;color:var(--muted);font-family:var(--mono);}
-.session-score{font-size:18px;font-weight:700;font-family:var(--mono);}
-.session-dur{font-size:11px;color:var(--muted);}
-.detail-close{width:100%;padding:13px;margin-top:16px;border-radius:10px;border:1px solid var(--border2);background:var(--surface2);color:var(--muted2);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;}
-.detail-delete{width:100%;padding:10px;margin-top:8px;border-radius:10px;border:1px solid #ef444430;background:#ef444410;color:#fca5a5;font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;}
-.save-sheet{position:fixed;inset:0;background:#000000cc;z-index:200;display:none;align-items:flex-end;justify-content:center;}
+/* ── AUTH SCREEN ── */
+#authOverlay{position:fixed;inset:0;background:#080c14;z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;}
+.auth-box{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px 28px;}
+.auth-logo{text-align:center;margin-bottom:24px;}
+.auth-logo svg{width:80px;height:20px;}
+.auth-title{font-size:22px;font-weight:800;color:#fff;text-align:center;margin-bottom:6px;}
+.auth-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:28px;}
+.auth-tabs{display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:24px;}
+.auth-tab{flex:1;padding:9px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;border-radius:9px;font-family:var(--font);}
+.auth-tab.active{background:var(--surface);color:var(--text);}
+.auth-field{margin-bottom:14px;}
+.auth-label{font-size:11px;color:var(--muted);margin-bottom:6px;display:block;font-family:var(--mono);}
+.auth-input{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:var(--font);outline:none;transition:border 0.2s;}
+.auth-input:focus{border-color:var(--accent);}
+.auth-terms{display:flex;align-items:flex-start;gap:10px;margin:16px 0;}
+.auth-terms input{margin-top:2px;flex-shrink:0;accent-color:var(--accent);}
+.auth-terms-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.auth-terms-text a{color:var(--accent);}
+.auth-btn{width:100%;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);margin-top:6px;transition:opacity 0.2s;}
+.auth-btn:hover{opacity:0.9;}
+.auth-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:18px 0;}
+.auth-divider-line{flex:1;height:1px;background:var(--border);}
+.auth-divider-text{font-size:11px;color:var(--muted);}
+.auth-google-btn{width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color 0.2s;}
+.auth-google-btn:hover{border-color:var(--accent);}
+.auth-forgot{text-align:center;margin-top:14px;}
+.auth-forgot a{font-size:12px;color:var(--accent);cursor:pointer;text-decoration:none;}
+.auth-msg{padding:10px 14px;border-radius:10px;font-size:13px;margin-top:12px;display:none;}
+.auth-msg.error{background:#1a0e0e;border:1px solid #5b1f1f;color:#fca5a5;}
+.auth-msg.success{background:#0d1f18;border:1px solid #1a4d30;color:#6ee7b7;}
+.auth-verify{text-align:center;padding:20px 0;}
+.auth-verify-icon{font-size:48px;margin-bottom:16px;}
+.auth-verify-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:8px;}
+.auth-verify-sub{font-size:13px;color:var(--muted);line-height:1.6;}
+.auth-verify-resend{color:var(--accent);cursor:pointer;font-size:13px;margin-top:16px;display:inline-block;}
+
+.hist-stat{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 12px;text-align:center;}
+.hist-stat-val{font-size:26px;font-weight:800;font-family:var(--mono);margin-bottom:3px;}
+.hist-stat-lbl{font-size:10px;color:var(--muted);letter-spacing:1px;}
+.history-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.history-item-name{font-size:14px;font-weight:600;color:var(--text);}
+.history-item-meta{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
+.history-item-score{font-size:20px;font-weight:800;font-family:var(--mono);}
+.guide-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.guide-card-hdr{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.guide-icon{width:36px;height:36px;border-radius:10px;background:#0d1628;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.guide-card-title{font-size:14px;font-weight:700;color:var(--text);}
+.guide-card-sub{font-size:11px;color:var(--muted);}
+.guide-card-body{font-size:13px;color:#94a3b8;line-height:1.6;}
+.settings-section-title{font-size:10px;color:var(--muted);letter-spacing:2px;font-weight:600;margin:20px 0 8px;}
+.settings-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:8px;}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);}
+.settings-row:last-child{border-bottom:none;}
+.settings-row-label{font-size:14px;font-weight:600;color:var(--text);}
+.settings-row-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.lang-opt{padding:5px 12px;border-radius:12px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;font-family:var(--font);}
+.lang-opt.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.save-sheet{position:fixed;inset:0;background:#000000cc;z-index:300;display:none;align-items:flex-end;justify-content:center;}
 .save-sheet.show{display:flex;}
 .save-sheet-box{width:100%;max-width:480px;background:var(--surface);border-radius:20px 20px 0 0;padding:20px 20px 40px;max-height:80vh;overflow-y:auto;}
-.save-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 14px;}
+.save-sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 14px;}
 .save-sheet-title{font-size:15px;font-weight:700;margin-bottom:4px;}
 .save-sheet-sub{font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:16px;}
 .save-new-row{display:flex;gap:10px;margin-bottom:14px;}
 .save-new-input{flex:1;padding:10px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;outline:none;}
 .save-new-input:focus{border-color:var(--accent);}
-.save-add-btn{padding:10px 16px;border-radius:8px;border:none;background:var(--accent);color:white;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.save-new-btn{padding:10px 16px;border-radius:8px;border:none;background:var(--accent);color:white;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
 .save-divider{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
-.save-contact-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
-.save-contact-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color 0.15s;}
+.save-contact-list{display:flex;flex-direction:column;gap:8px;}
+.save-contact-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color 0.2s;}
 .save-contact-row:active{border-color:var(--accent);}
-.scr-name{font-size:14px;font-weight:600;}
-.scr-meta{font-size:11px;color:var(--muted);font-family:var(--mono);}
-.scr-score{font-size:14px;font-weight:700;font-family:var(--mono);}
-.save-cancel-btn{width:100%;padding:13px;border-radius:10px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-family:var(--font);font-size:14px;cursor:pointer;}
-.save-sum-btn{width:100%;padding:14px;margin-top:14px;border-radius:10px;border:none;background:var(--accent);color:white;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;display:none;}
+.save-contact-row-name{font-size:14px;font-weight:600;}
+.save-contact-row-meta{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.save-contact-row-score{font-size:14px;font-weight:700;font-family:var(--mono);}
+.save-cancel-btn{width:100%;padding:13px;margin-top:14px;border-radius:10px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-family:var(--font);font-size:14px;cursor:pointer;}
+.nav-tabs{width:100%;display:flex;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:57px;z-index:19;}.nav-tab{flex:1;padding:11px 0;font-size:12px;font-weight:600;text-align:center;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:var(--font);border-bottom:2px solid transparent;transition:all 0.2s;}.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);}.screen{width:100%;display:none;flex-direction:column;align-items:center;}.screen.active{display:flex;}.contacts-wrap{width:calc(100% - 36px);max-width:424px;margin-top:16px;}.contacts-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}.contacts-title{font-size:13px;font-weight:600;color:var(--muted2);}.contacts-count{font-size:11px;font-family:var(--mono);color:var(--muted);}.contacts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}.contact-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 12px;cursor:pointer;transition:border-color 0.2s,transform 0.15s;overflow:hidden;}.contact-card:active{transform:scale(0.97);}.contact-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.contact-meta{font-size:10px;color:var(--muted);margin-bottom:8px;font-family:var(--mono);}.contact-score-badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:10px;font-size:11px;font-weight:700;font-family:var(--mono);margin-bottom:8px;}.contact-mini-chart{width:100%;height:36px;display:block;border-radius:4px;}.contacts-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;line-height:1.7;grid-column:span 2;}.modal-overlay{position:fixed;inset:0;background:#000000cc;z-index:100;display:none;align-items:flex-end;justify-content:center;}.modal-overlay.show{display:flex;}.modal-sheet{width:100%;max-width:480px;background:var(--surface);border-radius:20px 20px 0 0;padding:20px 20px 40px;max-height:85vh;overflow-y:auto;}.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px;}.modal-title{font-size:18px;font-weight:700;margin-bottom:4px;}.modal-subtitle{font-size:12px;color:var(--muted);margin-bottom:16px;font-family:var(--mono);}.modal-sessions{display:flex;flex-direction:column;gap:10px;}.session-row{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;}.session-date{font-size:11px;color:var(--muted);font-family:var(--mono);}.session-score{font-size:18px;font-weight:700;font-family:var(--mono);}.session-dur{font-size:11px;color:var(--muted);}.modal-close{width:100%;padding:13px;margin-top:16px;border-radius:10px;border:1px solid var(--border2);background:var(--surface2);color:var(--muted2);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;}.modal-delete{width:100%;padding:10px;margin-top:8px;border-radius:10px;border:1px solid #ef444430;background:#ef444410;color:#fca5a5;font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;}.save-popup{position:fixed;inset:0;background:#000000cc;z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}.save-popup.show{display:flex;}.save-box{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px 20px;}.save-box-title{font-size:16px;font-weight:700;margin-bottom:6px;}.save-box-sub{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.5;}.save-input{width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;outline:none;margin-bottom:14px;}.save-input:focus{border-color:var(--accent);}.save-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}.save-confirm{padding:12px;border-radius:8px;border:none;background:var(--accent);color:white;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;}.save-skip{padding:12px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-family:var(--font);font-size:14px;cursor:pointer;}
 
 /* ── EQ BARS SECTION ── */
 .eq-section{
@@ -241,10 +266,110 @@ body{
 .err-msg{width:calc(100% - 36px);max-width:424px;margin-top:8px;padding:9px 12px;border-radius:8px;background:#ef444410;border:1px solid #ef444440;color:#fca5a5;font-size:12px;display:none;}
 .err-msg.show{display:block;}
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
 <!-- TOPBAR -->
+
+<!-- AUTH OVERLAY -->
+<div id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <svg viewBox="0 0 220 52" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="ag" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#60a5fa"/><stop offset="50%" style="stop-color:#f1f5f9"/><stop offset="100%" style="stop-color:#38bdf8"/>
+        </linearGradient></defs>
+        <text x="10" y="40" font-family="monospace" font-weight="900" font-size="44" fill="url(#ag)">LIEDAR</text>
+      </svg>
+    </div>
+
+    <!-- Tabs: Login / Register -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')" data-key="authTabLogin">כניסה</button>
+      <button class="auth-tab" id="authTabRegister" onclick="switchAuthTab('register')" data-key="authTabRegister">הרשמה</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="authLogin">
+      <div class="auth-field">
+        <label class="auth-label" data-key="authEmailLabel">אימייל</label>
+        <input class="auth-input" id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" data-key="authPassLabel">סיסמה</label>
+        <input class="auth-input" id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button class="auth-btn" id="loginBtn" onclick="doLogin()" data-key="authLoginBtn">כניסה</button>
+      <div class="auth-forgot">
+        <a onclick="switchAuthTab('forgot')" data-key="authForgotLink">שכחתי סיסמה</a>
+      </div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="authRegister" style="display:none;">
+      <div class="auth-field">
+        <label class="auth-label" data-key="authEmailLabel">אימייל</label>
+        <input class="auth-input" id="regEmail" type="email" autocomplete="email" placeholder="you@example.com">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" data-key="authPassLabel">סיסמה</label>
+        <input class="auth-input" id="regPass" type="password" autocomplete="new-password" placeholder="••••••••  (6+ תווים)">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" data-key="authPassConfirmLabel">אימות סיסמה</label>
+        <input class="auth-input" id="regPassConfirm" type="password" autocomplete="new-password" placeholder="••••••••">
+      </div>
+      <div class="auth-terms">
+        <input type="checkbox" id="termsCheck">
+        <div class="auth-terms-text" data-key="authTermsText">
+          קראתי ואני מסכים/ה ל<a href="https://enakash.github.io/DLTM/terms.html" target="_blank" data-key="authTermsLink">תנאי השימוש</a>
+          ול<a href="https://enakash.github.io/DLTM/privacy.html" target="_blank" data-key="authPrivacyLink">מדיניות הפרטיות</a>
+        </div>
+      </div>
+      <button class="auth-btn" id="regBtn" onclick="doRegister()" data-key="authRegisterBtn">הרשמה</button>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div id="authForgot" style="display:none;">
+      <div class="auth-field">
+        <label class="auth-label" data-key="authEmailLabel">אימייל</label>
+        <input class="auth-input" id="forgotEmail" type="email" placeholder="you@example.com">
+      </div>
+      <button class="auth-btn" onclick="doForgot()" data-key="authForgotBtn">שלח קישור איפוס</button>
+      <div class="auth-forgot" style="margin-top:10px;">
+        <a onclick="switchAuthTab('login')" data-key="authBackLogin">חזרה לכניסה</a>
+      </div>
+    </div>
+
+    <!-- VERIFY EMAIL -->
+    <div id="authVerify" style="display:none;">
+      <div class="auth-verify">
+        <div class="auth-verify-icon">📧</div>
+        <div class="auth-verify-title" data-key="authVerifyTitle">נא לאשר את האימייל</div>
+        <div class="auth-verify-sub" data-key="authVerifySub">שלחנו לך קישור אימות. בדוק את תיבת הדואר שלך ולחץ על הקישור כדי להמשיך.</div>
+        <div class="auth-verify-resend" onclick="resendVerify()" data-key="authResend">שלח שוב</div>
+      </div>
+    </div>
+
+    <!-- Google Sign In -->
+    <div id="authGoogleSection">
+      <div class="auth-divider">
+        <div class="auth-divider-line"></div>
+        <span class="auth-divider-text" data-key="authOrWith">או</span>
+        <div class="auth-divider-line"></div>
+      </div>
+      <button class="auth-google-btn" onclick="doGoogleLogin()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
+        <span data-key="authGoogleBtn">כניסה עם Google</span>
+      </button>
+    </div>
+
+    <!-- Message area -->
+    <div class="auth-msg" id="authMsg"></div>
+  </div>
+</div>
+
 <div class="topbar">
   <div class="logo-svg">
       <svg viewBox="0 0 220 52" width="110" height="26" xmlns="http://www.w3.org/2000/svg">
@@ -269,11 +394,9 @@ body{
       </svg>
     </div>
   <div class="topbar-right">
-    <span data-key="langLabel" style="font-size:11px;color:var(--muted);font-family:var(--mono);padding-left:4px;">שפה</span>
-    <div class="lang-toggle">
-      <button class="lang-btn active" id="btnHe" onclick="setLang('he')">עב</button>
-      <button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" id="btnAr" onclick="setLang('ar')">ع</button>
+    <div id="userBadge" style="display:none;align-items:center;gap:8px;">
+      <span id="userEmail" style="font-size:10px;color:var(--muted);font-family:var(--mono);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+      <button onclick="signOut()" style="font-size:10px;padding:3px 10px;border-radius:10px;border:1px solid var(--border2);background:transparent;color:var(--muted2);cursor:pointer;font-family:var(--font);" data-key="signOutBtn">יציאה</button>
     </div>
     <div class="status-pill">
       <span class="sdot" id="sdot"></span>
@@ -281,7 +404,13 @@ body{
     </div>
   </div>
 </div>
-<div class="nav-tabs"><button class="nav-tab active" id="tabAnalyze" onclick="switchTab('analyze')" data-key="tabAnalyze">ניתוח</button><button class="nav-tab" id="tabContacts" onclick="switchTab('contacts')" data-key="tabContacts">אנשי קשר</button></div>
+<div class="nav-tabs">
+  <button class="nav-tab active" id="tabAnalyze" onclick="switchTab('analyze')" data-key="tabAnalyze">ניתוח</button>
+  <button class="nav-tab" id="tabContacts" onclick="switchTab('contacts')" data-key="tabContacts">אנשי קשר</button>
+  <button class="nav-tab" id="tabHistory" onclick="switchTab('history')" data-key="tabHistory">היסטוריה</button>
+  <button class="nav-tab" id="tabGuide" onclick="switchTab('guide')" data-key="tabGuide">מדריך</button>
+  <button class="nav-tab" id="tabSettings" onclick="switchTab('settings')" data-key="tabSettings">הגדרות</button>
+</div>
 <div class="screen active" id="screenAnalyze">
 
 <!-- SCORE ARC -->
@@ -305,14 +434,6 @@ body{
 <div class="alert" id="alertBox">
   <span>⚠️</span><span id="alertTxt"></span>
 </div>
-
-  <div class="gain-row" style="display:flex;align-items:center;gap:10px;margin-top:10px;width:100%;max-width:280px;">
-    <span style="font-size:10px;color:var(--muted);font-family:var(--mono);white-space:nowrap;" data-key="gainLabel">רגישות</span>
-    <input type="range" id="gainSlider" min="1" max="12" value="4" step="0.5"
-      oninput="updateGain(this.value)"
-      style="flex:1;accent-color:var(--accent);cursor:pointer;height:4px;">
-    <span id="gainVal" style="font-size:11px;color:var(--accent);font-family:var(--mono);min-width:28px;">x4</span>
-  </div>
 
 <!-- EQ BARS -->
 <div class="eq-section">
@@ -411,195 +532,277 @@ body{
   <div class="sum-row"><span class="sum-key" data-key="sumDurLabel">משך שיחה</span><span class="sum-val" id="sDur">—</span></div>
   <div class="sum-row"><span class="sum-key" data-key="sumMarksLabel">רגעים מסומנים</span><span class="sum-val" id="sMarks">—</span></div>
   <div class="mark-chips" id="markChips"></div>
-  <button class="save-sum-btn" id="saveSumBtn" onclick="openSaveSheet()" data-key="saveSumBtnLabel">שמור שיחה</button>
+  <button class="main-btn btn-start" id="saveSumBtn" onclick="openSaveSheet()" data-key="saveSumBtnLabel" style="margin-top:14px;display:none">שמור שיחה</button>
 </div>
 
 <!-- BUTTONS -->
 <div class="btn-row" id="btnRow">
   <button class="main-btn btn-start" id="mainBtn" onclick="toggleAnalysis()" data-key="startBtn">התחל ניתוח</button>
-  <button class="main-btn btn-summary" id="sumBtn" onclick="finishAndSummarize()" data-key="summaryBtn" disabled>סיכום</button>
+  <button class="main-btn btn-summary" id="sumBtn" onclick="toggleSummary()" data-key="summaryBtn" disabled>סיכום</button>
 </div>
 <div class="err-msg" id="errMsg" data-key="errMsg">לא ניתן לגשת למיקרופון.</div>
-</div><!-- /screenAnalyze -->
+</div>
 
-<!-- CONTACTS SCREEN -->
-<div class="screen" id="screenContacts">
-  <div class="contacts-wrap">
-    <div class="contacts-header">
-      <span class="contacts-title" data-key="tabContacts">אנשי קשר</span>
-      <span class="contacts-count" id="contactsCount"></span>
+<div class="screen" id="screenContacts"><div class="contacts-wrap"><div class="contacts-header"><span class="contacts-title" data-key="contactsTitle">אנשי קשר</span><span class="contacts-count" id="contactsCount"></span></div><div class="contacts-grid" id="contactsGrid"><div class="contacts-empty">עדיין אין שיחות שמורות.</div></div></div></div>
+
+<div class="modal-overlay" id="contactModal" onclick="closeContactModal(event)"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-title" id="modalName"></div><div class="modal-subtitle" id="modalMeta"></div><div class="modal-sessions" id="modalSessions"></div><button class="modal-close" onclick="closeModal()" data-key="modalClose">סגור</button><button class="modal-delete" onclick="deleteContact()" data-key="modalDelete">מחק</button></div></div>
+
+
+<!-- HISTORY SCREEN -->
+<div class="screen" id="screenHistory">
+  <div style="width:calc(100% - 36px);max-width:480px;margin-top:20px;display:flex;flex-direction:column;align-items:center;">
+    <div style="display:flex;gap:12px;margin-bottom:16px;width:100%;">
+      <div class="hist-stat"><div class="hist-stat-val" id="hStatAvg" style="color:var(--accent)">--</div><div class="hist-stat-lbl" data-key="hStatAvg">ממוצע</div></div>
+      <div class="hist-stat"><div class="hist-stat-val" id="hStatBest" style="color:#10b981">--</div><div class="hist-stat-lbl" data-key="hStatBest">שיא</div></div>
+      <div class="hist-stat"><div class="hist-stat-val" id="hStatCount" style="color:var(--muted2)">0</div><div class="hist-stat-lbl" data-key="hStatCount">שיחות</div></div>
     </div>
-    <div class="contacts-grid" id="contactsGrid">
-      <div class="contacts-empty" id="contactsEmpty">עדיין אין שיחות שמורות.</div>
+    <canvas id="histBigChart" style="width:100%;height:180px;background:var(--surface);border:1px solid var(--border);border-radius:12px;display:block;margin-bottom:16px;"></canvas>
+    <div id="histList" style="width:100%;">
+      <div id="histEmpty" class="contacts-empty" data-key="histEmpty">שמור שיחות כדי לראות היסטוריה</div>
     </div>
   </div>
 </div>
 
-<!-- CONTACT DETAIL -->
-<div class="detail-overlay" id="detailOverlay" onclick="closeDetailOverlay(event)">
-  <div class="detail-sheet">
-    <div class="detail-handle"></div>
-    <div class="detail-title" id="detailName"></div>
-    <div class="detail-meta" id="detailMeta"></div>
-    <div class="session-list" id="detailSessions"></div>
-    <button class="detail-close" onclick="closeDetail()" data-key="modalClose">סגור</button>
-    <button class="detail-delete" onclick="deleteContact()" data-key="modalDelete">מחק איש קשר</button>
+<!-- GUIDE SCREEN -->
+<div class="screen" id="screenGuide">
+  <div style="width:calc(100% - 36px);max-width:480px;margin-top:16px;">
+    <div class="guide-card">
+      <div class="guide-card-hdr"><div class="guide-icon">🎵</div><div><div class="guide-card-title" data-key="guidePitchTitle">גובה קול (Pitch)</div><div class="guide-card-sub" data-key="guidePitchSub">תדר הקול הבסיסי</div></div></div>
+      <div class="guide-card-body" data-key="guidePitchBody">עלייה פתאומית בגובה הקול עלולה להעיד על מתח. קול יציב נוטה להישאר בטווח עקבי.</div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-card-hdr"><div class="guide-icon">〰️</div><div><div class="guide-card-title" data-key="guideJitterTitle">רעידת קול (Jitter)</div><div class="guide-card-sub" data-key="guideJitterSub">יציבות התדר</div></div></div>
+      <div class="guide-card-body" data-key="guideJitterBody">Jitter גבוה עשוי להעיד על מתח או לחץ נפשי.</div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-card-hdr"><div class="guide-icon">⏸️</div><div><div class="guide-card-title" data-key="guidePauseTitle">פאוזות (Pauses)</div><div class="guide-card-sub" data-key="guidePauseSub">הפסקות באמצע משפט</div></div></div>
+      <div class="guide-card-body" data-key="guidePauseBody">פאוזות קצרות באמצע משפט עלולות להעיד על היסוס.</div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-card-hdr"><div class="guide-icon">⚡</div><div><div class="guide-card-title" data-key="guideRateTitle">קצב דיבור (Rate)</div><div class="guide-card-sub" data-key="guideRateSub">שינויים בקצב</div></div></div>
+      <div class="guide-card-body" data-key="guideRateBody">שינויים עקביים בקצב הדיבור עלולים להעיד על לחץ.</div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-card-hdr"><div class="guide-icon">🔊</div><div><div class="guide-card-title" data-key="guideVolTitle">עוצמת קול (Volume)</div><div class="guide-card-sub" data-key="guideVolSub">רמת האנרגיה הקולית</div></div></div>
+      <div class="guide-card-body" data-key="guideVolBody">תנודות חדות בעוצמת הקול יכולות להצביע על שינוי ברמת הנוחות.</div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-card-hdr"><div class="guide-icon">💨</div><div><div class="guide-card-title" data-key="guideBreathTitle">קצב נשימה (Breath)</div><div class="guide-card-sub" data-key="guideBreathSub">אנרגיית שינוי הקול</div></div></div>
+      <div class="guide-card-body" data-key="guideBreathBody">ערכים גבוהים עלולים להעיד על נשימה לא סדירה.</div>
+    </div>
+    <div class="guide-card">
+      <div class="guide-card-hdr"><div class="guide-icon">🎯</div><div><div class="guide-card-title" data-key="guideScoreTitle">מד האמינות</div><div class="guide-card-sub" data-key="guideScoreSub">מה המספרים אומרים</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:12px 0;">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#10b98115;"><div style="width:10px;height:10px;border-radius:50%;background:#10b981;flex-shrink:0;"></div><div style="font-size:13px;color:#cbd5e1;" data-key="legendHigh">65%–100% — מאפיינים יציבים ועקביים</div></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#f59e0b15;"><div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div><div style="font-size:13px;color:#cbd5e1;" data-key="legendMid">38%–65% — זוהו חריגות מסוימות</div></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#ef444415;"><div style="width:10px;height:10px;border-radius:50%;background:#ef4444;flex-shrink:0;"></div><div style="font-size:13px;color:#cbd5e1;" data-key="legendLow">0%–38% — מספר מאפיינים חריגים בו-זמנית</div></div>
+      </div>
+      <div style="font-size:12px;color:#94a3b8;border-top:1px solid var(--border);padding-top:10px;" data-key="guideScoreNote">הציון אינו מבחן מדעי. אינדיקציה לתרגול ומשוב אישי בלבד.</div>
+    </div>
   </div>
 </div>
 
-<!-- SAVE SHEET -->
-<div class="save-sheet" id="saveSheet" onclick="closeSaveOverlay(event)">
+<!-- SETTINGS SCREEN -->
+<div class="screen" id="screenSettings">
+  <div style="width:calc(100% - 36px);max-width:480px;margin-top:16px;">
+    <div class="settings-section-title" data-key="setSecLang">שפה</div>
+    <div class="settings-card">
+      <div class="settings-row">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🌐</span><div class="settings-row-label" data-key="setLangLabel">שפת ממשק</div></div>
+        <div style="display:flex;gap:6px;">
+          <button class="lang-opt active" id="sLangHe" onclick="setLang('he')">עב</button>
+          <button class="lang-opt" id="sLangEn" onclick="setLang('en')">EN</button>
+          <button class="lang-opt" id="sLangAr" onclick="setLang('ar')">ع</button>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section-title" data-key="setSecAudio">אודיו</div>
+    <div class="settings-card">
+      <div class="settings-row">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🎚️</span>
+          <div><div class="settings-row-label" data-key="setGainLabel">רגישות מיקרופון</div><div class="settings-row-sub" data-key="setGainSub">גבוה יותר לקליטה מרחוק</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="range" id="settingsGainSlider" min="1" max="12" value="4" step="0.5" oninput="updateGainFromSettings(this.value)" style="width:100px;accent-color:var(--accent);">
+          <span id="settingsGainVal" style="font-size:12px;color:var(--accent);font-family:var(--mono);min-width:26px;">x4</span>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section-title" data-key="setSecData">נתונים</div>
+    <div class="settings-card">
+      <div class="settings-row">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">👥</span><div class="settings-row-label" data-key="setSavedContacts">אנשי קשר שמורים</div></div>
+        <div style="color:var(--accent);font-family:var(--mono);font-size:14px;" id="setContactCount">0</div>
+      </div>
+      <div class="settings-row">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">💾</span>
+          <div><div class="settings-row-label" data-key="setStorageLabel">אחסון</div><div class="settings-row-sub" data-key="setStorageSub">מקומי על המכשיר בלבד</div></div>
+        </div>
+        <div style="color:var(--accent);font-size:12px;" data-key="setStorageVal">מקומי</div>
+      </div>
+    </div>
+    <button onclick="confirmResetAll()" style="width:100%;padding:14px;border-radius:12px;border:1px solid #ef444430;background:#ef444408;color:#fca5a5;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;" data-key="setResetBtn">מחק את כל הנתונים</button>
+    <div class="settings-section-title" data-key="setSecAbout">אודות</div>
+    <div class="settings-card">
+      <div class="settings-row"><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">📱</span><div class="settings-row-label">LIEDAR</div></div><div style="color:var(--muted);font-size:13px;">v1.0</div></div>
+      <div class="settings-row"><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🔒</span><div class="settings-row-label" data-key="setPrivacyLabel">מדיניות פרטיות</div></div><a href="https://enakash.github.io/DLTM/privacy.html" target="_blank" style="color:var(--accent);font-size:12px;" data-key="setPrivacyLink">צפה</a></div>
+      <div class="settings-row"><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">📋</span><div class="settings-row-label" data-key="setTermsLabel">תנאי שימוש</div></div><a href="https://enakash.github.io/DLTM/terms.html" target="_blank" style="color:var(--accent);font-size:12px;" data-key="setTermsLink">צפה</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- GAIN ROW (outside scoreWrap - stays visible during analysis) -->
+
+  <div style="display:flex;align-items:center;gap:10px;margin:0 18px 8px;max-width:460px;width:calc(100% - 36px);">
+    <span style="font-size:10px;color:var(--muted);font-family:var(--mono);white-space:nowrap;" data-key="gainLabel">רגישות</span>
+    <input type="range" id="gainSlider" min="1" max="12" value="4" step="0.5" oninput="updateGain(this.value)"
+      style="flex:1;accent-color:var(--accent);cursor:pointer;height:4px;">
+    <span id="gainVal" style="font-size:11px;color:var(--accent);font-family:var(--mono);min-width:28px;">x4</span>
+  </div>
+<div class="save-sheet" id="saveSheet" onclick="closeSaveSheetOverlay(event)">
   <div class="save-sheet-box">
-    <div class="save-handle"></div>
+    <div class="save-sheet-handle"></div>
     <div class="save-sheet-title" data-key="saveTitle">שמור שיחה</div>
     <div class="save-sheet-sub" id="saveSheetSub"></div>
     <div class="save-new-row">
       <input class="save-new-input" id="saveNewInput" maxlength="40" placeholder="שם חדש..."/>
-      <button class="save-add-btn" onclick="saveToNew()" data-key="saveConfirm">הוסף</button>
+      <button class="save-new-btn" onclick="saveToNew()" data-key="saveConfirm">הוסף</button>
     </div>
-    <div class="save-divider" id="saveDivider" style="display:none" data-key="saveExistingLabel">או בחר קיים</div>
+    <div class="save-divider" id="saveExistingLabel" style="display:none" data-key="saveExistingLabel">או בחר איש קשר קיים</div>
     <div class="save-contact-list" id="saveContactList"></div>
     <button class="save-cancel-btn" onclick="closeSaveSheet()" data-key="saveSkip">בטל</button>
   </div>
 </div>
 
 <script>
-
-// ── STORAGE ──
+// ── MEMORY ──
 function loadContacts(){try{return JSON.parse(localStorage.getItem('liedar_c')||'{}');}catch(e){return {};}}
-function saveContacts(d){try{localStorage.setItem('liedar_c',JSON.stringify(d));}catch(e){}}
-
-// ── TABS ──
+function saveContacts(c){try{localStorage.setItem('liedar_c',JSON.stringify(c));}catch(e){}}
 function switchTab(tab){
-  document.getElementById('screenAnalyze').classList.toggle('active',tab==='analyze');
-  document.getElementById('screenContacts').classList.toggle('active',tab==='contacts');
-  document.getElementById('tabAnalyze').classList.toggle('active',tab==='analyze');
-  document.getElementById('tabContacts').classList.toggle('active',tab==='contacts');
+  var screens=['Analyze','Contacts','History','Guide','Settings'];
+  screens.forEach(function(s){
+    var el=document.getElementById('screen'+s);
+    if(el) el.classList.toggle('active',tab===s.toLowerCase());
+    var tb=document.getElementById('tab'+s);
+    if(tb) tb.classList.toggle('active',tab===s.toLowerCase());
+  });
   if(tab==='contacts') renderContacts();
+  if(tab==='history') renderHistory();
+  if(tab==='settings') renderSettings();
 }
-
-// ── MINI CHART ──
 function drawMiniChart(canvas,scores){
   var dpr=window.devicePixelRatio||1;
-  canvas.width=canvas.offsetWidth*dpr; canvas.height=36*dpr;
+  canvas.width=canvas.offsetWidth*dpr;canvas.height=36*dpr;
   var ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,pd=3;
-  ctx.fillStyle='#080c14'; ctx.fillRect(0,0,w,h);
-  if(!scores||scores.length<2) return;
+  ctx.fillStyle='#080c14';ctx.fillRect(0,0,w,h);
+  if(!scores||scores.length<2)return;
   for(var i=1;i<scores.length;i++){
     var v=scores[i],pv=scores[i-1];
-    var x=pd+(i/(scores.length-1))*(w-pd*2), y=h-pd-(v/100)*(h-pd*2);
-    var px2=pd+((i-1)/(scores.length-1))*(w-pd*2), py2=h-pd-(pv/100)*(h-pd*2);
+    var x=pd+(i/(scores.length-1))*(w-pd*2),y=h-pd-(v/100)*(h-pd*2);
+    var px2=pd+((i-1)/(scores.length-1))*(w-pd*2),py2=h-pd-(pv/100)*(h-pd*2);
     var col=v>65?'#10b981':v>38?'#f59e0b':'#ef4444';
-    ctx.strokeStyle=col; ctx.lineWidth=2; ctx.shadowColor=col; ctx.shadowBlur=2;
-    ctx.beginPath(); ctx.moveTo(px2,py2); ctx.lineTo(x,y); ctx.stroke();
+    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.shadowColor=col;ctx.shadowBlur=2;
+    ctx.beginPath();ctx.moveTo(px2,py2);ctx.lineTo(x,y);ctx.stroke();
   }
 }
-
-// ── RENDER CONTACTS ──
 var currentContactKey=null;
 function renderContacts(){
-  var contacts=loadContacts(), keys=Object.keys(contacts);
+  var contacts=loadContacts(),keys=Object.keys(contacts);
   var grid=document.getElementById('contactsGrid');
   var cnt=document.getElementById('contactsCount');
   cnt.textContent=keys.length>0?keys.length+' '+t('contactsUnit'):'';
-  if(keys.length===0){
-    grid.innerHTML='<div class="contacts-empty">'+t('contactsEmpty')+'</div>';
-    return;
-  }
+  if(keys.length===0){grid.innerHTML='<div class="contacts-empty">'+t('contactsEmpty')+'</div>';return;}
   grid.innerHTML='';
   keys.sort(function(a,b){
     var la=(contacts[a].sessions.slice(-1)[0]||{date:0}).date;
     var lb=(contacts[b].sessions.slice(-1)[0]||{date:0}).date;
     return lb-la;
   }).forEach(function(key){
-    var ct=contacts[key], ss=ct.sessions||[];
-    var avg=ss.length?Math.round(ss.reduce(function(s,x){return s+x.score;},0)/ss.length):0;
+    var c=contacts[key],sessions=c.sessions||[];
+    var avg=sessions.length?Math.round(sessions.reduce(function(s,x){return s+x.score;},0)/sessions.length):0;
     var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
-    var last=ss.length?new Date(ss.slice(-1)[0].date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit'}):'';
+    var last=sessions.length?new Date(sessions.slice(-1)[0].date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit'}):'';
     var col=avg>65?'#10b981':avg>38?'#f59e0b':'#ef4444';
     var card=document.createElement('div');
     card.className='contact-card';
-    card.innerHTML='<div class="contact-name">'+ct.name+'</div>'
-      +'<div class="contact-meta">'+ss.length+' '+t('sessionsUnit')+' · '+last+'</div>'
+    card.innerHTML='<div class="contact-name">'+c.name+'</div>'
+      +'<div class="contact-meta">'+sessions.length+' '+t('sessionsUnit')+' · '+last+'</div>'
       +'<div class="contact-score-badge" style="background:'+col+'18;color:'+col+'">'+avg+'% '+t('avgLabel')+'</div>'
-      +'<canvas class="contact-mini-chart" id="mc-'+key+'"></canvas>';
-    (function(k,scores){
-      card.onclick=function(){openDetail(k);};
-      setTimeout(function(){var mc=document.getElementById('mc-'+k);if(mc)drawMiniChart(mc,scores);},60);
-    })(key, ss.map(function(s){return s.score;}));
+      +'<canvas class="contact-mini-chart" id="mini-'+key+'"></canvas>';
+    (function(k,ss){card.onclick=function(){openContactModal(k);};})(key,sessions);
     grid.appendChild(card);
+    (function(k,ss){setTimeout(function(){var mc=document.getElementById('mini-'+k);if(mc)drawMiniChart(mc,ss.map(function(s){return s.score;}));},60);})(key,sessions);
   });
 }
-
-// ── CONTACT DETAIL ──
-function openDetail(key){
+function openContactModal(key){
   currentContactKey=key;
-  var ct=loadContacts()[key]; if(!ct) return;
-  document.getElementById('detailName').textContent=ct.name;
-  document.getElementById('detailMeta').textContent=ct.sessions.length+' '+t('sessionsUnit');
-  var list=document.getElementById('detailSessions'); list.innerHTML='';
+  var c=loadContacts()[key];if(!c)return;
+  document.getElementById('modalName').textContent=c.name;
+  document.getElementById('modalMeta').textContent=c.sessions.length+' '+t('sessionsUnit');
+  var list=document.getElementById('modalSessions');list.innerHTML='';
   var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
-  ct.sessions.slice().reverse().forEach(function(s){
+  c.sessions.slice().reverse().forEach(function(s){
     var col=s.score>65?'#10b981':s.score>38?'#f59e0b':'#ef4444';
     var dt=new Date(s.date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
-    var row=document.createElement('div'); row.className='session-row';
+    var row=document.createElement('div');row.className='session-row';
     row.innerHTML='<div><div class="session-date">'+dt+'</div><div class="session-dur">'+(s.duration||'')+'</div></div>'
       +'<div class="session-score" style="color:'+col+'">'+s.score+'%</div>';
     list.appendChild(row);
   });
-  document.getElementById('detailOverlay').classList.add('show');
+  document.getElementById('contactModal').classList.add('show');
 }
-function closeDetail(){document.getElementById('detailOverlay').classList.remove('show');}
-function closeDetailOverlay(e){if(e.target===document.getElementById('detailOverlay'))closeDetail();}
+function closeModal(){document.getElementById('contactModal').classList.remove('show');}
+function closeContactModal(e){if(e.target===document.getElementById('contactModal'))closeModal();}
 function deleteContact(){
-  if(!currentContactKey) return;
-  var ct=loadContacts(); delete ct[currentContactKey]; saveContacts(ct);
-  closeDetail(); renderContacts();
+  if(!currentContactKey)return;
+  var c=loadContacts();delete c[currentContactKey];saveContacts(c);
+  closeModal();renderContacts();
 }
-
-// ── SAVE SHEET ──
 var pendingSaveData=null;
-var gainLevel=4;
-var gainNode=null;
-function updateGain(val){
-  gainLevel=parseFloat(val);
-  document.getElementById('gainVal').textContent='x'+gainLevel;
-  // Update live if active
-  if(typeof gainNode!=='undefined'&&gainNode){
-    try{gainNode.gain.value=gainLevel;}catch(e){}
-  }
-}
 
 function openSaveSheet(){
-  var contacts=loadContacts(), keys=Object.keys(contacts);
-  document.getElementById('saveSheetSub').textContent=
-    pendingSaveData?t('saveScoreLabel')+pendingSaveData.score+'% · '+pendingSaveData.duration:'';
+  var contacts=loadContacts();
+  var keys=Object.keys(contacts);
+  var sub=document.getElementById('saveSheetSub');
+  sub.textContent=t('saveScoreLabel')+(pendingSaveData?pendingSaveData.score+'%':'');
+  // populate existing contacts
   var list=document.getElementById('saveContactList');
-  var div=document.getElementById('saveDivider');
+  var label=document.getElementById('saveExistingLabel');
   list.innerHTML='';
   if(keys.length>0){
-    div.style.display='block';
+    label.style.display='block';
     var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
     keys.forEach(function(key){
-      var ct=contacts[key], ss=ct.sessions||[];
+      var ct=contacts[key],ss=ct.sessions||[];
       var avg=ss.length?Math.round(ss.reduce(function(s,x){return s+x.score;},0)/ss.length):0;
       var last=ss.length?new Date(ss.slice(-1)[0].date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit'}):'';
       var col=avg>65?'#10b981':avg>38?'#f59e0b':'#ef4444';
-      var row=document.createElement('div'); row.className='save-contact-row';
-      row.innerHTML='<div><div class="scr-name">'+ct.name+'</div>'
-        +'<div class="scr-meta">'+ss.length+' '+t('sessionsUnit')+' · '+last+'</div></div>'
-        +'<div class="scr-score" style="color:'+col+'">'+avg+'%</div>';
+      var row=document.createElement('div');
+      row.className='save-contact-row';
+      row.innerHTML='<div><div class="save-contact-row-name">'+ct.name+'</div>'
+        +'<div class="save-contact-row-meta">'+ss.length+' '+t('sessionsUnit')+' · '+last+'</div></div>'
+        +'<div class="save-contact-row-score" style="color:'+col+'">'+avg+'%</div>';
       (function(k){row.onclick=function(){saveToExisting(k);};})(key);
       list.appendChild(row);
     });
-  } else { div.style.display='none'; }
+  } else {
+    label.style.display='none';
+  }
   document.getElementById('saveNewInput').value='';
   document.getElementById('saveNewInput').placeholder=t('saveInputPlaceholder');
   document.getElementById('saveSheet').style.display='flex';
-  setTimeout(function(){document.getElementById('saveNewInput').focus();},150);
+  document.getElementById('saveSheet').classList.add('show');
+  setTimeout(function(){document.getElementById('saveNewInput').focus();},200);
 }
-function closeSaveSheet(){document.getElementById('saveSheet').style.display='none';}
-function closeSaveOverlay(e){if(e.target===document.getElementById('saveSheet'))closeSaveSheet();}
+
+function closeSaveSheet(){
+  document.getElementById('saveSheet').classList.remove('show');
+  document.getElementById('saveSheet').style.display='none';
+}
+function closeSaveSheetOverlay(e){
+  if(e.target===document.getElementById('saveSheet')) closeSaveSheet();
+}
+
 function _doSave(name,key){
   var contacts=loadContacts();
   if(!contacts[key]) contacts[key]={name:name,sessions:[]};
@@ -613,6 +816,7 @@ function _doSave(name,key){
   pendingSaveData=null;
   showAlert('✓ '+name+' - '+t('savedMsg'),2000);
 }
+
 function saveToNew(){
   var name=document.getElementById('saveNewInput').value.trim();
   if(!name){
@@ -622,12 +826,19 @@ function saveToNew(){
   }
   var contacts=loadContacts();
   var existKey=Object.keys(contacts).find(function(k){return contacts[k].name===name;});
-  _doSave(name, existKey||('k'+Date.now()));
+  var key=existKey||('k'+Date.now());
+  _doSave(name,key);
 }
+
 function saveToExisting(key){
-  var contacts=loadContacts(); if(!contacts[key]) return;
-  _doSave(contacts[key].name, key);
+  var contacts=loadContacts();
+  if(!contacts[key]) return;
+  _doSave(contacts[key].name,key);
 }
+
+function promptSave(data){ pendingSaveData=data; }
+function skipSave(){ closeSaveSheet(); }
+function confirmSave(){ saveToNew(); }
 
 // ── TRANSLATIONS ──
 const T = {
@@ -640,15 +851,18 @@ const T = {
     sumDurLabel:'משך שיחה', sumMarksLabel:'רגעים מסומנים',
     startBtn:'התחל ניתוח', stopBtn:'ביטול', finishBtn:'סיים וסכם',
     errMsg:'לא ניתן לגשת למיקרופון — בדוק הרשאות.',
-    noMarks:'אין', waitingData:'ממתין לנתונים...',
-    alertDrop:'ירידה חדה באמינות', autoMarkDrop:'סומן אוטומטי — ירידה חדה', autoMarkLow:'סומן אוטומטי — ציון נמוך מתמשך',
+    noMarks:'אין',, tabHistory:'היסטוריה', tabGuide:'מדריך', tabSettings:'הגדרות', hStatAvg:'ממוצע', hStatBest:'שיא', hStatCount:'שיחות', histEmpty:'שמור שיחות כדי לראות היסטוריה', guidePitchTitle:'גובה קול', guidePitchSub:'תדר הקול', guidePitchBody:'עלייה פתאומית עלולה להעיד על מתח.', guideJitterTitle:'רעידת קול', guideJitterSub:'יציבות התדר', guideJitterBody:'Jitter גבוה עשוי להעיד על מתח.', guidePauseTitle:'פאוזות', guidePauseSub:'הפסקות באמצע משפט', guidePauseBody:'פאוזות קצרות עלולות להעיד על היסוס.', guideRateTitle:'קצב דיבור', guideRateSub:'שינויים בקצב', guideRateBody:'שינויים עקביים עלולים להעיד על לחץ.', guideVolTitle:'עוצמת קול', guideVolSub:'רמת האנרגיה', guideVolBody:'תנודות חדות עלולות להצביע על שינוי.', guideBreathTitle:'קצב נשימה', guideBreathSub:'אנרגיית שינוי הקול', guideBreathBody:'ערכים גבוהים עלולים להעיד על נשימה לא סדירה.', guideScoreTitle:'מד האמינות', guideScoreSub:'מה המספרים אומרים', legendHigh:'65-100 יציב', legendMid:'38-65 חריגות מסוימות', legendLow:'0-38 מספר מאפיינים חריגים', guideScoreNote:'אינדיקציה לתרגול אישי בלבד.', setSecLang:'שפה', setLangLabel:'שפת ממשק', setSecAudio:'אודיו', setGainLabel:'רגישות מיקרופון', setGainSub:'גבוה יותר לקליטה מרחוק', setSecData:'נתונים', setSavedContacts:'אנשי קשר שמורים', setStorageLabel:'אחסון', setStorageSub:'מקומי על המכשיר', setStorageVal:'מקומי', setResetBtn:'מחק כל הנתונים', setSecAbout:'אודות', setPrivacyLabel:'מדיניות פרטיות', setPrivacyLink:'צפה', setTermsLabel:'תנאי שימוש', setTermsLink:'צפה', confirmReset:'למחוק את כל הנתונים?', resetDone:'נמחק', signOutBtn:'יציאה', authTabLogin:'כניסה', authTabRegister:'הרשמה', authEmailLabel:'אימייל', authPassLabel:'סיסמא', authPassConfirmLabel:'אימות סיסמא', authTermsText:'קראתי ואני מסכימ/ה ל', authTermsLink:'תנאי השימוש', authPrivacyLink:'מדיניות הפרטיות', authLoginBtn:'כניסה', authRegisterBtn:'הרשמה', authForgotLink:'שכחתי סיסמא', authForgotBtn:'שלח קישור איפוס', authBackLogin:'חזרה לכניסה', authGoogleBtn:'כניסה עם Google', authOrWith:'או', authVerifyTitle:'נא לאשר את האימייל', authVerifySub:'שלחנו קישור אימות. בדוק את תיבת הדואר שלך.', authResend:'שלח שוב', authResentMsg:'נשלח שוב!', authForgotSent:'קישור איפוס נשלח לאימייל שלך', authErrFields:'מלא את כל השדות', authErrTerms:'יש לאשר את תנאי השימוש', authErrPassMatch:'הסיסמאות אינן תואמות', authErrPassShort:'סיסמא מינימאלית 6 תווים', autoMarkDrop:'סומן אוטומטי — ירידה חדה', autoMarkLow:'סומן אוטומטי — ציון נמוך מתמשך' waitingData:'ממתין לנתונים...',
+    alertDrop:'ירידה חדה באמינות',
     markedAt:(t)=>'🚩 רגע מסומן — '+t,
     credible:'אמין', suspicious:'חשוד', unreliable:'לא אמין',
     credDesc:(s)=> s>65?'הדובר מציג מאפייני קול יציבים ועקביים.': s>38?'זוהו מספר מאפיינים חשודים. מומלץ לשים לב.':'מאפייני קול מרובים מעידים על מתח גבוה.',
     metricNorm:'תקין', metricHigh:'גבוה', metricLow:'נמוך', metricAlert:'חריגה',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
-    gainLabel:'רגישות', langLabel:'שפה:', contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
-    saveScoreLabel:'ציון: ', savedMsg:'נשמר', tabAnalyze:'ניתוח', tabContacts:'אנשי קשר', saveTitle:'שמור שיחה', saveConfirm:'הוסף', saveSkip:'בטל', saveExistingLabel:'או בחר קיים', saveSumBtnLabel:'שמור שיחה', modalClose:'סגור', modalDelete:'מחק איש קשר', saveInputPlaceholder:'שם חדש...',
+    saveScoreLabel:'ציון: ', savedMsg:'נשמר',
+    tabAnalyze:'ניתוח', tabContacts:'אנשי קשר', contactsTitle:'אנשי קשר',
+    contactsUnit:'אנשים', contactsEmpty:'עדיין אין שיחות שמורות.', sessionsUnit:'שיחות', avgLabel:'ממוצע',
+    saveTitle:'לשמור?', saveSub:'שם האדם', saveInputPlaceholder:'שם...',
+    saveConfirm:'הוסף', saveSkip:'בטל', saveTitle:'שמור שיחה', saveSumBtnLabel:'שמור שיחה', saveExistingLabel:'או בחר איש קשר קיים', modalClose:'סגור', modalDelete:'מחק',
     expPrefix:'הסבר: ',
     expSep:', ',
     expJitter:'רעידת קול גבוהה',
@@ -669,25 +883,28 @@ const T = {
     sumDurLabel:'Call Duration', sumMarksLabel:'Marked Moments',
     startBtn:'Start Analysis', stopBtn:'Cancel', finishBtn:'Finish & Summarize',
     errMsg:'Microphone access denied — check permissions.',
-    noMarks:'None', waitingData:'Waiting for data...',
-    alertDrop:'Sharp drop in credibility', autoMarkDrop:'Auto-marked — sharp drop detected', autoMarkLow:'Auto-marked — sustained low score',
+    noMarks:'None', tabHistory:'History', tabGuide:'Guide', tabSettings:'Settings', hStatAvg:'Average', hStatBest:'Best', hStatCount:'Sessions', histEmpty:'Save calls to see history', guidePitchTitle:'Pitch', guidePitchSub:'Fundamental frequency', guidePitchBody:'A sudden rise in pitch may indicate stress.', guideJitterTitle:'Jitter', guideJitterSub:'Frequency stability', guideJitterBody:'High jitter may indicate stress.', guidePauseTitle:'Pauses', guidePauseSub:'Mid-sentence stops', guidePauseBody:'Short unexpected pauses may indicate hesitation.', guideRateTitle:'Speech Rate', guideRateSub:'Pace changes', guideRateBody:'Consistent pace changes may indicate stress.', guideVolTitle:'Volume', guideVolSub:'Energy level', guideVolBody:'Sharp volume fluctuations may indicate comfort changes.', guideBreathTitle:'Breathing', guideBreathSub:'Energy change rate', guideBreathBody:'High values may indicate irregular breathing.', guideScoreTitle:'The Score', guideScoreSub:'What the numbers mean', legendHigh:'65-100 Stable and consistent', legendMid:'38-65 Some anomalies', legendLow:'0-38 Multiple anomalies', guideScoreNote:'For personal practice only.', setSecLang:'Language', setLangLabel:'Interface Language', setSecAudio:'Audio', setGainLabel:'Microphone Sensitivity', setGainSub:'Higher for remote pickup', setSecData:'Data', setSavedContacts:'Saved Contacts', setStorageLabel:'Storage', setStorageSub:'Local on device only', setStorageVal:'Local', setResetBtn:'Delete All Data', setSecAbout:'About', setPrivacyLabel:'Privacy Policy', setPrivacyLink:'View', setTermsLabel:'Terms of Use', setTermsLink:'View', confirmReset:'Delete all contacts and sessions?', resetDone:'All data cleared', signOutBtn:'Sign Out', authTabLogin:'Login', authTabRegister:'Register', authEmailLabel:'Email', authPassLabel:'Password', authPassConfirmLabel:'Confirm Password', authTermsText:'I have read and agree to the ', authTermsLink:'Terms of Use', authPrivacyLink:'Privacy Policy', authLoginBtn:'Sign In', authRegisterBtn:'Register', authForgotLink:'Forgot password', authForgotBtn:'Send Reset Link', authBackLogin:'Back to Login', authGoogleBtn:'Sign in with Google', authOrWith:'or', authVerifyTitle:'Please verify your email', authVerifySub:'We sent you a verification link. Check your inbox and click the link to continue.', authResend:'Resend', authResentMsg:'Sent again!', authForgotSent:'Reset link sent to your email', authErrFields:'Please fill in all fields', authErrTerms:'You must accept the Terms of Use', authErrPassMatch:'Passwords do not match', authErrPassShort:'Password must be at least 6 characters', autoMarkDrop:'Auto-marked - sharp drop', autoMarkLow:'Auto-marked - sustained low score', waitingData:'Waiting for data...',
+    alertDrop:'Sharp drop in credibility',
     markedAt:(t)=>'🚩 Marked — '+t,
     credible:'Credible', suspicious:'Suspicious', unreliable:'Unreliable',
     credDesc:(s)=> s>65?'Speaker shows stable and consistent voice features.': s>38?'Several suspicious features detected. Pay attention.':'Multiple voice features indicate high stress levels.',
     metricNorm:'Normal', metricHigh:'High', metricLow:'Low', metricAlert:'Alert',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
-    gainLabel:'Sensitivity', langLabel:'Language:', contactsUnit:'people', contactsEmpty:'No saved calls yet.', sessionsUnit:'calls', avgLabel:'avg',
-    saveScoreLabel:'Score: ', savedMsg:'Saved', tabAnalyze:'Analysis', tabContacts:'Contacts', saveTitle:'Save Call', saveConfirm:'Add', saveSkip:'Cancel', saveExistingLabel:'Or pick existing', saveSumBtnLabel:'Save Call', modalClose:'Close', modalDelete:'Delete Contact', saveInputPlaceholder:'New name...',
+    saveScoreLabel:'ציון: ', savedMsg:'נשמר',
+    tabAnalyze:'ניתוח', tabContacts:'אנשי קשר', contactsTitle:'אנשי קשר',
+    contactsUnit:'people', contactsEmpty:'No saved calls yet.', sessionsUnit:'calls', avgLabel:'avg',
+    saveTitle:'Save call?', saveSub:'Name of person', saveInputPlaceholder:'Name...',
+    saveConfirm:'Add', saveSkip:'Cancel', saveTitle:'Save Call', saveSumBtnLabel:'Save Call', saveExistingLabel:'Or pick existing contact', modalClose:'Close', modalDelete:'Delete',
     expPrefix:'Reason: ',
     expSep:', ',
-    expJitter:'High vocal jitter',
-    expJitterMid:'Moderate vocal jitter',
-    expPause:'Frequent suspicious mid-sentence pauses',
-    expPauseMid:'Short pauses during speech',
-    expRate:'Consistent change in speech rate',
-    expPitch:'Rise in vocal pitch',
-    expVolume:'Sharp fluctuations in volume',
-    expNone:'No significant anomalies detected — voice features are normal.',
+    expJitter:'רעידת קול גבוהה',
+    expJitterMid:'רעידת קול בינונית',
+    expPause:'פאוזות חשודות תכופות באמצע משפט',
+    expPauseMid:'פאוזות קצרות באמצע דיבור',
+    expRate:'שינוי עקבי בקצב הדיבור',
+    expPitch:'עלייה בגובה הקול',
+    expVolume:'תנודות חדה בעוצמת הקול',
+    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.',
   },
   ar:{
     waiting:'انتظار',
@@ -708,9 +925,9 @@ const T = {
     startBtn:'بدء التحليل',
     stopBtn:'إلغاء', finishBtn:'إنهاء وتلخيص',
     errMsg:'تعذّر الوصول إلى الميكروفون — تحقّق من الأذونات.',
-    noMarks:'لا يوجد',
+    noMarks:'لا يوجد',, tabHistory:'السجل', tabGuide:'دليل', tabSettings:'الإعدادات', hStatAvg:'المتوسط', hStatBest:'أعلى', hStatCount:'مكالمات', histEmpty:'احفظ مكالمات لعرض السجل', guidePitchTitle:'نبرة الصوت', guidePitchSub:'التردد الأساسي', guidePitchBody:'قد يشير الارتفاع المفاجئ إلى توتر.', guideJitterTitle:'اهتزاز الصوت', guideJitterSub:'ثبات التردد', guideJitterBody:'يشير الاهتزاز العالي إلى توتر.', guidePauseTitle:'التوقفات', guidePauseSub:'توقفات وسط الجملة', guidePauseBody:'تشير إلى تردد.', guideRateTitle:'سرعة الكلام', guideRateSub:'تغييرات الإيقاع', guideRateBody:'التغييرات المتكررة تشير إلى توتر.', guideVolTitle:'مستوى الصوت', guideVolSub:'مستوى الطاقة', guideVolBody:'التذبذبات الحادة تعكس تغييرات.', guideBreathTitle:'معدل التنفس', guideBreathSub:'معدل تغيير الطاقة', guideBreathBody:'القيم العالية تشير إلى نفس غير منتظم.', guideScoreTitle:'مؤشر المصداقية', guideScoreSub:'ماذا تعني الأرقام', legendHigh:'65-100 خصائص مستقرة', legendMid:'38-65 شذوذات بسيطة', legendLow:'0-38 شذوذات متعددة', guideScoreNote:'مؤشر فقط للتدريب الشخصي.', setSecLang:'اللغة', setLangLabel:'لغة الواجهة', setSecAudio:'الصوت', setGainLabel:'حساسية الميكروفون', setGainSub:'أعلى للتقاط عن بُعد', setSecData:'البيانات', setSavedContacts:'جهات الاتصال', setStorageLabel:'التخزين', setStorageSub:'محلي فقط', setStorageVal:'محلي', setResetBtn:'حذف جميع البيانات', setSecAbout:'حول', setPrivacyLabel:'سياسة الخصوصية', setPrivacyLink:'عرض', setTermsLabel:'شروط الاستخدام', setTermsLink:'عرض', confirmReset:'حذف جميع البيانات؟', resetDone:'تم الحذف', signOutBtn:'خروج', authTabLogin:'تسجيل الدخول', authTabRegister:'تسجيل', authEmailLabel:'البريد الإلكتروني', authPassLabel:'كلمة المرور', authPassConfirmLabel:'تأكيد كلمة المرور', authTermsText:'لقد قرأت وأوافق على ', authTermsLink:'شروط الاستخدام', authPrivacyLink:'سياسة الخصوصية', authLoginBtn:'دخول', authRegisterBtn:'تسجيل', authForgotLink:'نسيت كلمة المرور', authForgotBtn:'إرسال رابط إعادة التعيين', authBackLogin:'عودة لتسجيل الدخول', authGoogleBtn:'دخول بحساب Google', authOrWith:'أو', authVerifyTitle:'يُرجى تأكيد البريد الإلكتروني', authVerifySub:'أرسلنا رابط تحقق. تحقق من بريدك واضغط على الرابط.', authResend:'إعادة الإرسال', authResentMsg:'تم الإرسال!', authForgotSent:'تم إرسال رابط إعادة التعيين', authErrFields:'يُرجى ملء جميع الحقول', authErrTerms:'يجب الموافقة على شروط الاستخدام', authErrPassMatch:'كلمتا المرور غير متطابقتين', authErrPassShort:'كلمة المرور 6 أحرف على الأقل', autoMarkDrop:'تحديد تلقائي — انخفاض حاد', autoMarkLow:'تحديد تلقائي — درجة منخفضة'
     waitingData:'في انتظار البيانات...',
-    alertDrop:'انخفاض حاد في المصداقية', autoMarkDrop:'تحديد تلقائي — انخفاض حاد', autoMarkLow:'تحديد تلقائي — درجة منخفضة مستمرة',
+    alertDrop:'انخفاض حاد في المصداقية',
     markedAt:(t)=>'⚠️ تم التحديد — '+t,
     credible:'موثوق',
     suspicious:'مشبوه',
@@ -721,8 +938,11 @@ const T = {
     metricLow:'منخفض',
     metricAlert:'تنبيه',
     standby:'STANDBY', calib:'CALIBRATING', live:'LIVE',
-    gainLabel:'الحساسية', langLabel:'اللغة:', contactsUnit:'أشخاص', contactsEmpty:'لا توجد مكالمات.', sessionsUnit:'مكالمات', avgLabel:'متوسط',
-    saveScoreLabel:'الدرجة: ', savedMsg:'تم الحفظ', tabAnalyze:'تحليل', tabContacts:'جهات الاتصال', saveTitle:'حفظ المكالمة', saveConfirm:'إضافة', saveSkip:'إلغاء', saveExistingLabel:'أو اختر موجوداً', saveSumBtnLabel:'حفظ المكالمة', modalClose:'إغلاق', modalDelete:'حذف جهة الاتصال', saveInputPlaceholder:'اسم...',
+    saveScoreLabel:'الدرجة: ', savedMsg:'تم الحفظ',
+    tabAnalyze:'تحليل', tabContacts:'جهات الاتصال', contactsTitle:'جهات الاتصال',
+    contactsUnit:'أشخاص', contactsEmpty:'لا توجد مكالمات.', sessionsUnit:'مكالمات', avgLabel:'متوسط',
+    saveTitle:'حفظ?', saveSub:'اسم الشخص', saveInputPlaceholder:'اسم...',
+    saveConfirm:'إضافة', saveSkip:'إلغاء', saveTitle:'حفظ المكالمة', saveSumBtnLabel:'حفظ المكالمة', saveExistingLabel:'أو اختر جهة اتصال موجودة', modalClose:'إغلاق', modalDelete:'حذف',
     expPrefix:'السبب: ',
     expSep:'، ',
     expJitter:'اهتزاز صوتي مرتفع',
@@ -735,29 +955,19 @@ const T = {
     expNone:'لم ترصد شذوذات مهمة — مميزات الصوت مستقرة.',
   }
 };
-
-// ── LANGUAGE DETECTION & PERSISTENCE ──
-const LANG_KEY='liedar_lang';
-const SUPPORTED_LANGS=['he','en','ar'];
-function getInitialLang(){
-  try{
-    const saved=localStorage.getItem(LANG_KEY);
-    if(saved && SUPPORTED_LANGS.indexOf(saved)!==-1) return saved;
-  }catch(e){}
-  const nav=(navigator.language||(navigator.languages&&navigator.languages[0])||'en').toLowerCase();
-  const short=nav.slice(0,2);
-  return SUPPORTED_LANGS.indexOf(short)!==-1 ? short : 'en';
-}
-let lang=getInitialLang();
+let lang='he';
 function t(k,a){ const v=T[lang][k]; return typeof v==='function'?v(a):v; }
 function setLang(l){
   lang=l;
-  try{localStorage.setItem(LANG_KEY,l);}catch(e){}
   document.documentElement.lang=l;
   document.documentElement.dir=(l==='he'||l==='ar')?'rtl':'ltr';
-  document.getElementById('btnHe').classList.toggle('active',l==='he');
-  document.getElementById('btnEn').classList.toggle('active',l==='en');
-  document.getElementById('btnAr').classList.toggle('active',l==='ar');
+  // Update lang buttons wherever they exist (topbar or settings)
+  ['btnHe','btnEn','btnAr','sLangHe','sLangEn','sLangAr'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.classList.toggle('active',
+      (id==='btnHe'||id==='sLangHe')?l==='he':
+      (id==='btnEn'||id==='sLangEn')?l==='en':l==='ar');
+  });
   document.body.style.fontFamily=l==='ar'?"'Noto Sans Arabic',sans-serif":"'Inter',-apple-system,sans-serif";
   document.querySelectorAll('[data-key]').forEach(el=>{
     const k=el.getAttribute('data-key');
@@ -766,15 +976,10 @@ function setLang(l){
       else el.textContent=T[l][k];
     }
   });
-  // Update sMarks if summary is visible
-  var sMarksEl=document.getElementById('sMarks');
-  if(sMarksEl && !markCounter) sMarksEl.textContent=t('noMarks');
-  // Update placeholders
-  const inp=document.getElementById('saveNewInput');
-  if(inp) inp.placeholder=t('saveInputPlaceholder');
   if(active) updateArc(credibility);
   else document.getElementById('arcLbl').textContent=t('waiting');
 }
+
 // ── GAUGE SETUP ──
 const ACX=90,ACY=90,AR=62;
 const ASA=Math.PI*0.85, AEA=Math.PI*2.15, ATA=AEA-ASA;
@@ -853,7 +1058,6 @@ let historyData=[],markTimes=[],marks=[];
 let histInterval=null,waveAnimId=null,durInterval=null;
 let startTime=null,callDuration=0;
 let alertCooldown=false,markCounter=0;
-let lowScoreStreak=0,autoMarkCooldown=false;
 let summaryVisible=false;
 
 // running averages for summary
@@ -993,39 +1197,26 @@ function showAlert(msg,dur){
 }
 
 function checkAlert(nv,pv){
-  // Track low-score streak
   if(nv<40) lowScoreStreak++; else lowScoreStreak=0;
-
-  // Auto-mark: sharp drop (15+ pts in one step)
-  const sharpDrop = (pv-nv)>=15 && nv<55;
-  // Auto-mark: sustained low score (3+ consecutive readings below 40)
-  const sustainedLow = lowScoreStreak>=3;
-
-  if((sharpDrop||sustainedLow) && !autoMarkCooldown){
+  var sharpDrop=(pv-nv)>=15&&nv<55;
+  var sustainedLow=lowScoreStreak>=3;
+  if((sharpDrop||sustainedLow)&&!autoMarkCooldown){
     autoMarkCooldown=true;
-    // Add mark to graph
     marks.push(historyData.length);
-    const el=Math.floor((Date.now()-startTime)/1000);
-    markTimes.push(el);
-    markCounter++;
-    document.getElementById('markCnt').textContent=markCounter;
-    document.getElementById('markCnt').classList.add('show');
-    // Show alert banner
-    const reason = sharpDrop ? t('autoMarkDrop') : t('autoMarkLow');
-    showAlert('🚩 '+reason, 4000);
-    // Vibrate
+    var el=Math.floor((Date.now()-startTime)/1000);
+    markTimes.push(el); markCounter++;
+    var mc=document.getElementById('markCnt');
+    if(mc){mc.textContent=markCounter;mc.classList.add('show');}
+    showAlert('🚩 '+(sharpDrop?t('autoMarkDrop'):t('autoMarkLow')),4000);
     if(navigator.vibrate) navigator.vibrate([80,40,80,40,300]);
-    // Cooldown 5s to avoid spam
-    setTimeout(()=>{ autoMarkCooldown=false; }, 5000);
+    setTimeout(function(){autoMarkCooldown=false;},5000);
   }
-
-  // Existing alert for very sharp drops (kept separate)
   if(alertCooldown)return;
   if(pv-nv>18&&nv<50){
     alertCooldown=true;
     showAlert(t('alertDrop'),3500);
     if(navigator.vibrate) navigator.vibrate([100,50,100,50,200]);
-    setTimeout(()=>alertCooldown=false,4000);
+    setTimeout(function(){alertCooldown=false;},4000);
   }
 }
 
@@ -1097,38 +1288,45 @@ function buildSummary(){
 // ── START / STOP ──
 async function toggleAnalysis(){ if(active)cancelAnalysis(); else await startAnalysis(); }
 
+
+// Cancel: stop without summary or save
 function cancelAnalysis(){
-  _stopAll();
-  _resetUI();
+  _stopStreams();
+  _resetUI(false);
   historyData=[];
   document.getElementById('summaryPanel').classList.remove('show');
-  document.getElementById('saveSumBtn').style.display='none';
 }
 
+// Finish & Summarize: stop, show summary, prompt save
 function finishAndSummarize(){
   if(!active) return;
-  _stopAll();
-  _resetUI();
+  _stopStreams();
+  _resetUI(false);
   if(historyData.length>3){
-    buildSummary();
+    summaryVisible=true; buildSummary();
     document.getElementById('summaryPanel').classList.add('show');
     var fs=Math.round(historyData.reduce(function(a,b){return a+b;},0)/historyData.length);
-    pendingSaveData={score:fs, duration:formatTime(callDuration)};
+    var dur=formatTime(callDuration);
+    pendingSaveData={score:fs,duration:dur};
+    // Show save button in summary
     document.getElementById('saveSumBtn').style.display='block';
+    document.getElementById('saveSumBtn').textContent=t('saveSumBtnLabel');
   }
 }
 
-function _stopAll(){
+// Shared stop helper
+function _stopStreams(){
   if(processor){processor.disconnect();processor=null;}
   if(analyser){analyser.disconnect();analyser=null;}
-  if(stream){stream.getTracks().forEach(function(tk){tk.stop();});stream=null;}
+  if(stream){stream.getTracks().forEach(function(t){t.stop();});stream=null;}
   if(audioCtx){audioCtx.close();audioCtx=null;}
   if(histInterval){clearInterval(histInterval);histInterval=null;}
   if(durInterval){clearInterval(durInterval);durInterval=null;}
-  active=false; calibrating=false; gainNode=null;
+  active=false; calibrating=false;
 }
 
-function _resetUI(){
+// Shared UI reset helper
+function _resetUI(keepSummary){
   document.getElementById('calibTag').classList.remove('show');
   document.getElementById('sdot').className='sdot';
   document.getElementById('statusTxt').textContent=t('standby');
@@ -1140,8 +1338,9 @@ function _resetUI(){
   resetArc();
   document.getElementById('scoreWrap').classList.remove('hidden-live');
   ['pitch','jitter','pause','rate','volume','breath'].forEach(function(n){
-    var f=document.getElementById('fill-'+n),v=document.getElementById('val-'+n);
-    if(f){f.style.height='3px';f.style.background='#10b981';} if(v) v.textContent='--';
+    var f=document.getElementById('fill-'+n);
+    if(f){f.style.height='3px';f.style.background='#10b981';}
+    var v=document.getElementById('val-'+n); if(v) v.textContent='--';
   });
 }
 
@@ -1149,36 +1348,21 @@ async function startAnalysis(){
   document.getElementById('errMsg').classList.remove('show');
   document.getElementById('summaryPanel').classList.remove('show');
   document.getElementById('saveSumBtn').style.display='none';
-  pendingSaveData=null;
   summaryVisible=false;
   try{
-    stream=await navigator.mediaDevices.getUserMedia({
-      audio:{
-        echoCancellation:false,
-        noiseSuppression:false,
-        autoGainControl:false,
-        channelCount:1,
-        sampleRate:44100
-      },
-      video:false
-    });
+    stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
     audioCtx=new(window.AudioContext||window.webkitAudioContext)();
     const src=audioCtx.createMediaStreamSource(stream);
     analyser=audioCtx.createAnalyser(); analyser.fftSize=2048;
-    // Boost input gain for speaker pickup
-    gainNode=audioCtx.createGain();
-    gainNode.gain.value=gainLevel;
-    src.connect(gainNode);
-    gainNode.connect(analyser);
+    src.connect(analyser);
     processor=audioCtx.createScriptProcessor(2048,1,1);
-    gainNode.connect(processor); processor.connect(audioCtx.destination);
+    src.connect(processor); processor.connect(audioCtx.destination);
 
     pitchHist=[];voiceFrames=0;totalFrames=0;
     lastPitch=0;jitterAcc=0;sampleCount=0;
     credibility=50;prevCred=50;
     historyData=[];marks=[];markTimes=[];markCounter=0;
     alertCooldown=false;alertCooldownBars={};
-    lowScoreStreak=0;autoMarkCooldown=false;
     sumPitch=[];sumJitter=[];sumPause=[];sumRate=[];sumVolume=[];sumBreath=[];
     rateHistory=[];midSentencePauses=0;shortPauseCount=0;longPauseCount=0;
     inPause=false;pauseStartFrame=0;lastVoiceFrame=0;
@@ -1308,18 +1492,217 @@ async function startAnalysis(){
 
 function stopAnalysis(){ finishAndSummarize(); }
 
-window.addEventListener('load',()=>{ setLang(lang); resizeCanvases(); drawHistory(); });
+window.addEventListener('load',()=>{ resizeCanvases(); drawHistory(); });
 window.addEventListener('resize', resizeCanvases);
-</script>
 
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then((reg) => console.log('LIEDAR SW registered:', reg.scope))
-        .catch((err) => console.error('LIEDAR SW registration failed:', err));
-    });
+var gainLevel=4,gainNode=null;
+function updateGain(val){
+  gainLevel=parseFloat(val);
+  document.getElementById('gainVal').textContent='x'+gainLevel;
+  var sg=document.getElementById('settingsGainSlider');
+  var sgv=document.getElementById('settingsGainVal');
+  if(sg) sg.value=gainLevel;
+  if(sgv) sgv.textContent='x'+gainLevel;
+  if(gainNode){try{gainNode.gain.value=gainLevel;}catch(e){}}
+}
+function updateGainFromSettings(val){
+  gainLevel=parseFloat(val);
+  document.getElementById('settingsGainVal').textContent='x'+gainLevel;
+  document.getElementById('gainSlider').value=gainLevel;
+  document.getElementById('gainVal').textContent='x'+gainLevel;
+  if(gainNode){try{gainNode.gain.value=gainLevel;}catch(e){}}
+}
+function renderHistory(){
+  var contacts=loadContacts(),keys=Object.keys(contacts);
+  var all=[];
+  keys.forEach(function(k){var ct=contacts[k];ct.sessions.forEach(function(s){all.push({name:ct.name,score:s.score,date:s.date,duration:s.duration||''});});});
+  all.sort(function(a,b){return b.date-a.date;});
+  var list=document.getElementById('histList');
+  var empty=document.getElementById('histEmpty');
+  var avgEl=document.getElementById('hStatAvg'),bestEl=document.getElementById('hStatBest'),cntEl=document.getElementById('hStatCount');
+  if(all.length===0){list.innerHTML='';list.appendChild(empty);empty.style.display='block';avgEl.textContent='--';bestEl.textContent='--';cntEl.textContent='0';return;}
+  empty.style.display='none';
+  var scores=all.map(function(s){return s.score;});
+  var avgVal=Math.round(scores.reduce(function(a,b){return a+b;},0)/scores.length);
+  var bestVal=Math.max.apply(null,scores);
+  avgEl.textContent=avgVal+'%'; avgEl.style.color=avgVal>65?'#10b981':avgVal>38?'#f59e0b':'#ef4444';
+  bestEl.textContent=bestVal+'%'; cntEl.textContent=all.length;
+  drawBigChart(all.slice(0,30).reverse().map(function(s){return s.score;}));
+  list.innerHTML='';
+  all.slice(0,25).forEach(function(s){
+    var col=s.score>65?'#10b981':s.score>38?'#f59e0b':'#ef4444';
+    var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
+    var dt=new Date(s.date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit',year:'2-digit'});
+    var item=document.createElement('div');item.className='history-item';
+    item.innerHTML='<div><div class="history-item-name">'+s.name+'</div><div class="history-item-meta">'+dt+(s.duration?' · '+s.duration:'')+'</div></div><div class="history-item-score" style="color:'+col+'">'+s.score+'%</div>';
+    list.appendChild(item);
+  });
+}
+function drawBigChart(scores){
+  var canvas=document.getElementById('histBigChart');if(!canvas||scores.length<2)return;
+  var dpr=window.devicePixelRatio||1;
+  canvas.width=canvas.offsetWidth*dpr;canvas.height=180*dpr;
+  var ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,pd=16*dpr;
+  ctx.fillStyle='#0f1623';ctx.fillRect(0,0,w,h);
+  for(var i=1;i<scores.length;i++){
+    var v=scores[i],pv=scores[i-1];
+    var x=pd+(i/(scores.length-1))*(w-pd*2),y=h-pd-(v/100)*(h-pd*2);
+    var px=pd+((i-1)/(scores.length-1))*(w-pd*2),py=h-pd-(pv/100)*(h-pd*2);
+    var col=v>65?'#10b981':v>38?'#f59e0b':'#ef4444';
+    ctx.strokeStyle=col;ctx.lineWidth=2.5*dpr;ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(x,y);ctx.stroke();
   }
+}
+function renderSettings(){
+  var contacts=loadContacts();
+  document.getElementById('setContactCount').textContent=Object.keys(contacts).length;
+  ['He','En','Ar'].forEach(function(l){var b=document.getElementById('sLang'+l);if(b)b.classList.toggle('active',lang===l.toLowerCase());});
+  var gs=document.getElementById('settingsGainSlider');var gv=document.getElementById('settingsGainVal');
+  if(gs)gs.value=gainLevel;if(gv)gv.textContent='x'+gainLevel;
+}
+function confirmResetAll(){
+  if(confirm(t('confirmReset'))){localStorage.removeItem('liedar_c');showAlert(t('resetDone'),2000);renderSettings();}
+}
+// Auto-mark logic
+var lowScoreStreak=0,autoMarkCooldown=false;
+
+// ── SUPABASE AUTH ──
+// TODO: Replace with your actual Supabase project URL and anon key
+// Get them from: supabase.com → Your Project → Settings → API
+const SUPA_URL = 'https://YOUR_PROJECT.supabase.co';
+const SUPA_KEY = 'YOUR_ANON_KEY';
+const _supa = (typeof supabase !== 'undefined') ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+
+var _currentUser = null;
+var _pendingEmail = '';
+
+// Init: check session on load
+window.addEventListener('DOMContentLoaded', function() {
+  if (!_supa) { showApp(); return; } // No Supabase config yet
+  _supa.auth.getSession().then(function(res) {
+    var session = res.data && res.data.session;
+    if (session && session.user) {
+      if (!session.user.email_confirmed_at) {
+        _pendingEmail = session.user.email;
+        showAuthScreen('verify');
+      } else {
+        onUserLoggedIn(session.user);
+      }
+    }
+  });
+  _supa.auth.onAuthStateChange(function(event, session) {
+    if (event === 'SIGNED_IN' && session && session.user) {
+      if (!session.user.email_confirmed_at) {
+        _pendingEmail = session.user.email;
+        showAuthScreen('verify');
+      } else {
+        onUserLoggedIn(session.user);
+      }
+    } else if (event === 'SIGNED_OUT') {
+      _currentUser = null;
+      document.getElementById('authOverlay').style.display = 'flex';
+      document.getElementById('userBadge').style.display = 'none';
+    }
+  });
+});
+
+function onUserLoggedIn(user) {
+  _currentUser = user;
+  document.getElementById('authOverlay').style.display = 'none';
+  document.getElementById('userBadge').style.display = 'flex';
+  var emailEl = document.getElementById('userEmail');
+  if (emailEl) emailEl.textContent = user.email;
+}
+
+function showApp() {
+  document.getElementById('authOverlay').style.display = 'none';
+}
+
+function switchAuthTab(tab) {
+  ['login','register','forgot','verify'].forEach(function(t) {
+    document.getElementById('auth' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = t === tab ? 'block' : 'none';
+  });
+  document.getElementById('authTabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('authTabRegister').classList.toggle('active', tab === 'register');
+  // Hide google btn on forgot/verify
+  var gs = document.getElementById('authGoogleSection');
+  if (gs) gs.style.display = (tab === 'forgot' || tab === 'verify') ? 'none' : 'block';
+  clearAuthMsg();
+}
+
+function showAuthMsg(msg, type) {
+  var el = document.getElementById('authMsg');
+  el.textContent = msg;
+  el.className = 'auth-msg ' + type;
+  el.style.display = 'block';
+}
+function clearAuthMsg() { document.getElementById('authMsg').style.display = 'none'; }
+
+async function doLogin() {
+  if (!_supa) { showApp(); return; }
+  var email = document.getElementById('loginEmail').value.trim();
+  var pass = document.getElementById('loginPass').value;
+  if (!email || !pass) { showAuthMsg(t('authErrFields'), 'error'); return; }
+  var btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = '...';
+  var { data, error } = await _supa.auth.signInWithPassword({ email, password: pass });
+  btn.disabled = false; btn.textContent = t('authLoginBtn');
+  if (error) { showAuthMsg(error.message, 'error'); return; }
+  if (data.user && !data.user.email_confirmed_at) {
+    _pendingEmail = email;
+    switchAuthTab('verify');
+  }
+}
+
+async function doRegister() {
+  if (!_supa) { showApp(); return; }
+  var email = document.getElementById('regEmail').value.trim();
+  var pass = document.getElementById('regPass').value;
+  var passC = document.getElementById('regPassConfirm').value;
+  var terms = document.getElementById('termsCheck').checked;
+  if (!email || !pass) { showAuthMsg(t('authErrFields'), 'error'); return; }
+  if (!terms) { showAuthMsg(t('authErrTerms'), 'error'); return; }
+  if (pass !== passC) { showAuthMsg(t('authErrPassMatch'), 'error'); return; }
+  if (pass.length < 6) { showAuthMsg(t('authErrPassShort'), 'error'); return; }
+  var btn = document.getElementById('regBtn');
+  btn.disabled = true; btn.textContent = '...';
+  var { data, error } = await _supa.auth.signUp({ email, password: pass });
+  btn.disabled = false; btn.textContent = t('authRegisterBtn');
+  if (error) { showAuthMsg(error.message, 'error'); return; }
+  _pendingEmail = email;
+  switchAuthTab('verify');
+}
+
+async function doForgot() {
+  if (!_supa) return;
+  var email = document.getElementById('forgotEmail').value.trim();
+  if (!email) { showAuthMsg(t('authErrFields'), 'error'); return; }
+  var { error } = await _supa.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://enakash.github.io/DLTM/'
+  });
+  if (error) { showAuthMsg(error.message, 'error'); return; }
+  showAuthMsg(t('authForgotSent'), 'success');
+}
+
+async function doGoogleLogin() {
+  if (!_supa) return;
+  await _supa.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: 'https://enakash.github.io/DLTM/' }
+  });
+}
+
+async function resendVerify() {
+  if (!_supa || !_pendingEmail) return;
+  var { error } = await _supa.auth.resend({ type: 'signup', email: _pendingEmail });
+  if (!error) showAuthMsg(t('authResentMsg'), 'success');
+}
+
+async function signOut() {
+  if (!_supa) return;
+  await _supa.auth.signOut();
+}
+
+// ── UPDATE AUTH TRANSLATIONS IN setLang ──
 </script>
 </body>
 </html>
