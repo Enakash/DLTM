@@ -847,7 +847,7 @@ const T = {
     pitch:'גובה קול', jitter:'רעידת קול', pauses:'פאוזות',
     rate:'קצב דיבור', volume:'עוצמת קול', breath:'קצב נשימה',
     markBtn:'סמן רגע חשוד', history:'היסטוריה',
-    summaryTitle:'סיכום שיחה', summaryBtn:'סיים וסכם',
+    summaryTitle:'סיכום שיחה', summaryBtn:'סיים וסכם', summaryBtn2:'סיכום שיחה',
     sumDurLabel:'משך שיחה', sumMarksLabel:'רגעים מסומנים',
     startBtn:'התחל ניתוח', stopBtn:'ביטול', finishBtn:'סיים וסכם',
     errMsg:'לא ניתן לגשת למיקרופון — בדוק הרשאות.',
@@ -920,7 +920,7 @@ const T = {
     markBtn:'تحديد لحظة مشبوهة',
     history:'السجل',
     summaryTitle:'ملخص المكالمة',
-    summaryBtn:'إنهاء وتلخيص',
+    summaryBtn:'إنهاء وتلخيص', summaryBtn2:'عرض الملخص',
     sumDurLabel:'مدة المكالمة',
     sumMarksLabel:'اللحظات المحددة',
     startBtn:'بدء التحليل',
@@ -1312,6 +1312,11 @@ function finishAndSummarize(){
     // Show save button in summary
     document.getElementById('saveSumBtn').style.display='block';
     document.getElementById('saveSumBtn').textContent=t('saveSumBtnLabel');
+    // After summary - re-enable sumBtn to toggle view, update mainBtn
+    document.getElementById('sumBtn').disabled=false;
+    document.getElementById('sumBtn').textContent=t('summaryBtn2')||t('summaryBtn');
+    document.getElementById('mainBtn').textContent=t('startBtn');
+    document.getElementById('mainBtn').className='main-btn btn-start';
   }
 }
 
