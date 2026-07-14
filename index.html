@@ -397,15 +397,14 @@ body{
       <circle cx="79" cy="28" r="1.5" fill="#f59e0b" filter="url(#lg)" opacity="0.8"/>
     </svg>
   </div>
-  <!-- RIGHT: user + signout -->
-  <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
-    <div id="userBadge" style="display:none;align-items:center;gap:8px;">
-      <span id="userEmail" style="font-size:10px;color:var(--accent);font-family:var(--mono);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
-      <button onclick="signOut()" style="font-size:10px;padding:4px 10px;border-radius:10px;border:1px solid #ef444440;background:#ef444412;color:#fca5a5;cursor:pointer;font-family:var(--font);white-space:nowrap;" data-key="signOutBtn">יציאה</button>
-    </div>
-  </div>
+  <!-- RIGHT: placeholder for balance -->
+  <div style="flex:1;"></div>
 </div>
-<div class="nav-tabs">
+<div id="userBadge" style="display:none;align-items:center;justify-content:flex-end;gap:10px;padding:6px 18px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:57px;z-index:19;">
+  <span id="userEmail" style="font-size:11px;color:var(--accent);font-family:var(--mono);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+  <button onclick="signOut()" style="font-size:11px;padding:4px 12px;border-radius:10px;border:1px solid #ef444440;background:#ef444412;color:#fca5a5;cursor:pointer;font-family:var(--font);white-space:nowrap;" data-key="signOutBtn">יציאה</button>
+</div>
+<div class="nav-tabs" style="top:57px;" id="navTabs">
   <button class="nav-tab active" id="tabAnalyze" onclick="switchTab('analyze')" data-key="tabAnalyze">ניתוח</button>
   <button class="nav-tab" id="tabContacts" onclick="switchTab('contacts')" data-key="tabContacts">אנשי קשר</button>
   <button class="nav-tab" id="tabHistory" onclick="switchTab('history')" data-key="tabHistory">היסטוריה</button>
@@ -1607,6 +1606,8 @@ window.addEventListener('DOMContentLoaded', function() {
       _currentUser = null;
       document.getElementById('authOverlay').style.display = 'flex';
       document.getElementById('userBadge').style.display = 'none';
+    var nt = document.getElementById('navTabs');
+    if (nt) nt.style.top = '57px';
     }
   });
 });
@@ -1615,6 +1616,8 @@ function onUserLoggedIn(user) {
   _currentUser = user;
   document.getElementById('authOverlay').style.display = 'none';
   document.getElementById('userBadge').style.display = 'flex';
+  var nt = document.getElementById('navTabs');
+  if (nt) nt.style.top = '91px';
   var emailEl = document.getElementById('userEmail');
   if (emailEl) emailEl.textContent = user.email;
 }
