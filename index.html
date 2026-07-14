@@ -390,9 +390,9 @@ body{
       </svg>
     </div>
   <div class="topbar-right">
-    <div id="userBadge" style="display:none;align-items:center;gap:8px;">
-      <span id="userEmail" style="font-size:10px;color:var(--muted);font-family:var(--mono);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
-      <button onclick="signOut()" style="font-size:10px;padding:3px 10px;border-radius:10px;border:1px solid var(--border2);background:transparent;color:var(--muted2);cursor:pointer;font-family:var(--font);" data-key="signOutBtn">יציאה</button>
+    <div id="userBadge" style="display:none;align-items:center;gap:8px;overflow:hidden;">
+      <span id="userEmail" style="font-size:10px;color:var(--accent);font-family:var(--mono);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+      <button onclick="signOut()" style="font-size:10px;padding:4px 10px;border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:#fca5a5;cursor:pointer;font-family:var(--font);white-space:nowrap;" data-key="signOutBtn">יציאה</button>
     </div>
     <div class="status-pill">
       <span class="sdot" id="sdot"></span>
@@ -649,7 +649,7 @@ body{
 
 <!-- GAIN ROW (outside scoreWrap - stays visible during analysis) -->
 
-  <div style="display:flex;align-items:center;gap:8px;margin:4px 18px 4px;max-width:460px;width:calc(100% - 36px);">
+  <div style="display:flex;align-items:center;gap:8px;margin:42px 18px 4px;max-width:460px;width:calc(100% - 36px);">
     <span style="font-size:10px;color:var(--muted);font-family:var(--mono);white-space:nowrap;" data-key="gainLabel">רגישות</span>
     <input type="range" id="gainSlider" min="1" max="12" value="4" step="0.5" oninput="updateGain(this.value)"
       style="flex:1;accent-color:var(--accent);cursor:pointer;height:4px;">
