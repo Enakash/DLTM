@@ -1286,60 +1286,230 @@ function buildSummary(){
   markTimes.forEach(ti=>{ const s=document.createElement('span'); s.className='chip'; s.textContent='🚩 '+formatTime(ti); chips.appendChild(s); });
 }
 
-// ── START / STOP ──
-async function toggleAnalysis(){ if(active)cancelAnalysis(); else await startAnalysis(); }
+הנה קוד ה-JavaScript המלא והמתוקן שמסדר את כל הלוגיקה שדיברנו עליה.
 
+תיקנתי את הבעיות הבאות:
+
+1. **הפיכת `finishAndSummarize` ל-`async**` כדי שתוכל לבצע את פעולת הפרסום (השליחה לשרת) בצורה חלקה בעזרת `fetch`.
+2. **הסרת החסימה של כפתור הסיכום** בזמן שהאנליזה רצה (בתוך `startAnalysis`), כדי שהמשתמש יוכל ללחוץ עליו בפועל.
+3. **שילוב מנגנון ה"פרסום" (Publish)** בתוך תהליך הסיכום, כולל טיפול בשגיאות (`try/catch`).
+
+```javascript
+// ── VARIABLES & STATE ──
+let active = false;
+let calibrating = false;
+let summaryVisible = false;
+let stream = null;
+let audioCtx = null;
+let analyser = null;
+let processor = null;
+let histInterval = null;
+let durInterval = null;
+let historyData = [];
+let pendingSaveData = null;
+
+// משתני אנליזה נוספים
+let pitchHist, voiceFrames, totalFrames;
+let lastPitch, jitterAcc, sampleCount;
+let credibility, prevCred;
+let marks, markTimes, markCounter;
+let alertCooldown, alertCooldownBars;
+let sumPitch, sumJitter, sumPause, sumRate, sumVolume, sumBreath;
+let rateHistory, midSentencePauses, shortPauseCount, longPauseCount;
+let inPause, pauseStartFrame, lastVoiceFrame;
+let startTime;
+let callDuration = 0; // בהנחה שזה מנוהל במקום אחר בקוד
+
+// פונקציית תרגום דמה (במידה ולא קיימת אצלך גלובלית)
+function t(key) {
+  const translations = {
+    'standby': 'בהמתנה',
+    'calibrating': 'מכייל...',
+    'calib': 'כיול',
+    'startBtn': 'התחל אנליזה',
+    'saveSumBtnLabel': 'שמור סיכום',
+    'summaryBtn': 'הצג סיכום',
+    'summaryBtn2': 'סגור סיכום'
+  };
+  return (typeof window.t === 'function') ? window.t(key) : (translations[key] || key);
+}
+
+// פונקציית עזר לעיצוב זמן (במידה ולא מוגדרת במקום אחר)
+function formatTime(seconds) {
+  if (typeof window.formatTime === 'function') return window.formatTime(seconds);
+  var m = Math.floor(seconds / 60);
+  var s = Math.floor(seconds % 60);
+  return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+// פונקציית עזר לאיפוס הארק (במידה ולא מוגדרת)
+function resetArc() {
+  if (typeof window.resetArc === 'function') window.resetArc();
+}
+
+// פונקציית דמה לבניית הסיכום (במידה ולא מוגדרת)
+function buildSummary() {
+  if (typeof window.buildSummary === 'function') window.buildSummary();
+  console.log("בונה סיכום נתונים...");
+}
+
+
+// ── START / STOP CONTROL ──
+
+async function toggleAnalysis() { 
+  if (active) {
+    // בלחיצה על כפתור ראשי בזמן עבודה - מבצעים ביטול מלא ללא סיכום
+    cancelAnalysis(); 
+  } else {
+    await startAnalysis(); 
+  }
+}
 
 // Cancel: stop without summary or save
-function cancelAnalysis(){
+function cancelAnalysis() {
   _stopStreams();
   _resetUI(false);
-  historyData=[];
+  historyData = [];
   document.getElementById('summaryPanel').classList.remove('show');
 }
 
-// Finish & Summarize: stop, show summary, prompt save
-function finishAndSummarize(){
-  if(!active) return;
+// Finish & Summarize: stop, show summary, publish and prompt save
+async function finishAndSummarize() {
+  if (!active) return;
+  
+  // 1. עצירת הזרמת השמע והטיימרים ברקע
   _stopStreams();
+  
+  // 2. איפוס ממשק המשתמש (לא מאפס את ה-Summary Panel כי אנחנו רוצים להציג אותו)
   _resetUI(false);
-  if(historyData.length>3){
-    summaryVisible=true; buildSummary();
+  
+  if (historyData.length > 3) {
+    summaryVisible = true; 
+    buildSummary();
+    
+    // הצגת פאנל הסיכום
     document.getElementById('summaryPanel').classList.add('show');
-    var fs=Math.round(historyData.reduce(function(a,b){return a+b;},0)/historyData.length);
-    var dur=formatTime(callDuration);
-    pendingSaveData={score:fs,duration:dur};
-    // Show save button in summary
-    document.getElementById('saveSumBtn').style.display='block';
-    document.getElementById('saveSumBtn').textContent=t('saveSumBtnLabel');
-    // After summary - re-enable sumBtn to toggle view, update mainBtn
-    document.getElementById('sumBtn').disabled=false;
-    document.getElementById('sumBtn').textContent=t('summaryBtn2')||t('summaryBtn');
-    document.getElementById('mainBtn').textContent=t('startBtn');
-    document.getElementById('mainBtn').className='main-btn btn-start';
+    
+    var fs = Math.round(historyData.reduce(function(a, b) { return a + b; }, 0) / historyData.length);
+    var dur = formatTime(callDuration);
+    pendingSaveData = { score: fs, duration: dur };
+    
+    // 3. ─── ביצוע הפרסום (PUBLISH) לשרת ───
+    try {
+      // שליחת הנתונים לשרת (יש לשנות את ה-URL לכתובת ה-API האמיתית שלך)
+      const response = await fetch('/api/publish-analysis', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(pendingSaveData)
+      });
+      
+      if (!response.ok) {
+         throw new Error("תגובת השרת אינה תקינה");
+      }
+      console.log("הנתונים פורסמו בהצלחה לשרת!");
+    } catch (err) {
+      console.error("שגיאה במהלך פרסום הנתונים:", err);
+      // אופציונלי: הצגת הודעת שגיאה למשתמש
+      document.getElementById('errMsg').textContent = "הפרסום נכשל, אך הסיכום נשמר מקומית.";
+      document.getElementById('errMsg').classList.add('show');
+    }
+    // ──────────────────────────────────────
+
+    // הצגת כפתור שמירת הסיכום בפאנל
+    document.getElementById('saveSumBtn').style.display = 'block';
+    document.getElementById('saveSumBtn').textContent = t('saveSumBtnLabel');
+    
+    // עדכון כפתור הסיכום הראשי שיוכל לסגור/לפתוח את התצוגה, ועדכון כפתור ההפעלה
+    document.getElementById('sumBtn').disabled = false;
+    document.getElementById('sumBtn').textContent = t('summaryBtn2') || t('summaryBtn');
+    document.getElementById('mainBtn').textContent = t('startBtn');
+    document.getElementById('mainBtn').className = 'main-btn btn-start';
   }
 }
 
 // Shared stop helper
-function _stopStreams(){
-  if(processor){processor.disconnect();processor=null;}
-  if(analyser){analyser.disconnect();analyser=null;}
-  if(stream){stream.getTracks().forEach(function(t){t.stop();});stream=null;}
-  if(audioCtx){audioCtx.close();audioCtx=null;}
-  if(histInterval){clearInterval(histInterval);histInterval=null;}
-  if(durInterval){clearInterval(durInterval);durInterval=null;}
-  active=false; calibrating=false;
+function _stopStreams() {
+  if (processor) { processor.disconnect(); processor = null; }
+  if (analyser) { analyser.disconnect(); analyser = null; }
+  if (stream) { stream.getTracks().forEach(function(t) { t.stop(); }); stream = null; }
+  if (audioCtx) { audioCtx.close(); audioCtx = null; }
+  if (histInterval) { clearInterval(histInterval); histInterval = null; }
+  if (durInterval) { clearInterval(durInterval); durInterval = null; }
+  active = false; 
+  calibrating = false;
 }
 
 // Shared UI reset helper
-function _resetUI(keepSummary){
+function _resetUI(keepSummary) {
   document.getElementById('calibTag').classList.remove('show');
-  document.getElementById('sdot').className='sdot';
-  document.getElementById('statusTxt').textContent=t('standby');
-  document.getElementById('mainBtn').textContent=t('startBtn');
-  document.getElementById('mainBtn').className='main-btn btn-start';
-  document.getElementById('markBtn').disabled=true;
-  document.getElementById('sumBtn').disabled=true;
+  document.getElementById('sdot').className = 'sdot';
+  document.getElementById('statusTxt').textContent = t('standby');
+  document.getElementById('mainBtn').textContent = t('startBtn');
+  document.getElementById('mainBtn').className = 'main-btn btn-start';
+  document.getElementById('markBtn').disabled = true;
+  document.getElementById('sumBtn').disabled = true;
+  document.getElementById('alertBox').classList.remove('show');
+  resetArc();
+  document.getElementById('scoreWrap').classList.remove('hidden-live');
+  ['pitch', 'jitter', 'pause', 'rate', 'volume', 'breath'].forEach(function(n) {
+    var f = document.getElementById('fill-' + n);
+    if (f) { f.style.height = '3px'; f.style.background = '#10b981'; }
+    var v = document.getElementById('val-' + n); 
+    if (v) v.textContent = '--';
+  });
+}
+
+// Start Analysis
+async function startAnalysis() {
+  document.getElementById('summaryPanel').classList.remove('show');
+  document.getElementById('errMsg').classList.remove('show');
+  document.getElementById('saveSumBtn').style.display = 'none';
+  summaryVisible = false;
+  
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = audioCtx.createMediaStreamSource(stream);
+    analyser = audioCtx.createAnalyser(); 
+    analyser.fftSize = 2048;
+    src.connect(analyser);
+    processor = audioCtx.createScriptProcessor(2048, 1, 1);
+    src.connect(processor); 
+    processor.connect(audioCtx.destination);
+
+    // אתחול משתני ריצה
+    pitchHist = []; voiceFrames = 0; totalFrames = 0;
+    lastPitch = 0; jitterAcc = 0; sampleCount = 0;
+    credibility = 50; prevCred = 50;
+    historyData = []; marks = []; markTimes = []; markCounter = 0;
+    alertCooldown = false; alertCooldownBars = {};
+    sumPitch = []; sumJitter = []; sumPause = []; sumRate = []; sumVolume = []; sumBreath = [];
+    rateHistory = []; midSentencePauses = 0; shortPauseCount = 0; longPauseCount = 0;
+    inPause = false; pauseStartFrame = 0; lastVoiceFrame = 0;
+    startTime = Date.now(); 
+    calibrating = true;
+    active = true; // עדכון מצב האנליזה לפעיל
+
+    // עדכון אלמנטים של כיול ב-UI
+    document.getElementById('calibTag').textContent = t('calibrating');
+    document.getElementById('calibTag').classList.add('show');
+    document.getElementById('sdot').className = 'sdot calib';
+    document.getElementById('statusTxt').textContent = t('calib');
+    document.getElementById('markCnt').classList.remove('show');
+    document.getElementById('markCnt').textContent = '0';
+    
+    // תיקון חשוב: כפתור הסיכום נשאר זמין (ולא disabled = true) כדי שיהיה אפשר ללחוץ עליו ולעצור
+    document.getElementById('sumBtn').disabled = false; 
+    
+  } catch (err) {
+    console.error("שגיאה בגישה למיקרופון:", err);
+    document.getElementById('errMsg').textContent = "לא ניתן לגשת למיקרופון. אנא ודא הרשאות.";
+    document.getElementById('errMsg').classList.add('show');
+    _resetUI(false);
+  }
+}
+
+```
   document.getElementById('alertBox').classList.remove('show');
   resetArc();
   document.getElementById('scoreWrap').classList.remove('hidden-live');
