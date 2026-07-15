@@ -1,204 +1,298 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LIEDAR – תנאי שימוש / Terms of Use</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Hebrew:wght@400;600;700&display=swap" rel="stylesheet" />
-  <style>
-    :root { --bg:#0a0e17; --surface:#0f1623; --border:#1c2d42; --accent:#3b82f6; --text:#e2e8f0; --muted:#4a6080; --warn:#f59e0b; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.7; }
-    .lang-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; }
-    .brand { color: var(--accent); font-weight: 700; font-size: 18px; letter-spacing: 2px; }
-    .lang-btn { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 4px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; font-family: inherit; transition: all 0.2s; }
-    .lang-btn.active { border-color: var(--accent); color: var(--accent); }
-    .container { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
-    h1 { font-size: 28px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
-    .updated { font-size: 13px; color: var(--muted); margin-bottom: 36px; }
-    h2 { font-size: 16px; font-weight: 700; color: var(--text); margin: 32px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
-    p { font-size: 15px; color: #c4cfe0; margin-bottom: 12px; }
-    ul { padding-right: 20px; margin-bottom: 12px; }
-    li { font-size: 15px; color: #c4cfe0; margin-bottom: 6px; }
-    .warn-box { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
-    .warn-box p { color: #fcd34d; margin: 0; font-weight: 600; }
-    .payment-box { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.3); border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
-    .payment-box p { color: #93c5fd; margin: 0; }
-    .footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); }
-    .footer a { color: var(--accent); text-decoration: none; }
-    [dir="rtl"] { font-family: 'Noto Sans Hebrew', 'Inter', sans-serif; }
-    [dir="rtl"] ul { padding-right: 20px; padding-left: 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIEDAR — תנאי שימוש / Terms of Use / شروط الاستخدام</title>
+<style>
+  :root{
+    --bg:#080c14;--surface:#0f1623;--border:#1c2d42;--border2:#243248;
+    --text:#e2e8f0;--muted:#4a6080;--muted2:#7a98b8;--accent:#60a5fa;--danger:#ef4444;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+    line-height:1.8;}
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);
+    padding:18px 20px;display:flex;align-items:center;justify-content:space-between;}
+  .logo{font-weight:900;font-size:20px;color:var(--accent);}
+  .lang-toggle{display:flex;gap:8px;}
+  .lang-btn{padding:5px 14px;border-radius:14px;border:1px solid var(--border2);
+    background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;text-decoration:none;}
+  .lang-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .wrap{max-width:760px;margin:0 auto;padding:36px 20px 80px;}
+  .section{display:none;}
+  .section.active{display:block;}
+  h1{font-size:26px;margin:0 0 6px;color:#fff;}
+  .updated{color:var(--muted);font-size:13px;margin-bottom:32px;font-family:monospace;}
+  h2{font-size:18px;color:var(--accent);margin-top:36px;margin-bottom:10px;
+    border-bottom:1px solid var(--border);padding-bottom:8px;}
+  p{color:#cbd5e1;font-size:14.5px;margin:10px 0;}
+  ul{margin:10px 0;padding-right:22px;padding-left:0;}
+  li{color:#cbd5e1;font-size:14.5px;margin-bottom:6px;}
+  strong{color:#fff;}
+  .warning{background:#1a0e0e;border:1px solid #5b1f1f;border-right:4px solid var(--danger);
+    border-radius:8px;padding:16px 18px;margin:20px 0;font-size:14px;color:#fca5a5;font-weight:600;}
+  .info{background:#0d1f30;border:1px solid #1e3a5f;border-right:4px solid var(--accent);
+    border-radius:8px;padding:14px 16px;margin:18px 0;font-size:14px;color:#7dd3fc;}
+  .legal{font-size:13px;color:var(--muted2);background:#0d1628;border:1px solid var(--border2);
+    border-radius:8px;padding:14px 16px;margin:14px 0;}
+  .contact-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    padding:18px 20px;margin-top:14px;}
+  .contact-box p{margin:4px 0;}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:24px;
+    border-top:1px solid var(--border);margin-top:40px;}
+  a{color:var(--accent);}
+  /* LTR overrides */
+  .ltr{direction:ltr;text-align:left;}
+  .ltr ul{padding-left:22px;padding-right:0;}
+  .ltr .warning{border-right:none;border-left:4px solid var(--danger);}
+  .ltr .info{border-right:none;border-left:4px solid var(--accent);}
+</style>
 </head>
 <body>
 
-<div class="lang-bar">
-  <span class="brand">LIEDAR</span>
-  <button class="lang-btn active" onclick="setLang('he')">עברית</button>
-  <button class="lang-btn" onclick="setLang('en')">English</button>
-  <button class="lang-btn" onclick="setLang('ar')">العربية</button>
-</div>
-
-<!-- HEBREW -->
-<div id="he" dir="rtl">
-  <div class="container">
-    <h1>תנאי שימוש</h1>
-    <div class="updated">עודכן לאחרונה: 13 ביולי 2026</div>
-
-    <p>תנאי שימוש אלה ("התנאים") מסדירים את השימוש שלך באפליקציית LIEDAR ("האפליקציה"), שפותחה והופצה על ידי מפתח עצמאי הפועל כעוסק פטור בישראל תחת שם העסק MusicMee Autocyc ("אנחנו", "המפתח"). הורדה, התקנה או שימוש באפליקציה מהווים הסכמה לתנאים אלה.</p>
-
-    <h2>1. תשלום ורכישה</h2>
-    <div class="payment-box">
-      <p>📌 רכישת האפליקציה הינה בתשלום חד-פעמי בלבד. לא תחויב בדמי מנוי חוזרים, ולא נדרש תשלום נוסף לקבלת הגרסאות השוטפות של האפליקציה.</p>
-    </div>
-    <p>החברה מתחייבת לתפעל ולתחזק את האפליקציה לפחות עד <strong>31 בדצמבר 2029</strong>. המשמעות היא כי האפליקציה תמשיך לפעול ותהיה נגישה למשתמשים שרכשו אותה לפחות עד מועד זה. לאחר מועד זה, ייתכנו שינויים במדיניות הפעלת השירות, ובכל מקרה תינתן הודעה מוקדמת של לפחות 90 יום לפני כל שינוי מהותי.</p>
-    <p>עדכוני תוכנה שוטפים, תיקוני באגים ושיפורים כלליים יסופקו ללא תשלום נוסף כל עוד האפליקציה בפעילות.</p>
-
-    <h2>2. מהי LIEDAR — ומה היא אינה</h2>
-    <div class="warn-box">
-      <p>⚠️ חשוב: LIEDAR אינה מכשיר לזיהוי שקרים בעל תוקף מדעי. אף אות קולי לא הוכח מדעית כאמין להבחנה בין אמת לשקר.</p>
-    </div>
-    <p>LIEDAR מנתחת מאפיינים אקוסטיים של קול בזמן אמת — כולל גובה קול, רעידת קול (jitter), דפוסי פאוזות, קצב דיבור, עוצמה וקצב נשימה — ומציגה ציון "אמינות" מורכב יחד עם הסבר בשפה פשוטה.</p>
-    <p>האפליקציה מיועדת ככלי אישי למודעות עצמית ותרגול דיבור. דוגמאות לשימוש לגיטימי:</p>
-    <ul>
-      <li>תרגול הצגות, ראיונות או נאומים ובחינת יציבות הקול האישי שלך.</li>
-      <li>מודעות עצמית למדדי לחץ אישיים בזמן דיבור.</li>
-      <li>שיקוף עצמי בלתי-פורמלי ולא-ראייתי של דפוסי תקשורת אישיים.</li>
-    </ul>
-    <p>אין להשתמש ב-LIEDAR ואין להסתמך עליה לצורך:</p>
-    <ul>
-      <li>קביעת אמיתות טענה כלשהי של עצמך או של אדם אחר.</li>
-      <li>מיון עובדים, בדיקות רקע, או כל החלטת גיוס/פיטורים.</li>
-      <li>הליכים משפטיים, איסוף ראיות, חקירות, או מטרות אכיפת חוק.</li>
-      <li>אבחון רפואי, פסיכולוגי או פסיכיאטרי מכל סוג.</li>
-      <li>כל החלטה בעלת השלכות משפטיות, כלכליות, רפואיות או ביטחוניות.</li>
-    </ul>
-
-    <h2>3. הקלטה ופרטיות של אנשים אחרים</h2>
-    <p>LIEDAR מיועדת לניתוח קולך האישי. האפליקציה אינה מקליטה ואינה שומרת קובץ אודיו בשום נסיבות — כל הניתוח מתבצע באופן חולף בזיכרון המכשיר בלבד.</p>
-    <p>אם השתמשת באפליקציה בצורה שבה קול של אדם אחר נקלט, האחריות המלאה לעמידה בכל הדין החל מוטלת עליך, לרבות חוק האזנת הסתר, התשל"ט-1979 וחוק הגנת הפרטיות, התשמ"א-1981.</p>
-
-    <h2>4. ללא אחריות</h2>
-    <p>האפליקציה מסופקת "כפי שהיא" ו"כפי שהיא זמינה", ללא אחריות מכל סוג — מפורשת או משתמעת. אנו לא מתחייבים שניתוחי האפליקציה, ציוניה או הסבריה מדויקים או מתאימים לכל מטרה שהיא.</p>
-
-    <h2>5. הגבלת אחריות</h2>
-    <p>במידה המרבית המותרת על פי דין, המפתח לא יישא באחריות לכל נזק ישיר, עקיף, מקרי, תוצאתי, מיוחד או עונשי הנובע מהשימוש באפליקציה.</p>
-
-    <h2>6. אחריות המשתמש</h2>
-    <ul>
-      <li>עליך להיות מורשה חוקית להשתמש בתוכנת ניתוח קול בתחום שיפוטך.</li>
-      <li>אתה מסכים שלא להשתמש באפליקציה להטרדה, מעקב, השמצה או פגיעה באדם אחר.</li>
-      <li>אתה מסכים שלא להציג פלט האפליקציה כראיית זיהוי שקרים בעלת תוקף מדעי.</li>
-      <li>אתה אחראי לכל שמות אנשי הקשר שתבחר להזין ולשמור מקומית באפליקציה.</li>
-      <li>אתה מצהיר שאתה בן 18 ומעלה, או שיש לך הסכמת הורה/אפוטרופוס לשימוש.</li>
-    </ul>
-
-    <h2>7. אחסון נתונים מקומי</h2>
-    <p>סיכומי שיחות שבחרת לשמור מאוחסנים אך ורק באחסון המקומי של מכשירך ואינם מועברים לשום מקום. תוכל למחוק נתונים אלה בכל עת מתוך האפליקציה או על ידי הסרתה.</p>
-
-    <h2>8. קניין רוחני</h2>
-    <p>האפליקציה, לרבות עיצובה, אלגוריתמיה, מיתוגה ותוכנה, הם רכושו של המפתח. אינך רשאי להעתיק, לבצע הנדסה לאחור, להפיץ, או ליצור יצירות נגזרות ללא אישור בכתב מראש.</p>
-
-    <h2>9. שינויים באפליקציה ובתנאים</h2>
-    <p>אנו רשאים לעדכן, לשנות או להפסיק את האפליקציה או תנאים אלה בכל עת. המשך השימוש באפליקציה לאחר כניסת שינויים לתוקף מהווה הסכמה לתנאים המעודכנים. בכל מקרה של שינוי מהותי, תינתן הודעה מוקדמת של לפחות 90 יום.</p>
-
-    <h2>10. דין חל וסמכות שיפוט</h2>
-    <p>תנאים אלה כפופים לדין מדינת ישראל ויפורשו על פיו, לרבות חוק הגנת הפרטיות, התשמ"א-1981 וחוק האזנת הסתר, התשל"ט-1979, בכפוף לדין הצרכני המחייב בתחום שיפוטך.</p>
-
-    <h2>11. יצירת קשר</h2>
-    <p>service@liedar.store</p>
-    <p>מספר תיק עסקי: 031376551 (עוסק פטור) · ישראל</p>
-
-    <div class="footer">
-      <a href="/">LIEDAR</a> · <a href="/privacy.html">מדיניות פרטיות / Privacy Policy</a> · <a href="/">Back to App</a>
-    </div>
+<div class="topbar">
+  <span class="logo">LIEDAR</span>
+  <div class="lang-toggle">
+    <a class="lang-btn active" onclick="showLang('he',event)" href="#">עברית</a>
+    <a class="lang-btn" onclick="showLang('en',event)" href="#">English</a>
+    <a class="lang-btn" onclick="showLang('ar',event)" href="#">العربية</a>
   </div>
 </div>
 
-<!-- ENGLISH -->
-<div id="en" dir="ltr" style="display:none">
-  <div class="container">
-    <h1>Terms of Use</h1>
-    <div class="updated">Last updated: July 13, 2026</div>
+<div class="wrap">
 
-    <p>These Terms of Use ("Terms") govern your use of the LIEDAR application ("the App"), developed and distributed by an independent developer operating as an exempt dealer (עוסק פטור) in Israel under the business name MusicMee Autocyc ("we," "our," "developer"). By downloading, installing, or using the App, you agree to be bound by these Terms.</p>
+<!-- ══════════════════════ HEBREW ══════════════════════ -->
+<div class="section active" id="sec-he">
+  <h1>תנאי שימוש</h1>
+  <div class="updated">עודכן לאחרונה: 30 ביוני 2026</div>
 
-    <h2>1. Payment and Purchase</h2>
-    <div class="payment-box">
-      <p>📌 The purchase of this application is a one-time payment only. You will not be charged recurring subscription fees, and no additional payment is required to receive ongoing updates to the App.</p>
-    </div>
-    <p>The developer commits to operating and maintaining the App for at least until <strong>December 31, 2029</strong>. This means the App will continue to function and remain accessible to users who have purchased it until at least that date. After that date, changes to the service operation policy may occur, and in any case, at least 90 days' advance notice will be given before any material change.</p>
-    <p>Routine software updates, bug fixes, and general improvements will be provided at no additional charge for as long as the App is in operation.</p>
+  <p>תנאי שימוש אלה מסדירים את השימוש שלך באפליקציית LIEDAR (&ldquo;האפליקציה&rdquo;, &ldquo;השירות&rdquo;), שפותחה על ידי מפתח עצמאי הפועל כעוסק פטור בישראל תחת שם העסק MusicMee Autocyc (&ldquo;אנחנו&rdquo;, &ldquo;המפתח&rdquo;). שימוש באפליקציה מהווה הסכמה לתנאים אלה.</p>
 
-    <h2>2. What LIEDAR Is — and What It Is Not</h2>
-    <div class="warn-box">
-      <p>⚠️ IMPORTANT: LIEDAR is NOT a scientifically validated lie-detection device. No acoustic or physiological signal has been scientifically proven to reliably distinguish truthful statements from false ones.</p>
-    </div>
-    <p>LIEDAR analyzes acoustic features of voice audio in real time — including pitch, micro-tremor (jitter), pause patterns, speech rate, volume, and breathing rate — and presents a composite "credibility" score along with a plain-language explanation.</p>
-    <p>The App is intended as a personal self-awareness and speech-practice tool. Legitimate uses include:</p>
-    <ul>
-      <li>Practicing presentations, interviews, or public speaking and reviewing your own vocal stability.</li>
-      <li>Becoming more aware of your own stress indicators while speaking.</li>
-      <li>Informal, non-evidentiary self-reflection on your communication patterns.</li>
-    </ul>
-    <p>LIEDAR must not be used, and may not be relied upon, for:</p>
-    <ul>
-      <li>Determining the truthfulness of any statement made by yourself or another person.</li>
-      <li>Employment screening, background checks, or any hiring/firing decision.</li>
-      <li>Legal proceedings, evidence gathering, investigations, or law enforcement purposes.</li>
-      <li>Medical, psychological, or psychiatric diagnosis of any kind.</li>
-      <li>Any decision with legal, financial, medical, or safety consequences.</li>
-    </ul>
+  <h2>1. מהי LIEDAR — ומה היא אינה</h2>
+  <p>LIEDAR מנתחת מאפיינים אקוסטיים של קול בזמן אמת — גובה קול, רעידת קול, פאוזות, קצב דיבור, עוצמה וקצב נשימה — ומציגה ציון &ldquo;אמינות&rdquo; עם הסבר בשפה פשוטה.</p>
 
-    <h2>3. Recording and Privacy of Other People</h2>
-    <p>LIEDAR is designed for analyzing your own voice. The App does not record or store audio under any circumstances — all analysis happens transiently, in memory, on your device.</p>
-    <p>If you use the App in a way that captures another person's voice, you are solely responsible for complying with all applicable laws, including Israel's Wiretap Law (5739-1979) and the Privacy Protection Law (5741-1981).</p>
+  <div class="warning">חשוב: LIEDAR אינה מכשיר לזיהוי שקרים בעל תוקף מדעי. אף אות קולי לא הוכח מדעית כאמצעי אמין להבחנה בין אמת לשקר. האפליקציה מיועדת לשימוש אישי ותרגול בלבד.</div>
 
-    <h2>4. No Warranty</h2>
-    <p>THE APP IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED. We do not warrant that the App's analysis, scores, or explanations are accurate, complete, or suitable for any particular purpose.</p>
+  <p>שימושים לגיטימיים: תרגול הצגות ונאומים, מודעות עצמית לדפוסי דיבור, שיקוף עצמי לא-פורמלי.</p>
+  <p><strong>אין להשתמש באפליקציה לצורך:</strong> קביעת אמיתות טענות, מיון עובדים, הליכים משפטיים, אבחון רפואי, או כל החלטה בעלת השלכות משפטיות, כלכליות, רפואיות או ביטחוניות.</p>
 
-    <h2>5. Limitation of Liability</h2>
-    <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE DEVELOPER SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, CONSEQUENTIAL, SPECIAL, OR PUNITIVE DAMAGES ARISING FROM OR RELATED TO YOUR USE OF THE APP.</p>
+  <h2>2. מנוי שנתי ותנאי תשלום</h2>
 
-    <h2>6. User Responsibilities</h2>
-    <ul>
-      <li>You must be legally permitted to use voice-analysis software in your jurisdiction.</li>
-      <li>You agree not to use the App to harass, stalk, defame, or harm any other person.</li>
-      <li>You agree not to misrepresent the App's output as scientifically validated lie-detection evidence.</li>
-      <li>You are responsible for any contact names or labels you choose to enter and store locally within the App.</li>
-      <li>You confirm that you are 18 years of age or older, or that you have parental/guardian consent to use the App.</li>
-    </ul>
+  <div class="info">האפליקציה נמצאת כעת בגישה מוקדמת (Early Access). מחיר המנוי השנתי יוכרז בהמשך. שינויים יפורסמו מראש.</div>
 
-    <h2>7. Local Data Storage</h2>
-    <p>Session summaries you choose to save are stored only in local app storage on your device and are never transmitted anywhere. You may delete this data at any time within the App or by uninstalling it.</p>
+  <ul>
+    <li><strong>מנוי שנתי:</strong> הגישה לשירות מותנית בתשלום מנוי שנתי שמחירו יוכרז.</li>
+    <li><strong>חידוש אוטומטי:</strong> המנוי מתחדש אוטומטית מדי שנה אלא אם בוטל לפחות 24 שעות לפני מועד החידוש.</li>
+    <li><strong>ביטול:</strong> ניתן לבטל את המנוי בכל עת. הביטול ייכנס לתוקף בתום תקופת המנוי השוטפת. לא יינתן החזר כספי יחסי עבור חלק מהתקופה שנותרה, אלא אם נדרש על פי דין.</li>
+    <li><strong>החזר כספי:</strong> בכפוף לדין הצרכני הישראלי, תוכל לבטל תוך 14 ימים מרכישה ראשונה ולקבל החזר מלא, בתנאי שלא נעשה שימוש ממשי בשירות.</li>
+  </ul>
 
-    <h2>8. Intellectual Property</h2>
-    <p>The App, including its design, algorithms, branding, and content, is the property of the developer. You may not copy, reverse-engineer, redistribute, or create derivative works from the App without prior written permission.</p>
+  <h2>3. אין התחייבות להמשכיות השירות</h2>
+  <div class="warning">המפתח אינו מתחייב להמשיך להפעיל את האפליקציה או השירות עד כל מועד עתידי, לרבות עד סוף שנת 2029. השירות עשוי להיסגר, להשתנות, או להפסיק בכל עת, עם הודעה מוקדמת סבירה ככל האפשר.</div>
 
-    <h2>9. Changes to the App and Terms</h2>
-    <p>We may update, modify, or discontinue the App, or these Terms, at any time. Continued use of the App after changes take effect constitutes acceptance of the revised Terms. In the case of any material change, at least 90 days' advance notice will be given.</p>
+  <p>במקרה של סגירת השירות:</p>
+  <ul>
+    <li>הודעה מוקדמת של לפחות 30 יום תפורסם <strong>בתוך האפליקציה עצמה</strong> ובדף האינטרנט הרשמי. מאחר שאין בידינו כתובות אימייל של משתמשים, לא תישלח הודעה ישירה — באחריות המשתמש לעקוב אחר עדכונים בתוך האפליקציה.</li>
+    <li>יינתן החזר יחסי עבור חלק המנוי שלא נוצל, בכפוף לדין החל.</li>
+    <li>כל הנתונים המאוחסנים מקומית על מכשירך יישארו ברשותך ולא יושפעו.</li>
+  </ul>
 
-    <h2>10. Governing Law and Jurisdiction</h2>
-    <p>These Terms are governed by the laws of the State of Israel, including the Privacy Protection Law (5741-1981) and the Wiretap Law (5739-1979), except where mandatory consumer-protection law in your jurisdiction provides otherwise.</p>
+  <h2>4. ניתוח קול של אנשים אחרים</h2>
+  <p>האפליקציה מיועדת לניתוח קולך האישי. אינה מקליטה ואינה שומרת קובץ אודיו. אם קולו של אדם אחר נקלט, האחריות לעמידה בחוק האזנת הסתר (התשל"ט-1979) וחוק הגנת הפרטיות (התשמ"א-1981) מוטלת עליך בלבד.</p>
 
-    <h2>11. Contact</h2>
-    <p>service@liedar.store</p>
-    <p>Business File Number: 031376551 (Exempt Dealer / עוסק פטור) · Israel</p>
+  <h2>5. ללא אחריות</h2>
+  <p class="legal">האפליקציה מסופקת &ldquo;כפי שהיא&rdquo; ללא אחריות מכל סוג. אנו לא מתחייבים לדיוק הניתוחים, לזמינות רציפה, או להתאמת האפליקציה למטרה כלשהי. בכפוף לדין הישראלי.</p>
 
-    <div class="footer">
-      <a href="/">LIEDAR</a> · <a href="/privacy.html">מדיניות פרטיות / Privacy Policy</a> · <a href="/">Back to App</a>
-    </div>
+  <h2>6. הגבלת אחריות</h2>
+  <p class="legal">במידה המרבית המותרת על פי דין, המפתח לא יישא באחריות לנזקים כלשהם הנובעים מהשימוש באפליקציה, לרבות החלטות שנתקבלו בהסתמך על פלטה.</p>
+
+  <h2>7. אחריות המשתמש</h2>
+  <ul>
+    <li>אתה בן 18 ומעלה או שיש לך הסכמת הורה/אפוטרופוס.</li>
+    <li>לא תשתמש באפליקציה להטרדה, מעקב, השמצה או פגיעה באחרים.</li>
+    <li>לא תציג פלט האפליקציה כראיה מדעית לזיהוי שקרים.</li>
+    <li>אתה אחראי לתשלום המנוי במועדו.</li>
+  </ul>
+
+  <h2>8. קניין רוחני</h2>
+  <p>האפליקציה, עיצובה ואלגוריתמיה הם רכוש המפתח. אינך רשאי להעתיק, לפרוק, להפיץ או ליצור יצירות נגזרות ללא אישור מראש.</p>
+
+  <h2>9. שינויים בתנאים</h2>
+  <p>נוכל לעדכן תנאים אלה. שינויים מהותיים יפורסמו 30 יום מראש <strong>בתוך האפליקציה</strong> ובדף האינטרנט. המשך שימוש לאחר מועד השינוי מהווה הסכמה.</p>
+
+  <h2>10. דין חל וסמכות שיפוט</h2>
+  <p>תנאים אלה כפופים לדין מדינת ישראל, לרבות חוק הגנת הצרכן (התשמ"א-1981) וחוק הגנת הפרטיות (התשמ"א-1981).</p>
+
+  <h2>11. יצירת קשר</h2>
+  <div class="contact-box">
+    <p><strong>MusicMee Autocyc</strong> (עוסק פטור)</p>
+    <p>מספר תיק עסקי: 031376551</p>
+    <p>ישראל</p>
+    <p><a href="mailto:service@liedar.store">service@liedar.store</a></p>
   </div>
 </div>
+
+<!-- ══════════════════════ ENGLISH ══════════════════════ -->
+<div class="section ltr" id="sec-en">
+  <h1>Terms of Use</h1>
+  <div class="updated">Last updated: June 30, 2026</div>
+
+  <p>These Terms govern your use of the LIEDAR application (&ldquo;the App,&rdquo; &ldquo;the Service&rdquo;), developed by an independent developer operating as an exempt dealer (עוסק פטור) in Israel under the business name MusicMee Autocyc (&ldquo;we,&rdquo; &ldquo;developer&rdquo;). Using the App constitutes acceptance of these Terms.</p>
+
+  <h2>1. What LIEDAR Is &mdash; and What It Is Not</h2>
+  <p>LIEDAR analyzes acoustic voice features in real time &mdash; pitch, jitter, pauses, speech rate, volume, and breathing rate &mdash; and presents a composite &ldquo;credibility&rdquo; score with a plain-language explanation.</p>
+
+  <div class="warning">IMPORTANT: LIEDAR is NOT a scientifically validated lie-detection device. No acoustic signal has been scientifically proven to reliably distinguish truthful from false statements. The App is for personal self-practice use only.</div>
+
+  <p>Legitimate uses: practicing presentations, self-awareness of vocal patterns, informal non-evidentiary self-reflection.</p>
+  <p><strong>Must NOT be used for:</strong> determining truthfulness, employment screening, legal proceedings, medical diagnosis, or any decision with legal, financial, medical, or safety consequences.</p>
+
+  <h2>2. Annual Subscription and Payment Terms</h2>
+
+  <div class="info">The App is currently in Early Access. The annual subscription price will be announced at a later date. Any changes will be communicated in advance.</div>
+
+  <ul>
+    <li><strong>Annual subscription:</strong> Access to the Service is subject to payment of an annual subscription fee to be announced.</li>
+    <li><strong>Auto-renewal:</strong> Subscriptions renew automatically each year unless cancelled at least 24 hours before the renewal date.</li>
+    <li><strong>Cancellation:</strong> You may cancel at any time. Cancellation takes effect at the end of the current subscription period. No pro-rata refund will be issued for unused time, except as required by law.</li>
+    <li><strong>Cooling-off period:</strong> Under Israeli consumer protection law, you may cancel within 14 days of first purchase for a full refund, provided the Service has not been substantially used.</li>
+  </ul>
+
+  <h2>3. No Commitment to Service Continuity</h2>
+  <div class="warning">The developer does not commit to operating the App or Service until any future date, including the end of 2029. The Service may be discontinued, changed, or suspended at any time, with reasonable advance notice where possible.</div>
+
+  <p>In the event of Service closure:</p>
+  <ul>
+    <li>At least 30 days&rsquo; advance notice will be published <strong>within the App itself</strong> and on the official website. As we do not hold users&rsquo; email addresses, no direct notification will be sent &mdash; it is the user&rsquo;s responsibility to check for updates within the App.</li>
+    <li>A pro-rata refund for unused subscription time will be issued, subject to applicable law.</li>
+    <li>All data stored locally on your device will remain yours and will not be affected.</li>
+  </ul>
+
+  <h2>4. Third-Party Voice Analysis</h2>
+  <p>The App is designed for analyzing your own voice and does not record or store audio. If another person&rsquo;s voice is captured, compliance with Israel&rsquo;s Wiretap Law (5739-1979) and Privacy Protection Law (5741-1981) is your sole responsibility.</p>
+
+  <h2>5. No Warranty</h2>
+  <p class="legal">THE APP IS PROVIDED &ldquo;AS IS&rdquo; WITHOUT WARRANTIES OF ANY KIND. We do not warrant accuracy of analyses, continuous availability, or fitness for any particular purpose. Subject to applicable Israeli law.</p>
+
+  <h2>6. Limitation of Liability</h2>
+  <p class="legal">TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE DEVELOPER SHALL NOT BE LIABLE FOR DAMAGES ARISING FROM USE OF THE APP, INCLUDING DECISIONS MADE IN RELIANCE ON ITS OUTPUT.</p>
+
+  <h2>7. User Responsibilities</h2>
+  <ul>
+    <li>You are 18 or older, or have parental/guardian consent.</li>
+    <li>You will not use the App to harass, stalk, defame, or harm others.</li>
+    <li>You will not misrepresent the App&rsquo;s output as scientific lie-detection evidence.</li>
+    <li>You are responsible for timely subscription payments.</li>
+  </ul>
+
+  <h2>8. Intellectual Property</h2>
+  <p>The App, its design, and algorithms are the developer&rsquo;s property. You may not copy, reverse-engineer, redistribute, or create derivative works without prior written permission.</p>
+
+  <h2>9. Changes to Terms</h2>
+  <p>We may update these Terms. Material changes will be published 30 days in advance <strong>within the App</strong> and on the official website. Continued use after changes constitutes acceptance.</p>
+
+  <h2>10. Governing Law</h2>
+  <p>These Terms are governed by Israeli law, including the Consumer Protection Law (5741-1981) and the Privacy Protection Law (5741-1981).</p>
+
+  <h2>11. Contact</h2>
+  <div class="contact-box">
+    <p><strong>MusicMee Autocyc</strong> (Exempt Dealer / עוסק פטור)</p>
+    <p>Business File Number: 031376551</p>
+    <p>Israel</p>
+    <p><a href="mailto:service@liedar.store">service@liedar.store</a></p>
+  </div>
+</div>
+
+<!-- ══════════════════════ ARABIC ══════════════════════ -->
+<div class="section" id="sec-ar">
+  <h1>شروط الاستخدام</h1>
+  <div class="updated">آخر تحديث: 30 يونيو 2026</div>
+
+  <p>تحكم هذه الشروط استخدامك لتطبيق LIEDAR (&ldquo;التطبيق&rdquo;، &ldquo;الخدمة&rdquo;)، الذي طوّره مطوّر مستقل يعمل بصفة عوסق פטور (معفى من الضريبة) في إسرائيل تحت اسم العمل التجاري MusicMee Autocyc (&ldquo;نحن&rdquo;، &ldquo;المطوّر&rdquo;). يُعدّ استخدام التطبيق موافقةً على هذه الشروط.</p>
+
+  <h2>1. ما هو LIEDAR — وما ليس عليه</h2>
+  <p>يحلّل LIEDAR الخصائص الصوتية في الوقت الفعلي — بما فيها نبرة الصوت، والاهتزاز، وفترات الصمت، وسرعة الكلام، والحجم، ومعدل التنفس — ويعرض درجةً مركّبة &ldquo;للمصداقية&rdquo; مع تفسير بلغة بسيطة.</p>
+
+  <div class="warning">تنبيه: LIEDAR ليس جهاز كشف كذب معتمداً علمياً. لم يُثبَت علمياً أن أي إشارة صوتية تميّز بشكل موثوق بين الصدق والكذب. التطبيق مخصص للاستخدام الشخصي والتدريب فحسب.</div>
+
+  <p>الاستخدامات المشروعة: تدريب العروض التقديمية، الوعي الذاتي بأنماط الكلام، التأمل الذاتي غير الرسمي.</p>
+  <p><strong>يُحظر استخدام التطبيق لـ:</strong> تحديد صحة الأقوال، فحص الموظفين، الإجراءات القانونية، التشخيص الطبي، أو أي قرار له عواقب قانونية أو مالية أو طبية.</p>
+
+  <h2>2. الاشتراك السنوي وشروط الدفع</h2>
+
+  <div class="info">التطبيق في مرحلة الوصول المبكر (Early Access) حالياً. سيُعلَن عن سعر الاشتراك السنوي لاحقاً. سيتم إخطارك بأي تغييرات مسبقاً.</div>
+
+  <ul>
+    <li><strong>اشتراك سنوي:</strong> يُشترط لاستخدام الخدمة دفع رسوم اشتراك سنوية سيُعلَن عنها.</li>
+    <li><strong>التجديد التلقائي:</strong> يتجدد الاشتراك تلقائياً كل عام ما لم يُلغَ قبل 24 ساعة على الأقل من موعد التجديد.</li>
+    <li><strong>الإلغاء:</strong> يمكنك الإلغاء في أي وقت. يسري الإلغاء في نهاية فترة الاشتراك الحالية. لن يُردّ المبلغ المتبقي إلا وفقاً للقانون.</li>
+    <li><strong>حق الانسحاب:</strong> وفقاً لقانون حماية المستهلك الإسرائيلي، يحق لك الإلغاء خلال 14 يوماً من الشراء الأول واسترداد المبلغ كاملاً شرط عدم الاستخدام الفعلي للخدمة.</li>
+  </ul>
+
+  <h2>3. عدم الالتزام باستمرارية الخدمة</h2>
+  <div class="warning">لا يلتزم المطوّر بتشغيل التطبيق أو الخدمة حتى أي تاريخ مستقبلي، بما في ذلك نهاية عام 2029. قد تُوقَف الخدمة أو تُعدَّل أو تُعلَّق في أي وقت، مع إشعار مسبق معقول قدر الإمكان.</div>
+
+  <p>في حال إيقاف الخدمة:</p>
+  <ul>
+    <li>سيُنشر إشعار مسبق لا يقل عن 30 يوماً <strong>داخل التطبيق نفسه</strong> وعلى الموقع الرسمي. بما أننا لا نحتفظ بعناوين البريد الإلكتروني للمستخدمين، لن يُرسَل إشعار مباشر — يقع على عاتق المستخدم متابعة التحديثات داخل التطبيق.</li>
+    <li>سيُردّ المبلغ المتبقي من الاشتراك غير المستخدَم وفقاً للقانون المعمول به.</li>
+    <li>تبقى جميع البيانات المخزّنة محلياً على جهازك ملكاً لك ولن تتأثر.</li>
+  </ul>
+
+  <h2>4. تحليل أصوات الآخرين</h2>
+  <p>التطبيق مصمم لتحليل صوتك الشخصي ولا يسجّل أو يحفظ أي ملف صوتي. إذا التُقط صوت شخص آخر، فأنت المسؤول الوحيد عن الامتثال لقانون التنصت الإسرائيلي (5739-1979) وقانون حماية الخصوصية (5741-1981).</p>
+
+  <h2>5. إخلاء المسؤولية</h2>
+  <p class="legal">يُقدَّم التطبيق &ldquo;كما هو&rdquo; دون أي ضمانات. لا نضمن دقة التحليلات أو التوافر المستمر أو الملاءمة لأي غرض معين. وفقاً للقانون الإسرائيلي المعمول به.</p>
+
+  <h2>6. تحديد المسؤولية</h2>
+  <p class="legal">في أقصى حد يسمح به القانون، لا يتحمل المطوّر المسؤولية عن أي أضرار ناجمة عن استخدام التطبيق، بما فيها القرارات المبنية على مخرجاته.</p>
+
+  <h2>7. مسؤوليات المستخدم</h2>
+  <ul>
+    <li>أنت تبلغ 18 عاماً أو أكثر، أو لديك موافقة وليّ الأمر.</li>
+    <li>لن تستخدم التطبيق للمضايقة أو التجسس أو التشهير أو إيذاء الآخرين.</li>
+    <li>لن تقدّم مخرجات التطبيق باعتبارها دليلاً علمياً على الكذب.</li>
+    <li>أنت مسؤول عن سداد رسوم الاشتراك في مواعيدها.</li>
+  </ul>
+
+  <h2>8. الملكية الفكرية</h2>
+  <p>التطبيق وتصميمه وخوارزمياته ملك للمطوّر. لا يجوز نسخه أو هندسته عكسياً أو توزيعه أو إنشاء أعمال مشتقة منه دون إذن مسبق كتابي.</p>
+
+  <h2>9. التعديلات على الشروط</h2>
+  <p>يحق لنا تعديل هذه الشروط. ستُنشر أي تغييرات جوهرية قبل 30 يوماً <strong>داخل التطبيق</strong> وعلى الموقع الرسمي. مواصلة الاستخدام بعد التعديل تُعدّ موافقةً.</p>
+
+  <h2>10. القانون الحاكم</h2>
+  <p>تخضع هذه الشروط لقانون دولة إسرائيل، بما في ذلك قانون حماية المستهلك (5741-1981) وقانون حماية الخصوصية (5741-1981).</p>
+
+  <h2>11. التواصل</h2>
+  <div class="contact-box">
+    <p><strong>MusicMee Autocyc</strong> (عوסق פטור / معفى من الضريبة)</p>
+    <p>رقم الملف التجاري: 031376551</p>
+    <p>إسرائيل</p>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>LIEDAR &middot;
+  <a href="privacy.html">מדיניות פרטיות / Privacy Policy / سياسة الخصوصية</a> &middot;
+  <a href="https://enakash.github.io/DLTM">Back to App</a>
+</footer>
 
 <script>
-  function setLang(lang) {
-    document.getElementById('he').style.display = lang === 'he' ? 'block' : 'none';
-    document.getElementById('en').style.display = lang === 'en' ? 'block' : 'none';
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    document.documentElement.lang = lang;
-  }
+function showLang(l, e) {
+  if (e) e.preventDefault();
+  ['he','en','ar'].forEach(function(id) {
+    document.getElementById('sec-'+id).classList.toggle('active', id===l);
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (e && e.target) e.target.classList.add('active');
+  document.documentElement.dir = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
+  document.documentElement.lang = l;
+}
 </script>
 </body>
 </html>
