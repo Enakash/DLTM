@@ -85,7 +85,7 @@ body{
 .score-wrap{
   width:100%;max-width:460px;
   display:flex;flex-direction:column;align-items:center;
-  padding:20px 18px 0;
+  padding:8px 18px 0;
 }
 .score-wrap.hidden-live{opacity:0;pointer-events:none;height:0;padding:0;overflow:hidden;}
 .arc-container{position:relative;width:180px;height:100px;}
@@ -201,15 +201,15 @@ body{
 /* ── EQ BARS SECTION ── */
 .eq-section{
   width:calc(100% - 36px);max-width:424px;
-  margin-top:16px;
+  margin-top:6px;
   background:var(--surface);border:1px solid var(--border);
-  border-radius:12px;padding:16px 14px 12px;
+  border-radius:12px;padding:14px 14px 10px;
 }
 .eq-section-title{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
 .eq-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end;}
 .eq-col{display:flex;flex-direction:column;align-items:center;gap:6px;}
 .eq-bar-wrap{
-  width:100%;height:100px;
+  width:100%;height:80px;
   background:var(--bg);border-radius:6px;
   border:1px solid var(--border);
   position:relative;overflow:hidden;
@@ -239,7 +239,7 @@ body{
 .eq-value{font-size:10px;font-family:var(--mono);color:var(--muted2);text-align:center;min-height:13px;}
 
 /* ── MARK BUTTON ── */
-.mark-wrap{width:calc(100% - 36px);max-width:424px;margin-top:10px;}
+.mark-wrap{width:calc(100% - 36px);max-width:424px;margin-top:6px;}
 .mark-btn{
   width:100%;padding:10px;border-radius:8px;
   border:1px solid var(--border2);background:var(--surface2);
@@ -253,7 +253,7 @@ body{
 .mark-cnt.show{display:inline;}
 
 /* ── HISTORY ── */
-.hist-section{width:calc(100% - 36px);max-width:424px;margin-top:12px;}
+.hist-section{width:calc(100% - 36px);max-width:424px;margin-top:8px;}
 .sec-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
 .sec-title{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
 #histCanvas{width:100%;height:55px;border-radius:8px;background:var(--surface);border:1px solid var(--border);display:block;}
@@ -291,7 +291,7 @@ body{
 .chip{display:inline-flex;align-items:center;background:#ef444412;border:1px solid #ef444430;color:#fca5a5;font-size:10px;font-family:var(--mono);padding:2px 7px;border-radius:10px;margin:2px;}
 
 /* ── BUTTONS ── */
-.btn-row{width:calc(100% - 36px);max-width:424px;margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn-row{width:calc(100% - 36px);max-width:424px;margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .btn-row.single{grid-template-columns:1fr;}
 .main-btn{
   padding:15px;border-radius:10px;border:none;cursor:pointer;
@@ -501,7 +501,7 @@ body{
   <span>⚠️</span><span id="alertTxt"></span>
 </div>
 
-  <div class="gain-row" style="display:flex;align-items:center;gap:10px;margin-top:10px;width:100%;max-width:280px;">
+  <div class="gain-row" style="display:flex;align-items:center;gap:10px;margin-top:4px;width:100%;max-width:280px;">
     <span style="font-size:10px;color:var(--muted);font-family:var(--mono);white-space:nowrap;" data-key="gainLabel">רגישות</span>
     <input type="range" id="gainSlider" min="1" max="12" value="4" step="0.5"
       oninput="updateGain(this.value)"
@@ -1558,8 +1558,8 @@ window.addEventListener('resize', resizeCanvases);
   }
 
 // ── SUPABASE AUTH ──
-const SUPA_URL = 'https://fllqlcofglxvygslfbiy.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbHFsY29mZ2x4dnlnc2xmYml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMjU0MzgsImV4cCI6MjA5OTYwMTQzOH0.mASmyJNF0qqhZbyMPkBbG3eyPMN9b8P87BC_WB-fpNE';
+const SUPA_URL = 'https://YOUR_PROJECT.supabase.co';
+const SUPA_KEY = 'YOUR_ANON_KEY';
 const _supa = (typeof supabase !== 'undefined' && !SUPA_URL.includes('YOUR_PROJECT') && !SUPA_KEY.includes('YOUR_ANON'))
   ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
 if (!_supa) console.warn('Supabase not configured');
