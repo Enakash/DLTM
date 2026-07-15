@@ -1,4 +1,4 @@
-<, tabHistory:'السجل', tabGuide:'دليل', tabSettings:'الإعدادات', hStatAvg:'المتوسط', hStatBest:'أعلى', hStatCount:'مكالمات', histEmpty:'احفظ مكالمات لعرض السجل', guidePitchTitle:'نبرة الصوت', guidePitchSub:'التردد الأساسي', guidePitchBody:'قد يشير الارتفاع المفاجئ إلى توتر.', guideJitterTitle:'اهتزاز الصوت', guideJitterSub:'ثبات التردد', guideJitterBody:'يشير الاهتزاز العالي إلى توتر.', guidePauseTitle:'التوقفات', guidePauseSub:'توقفات وسط الجملة', guidePauseBody:'قد تشير إلى تردد.', guideRateTitle:'سرعة الكلام', guideRateSub:'تغييرات الإيقاع', guideRateBody:'التغييرات المتكررة تشير إلى توتر.', guideVolTitle:'مستوى الصوت', guideVolSub:'مستوى الطاقة', guideVolBody:'التذبذبات الحادة تعكس تغييرات.', guideBreathTitle:'معدل التنفس', guideBreathSub:'معدل تغيير الطاقة', guideBreathBody:'القيم العالية تشير إلى نفس غير منتظم.', guideScoreTitle:'مؤشر المصداقية', guideScoreSub:'ماذا تعني الأرقام', legendHigh:'65-100% — خصائص مستقرة', legendMid:'38-65% — شذوذات بسيطة', legendLow:'0-38% — شذوذات متعددة', guideScoreNote:'مؤشر فقط للتدريب الشخصي.', setSecLang:'اللغة', setLangLabel:'لغة الواجهة', setSecAudio:'الصوت', setGainLabel:'حساسية الميكروفون', setGainSub:'أعلى للتقاط عن بُعد', setSecData:'البيانات', setSavedContacts:'جهات الاتصال', setStorageLabel:'التخزين', setStorageSub:'محلي فقط', setStorageVal:'محلي', setResetBtn:'حذف جميع البيانات', setSecAbout:'حول', setPrivacyLabel:'سياسة الخصوصية', setPrivacyLink:'عرض', setTermsLabel:'شروط الاستخدام', setTermsLink:'عرض', confirmReset:'حذف جميع البيانات؟', resetDone:'تم الحذف'!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -31,11 +31,44 @@ body{
 }
 
 /* ── TOPBAR ── */
+
+/* ── USER INFO BAR (above topbar) ── */
+.user-bar{
+  width:100%;
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  padding: env(safe-area-inset-top, 10px) 18px 8px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:21;
+  min-height:36px;
+}
+.user-bar.visible{ display:flex; }
+.user-bar-email{
+  font-size:11px;color:var(--accent);
+  font-family:var(--mono);
+  max-width:200px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;
+}
+.user-bar-signout{
+  font-size:11px;padding:3px 10px;
+  border-radius:10px;
+  border:1px solid #ef444440;
+  background:#ef444412;
+  color:#fca5a5;
+  cursor:pointer;
+  font-family:var(--font);
+  white-space:nowrap;
+}
 .topbar{
   width:100%;display:flex;align-items:center;justify-content:space-between;
-  padding:13px 18px;border-bottom:1px solid var(--border);
+  padding:env(safe-area-inset-top,16px) 18px 10px;border-bottom:1px solid var(--border);
   background:var(--surface);position:sticky;top:0;z-index:20;
 }
+.topbar.with-userbar{ top:36px; }
 .logo{font-size:16px;font-weight:700;letter-spacing:-0.5px;color:var(--text);}
 .logo em{color:var(--accent);font-style:normal;}
 .logo-svg{display:flex;align-items:center;}
@@ -115,7 +148,7 @@ body{
 .auth-verify-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:6px;}
 .auth-verify-sub{font-size:12px;color:var(--muted);line-height:1.6;}
 .auth-verify-resend{color:var(--accent);cursor:pointer;font-size:12px;margin-top:12px;display:inline-block;}
-.nav-tabs{width:100%;display:flex;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:57px;z-index:19;}
+.nav-tabs{width:100%;display:flex;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:57px;z-index:19;transition:top 0.2s;}
 .nav-tab{flex:1;padding:11px 0;font-size:12px;font-weight:600;text-align:center;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:var(--font);border-bottom:2px solid transparent;transition:all 0.2s;}
 .nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
 .screen{width:100%;display:none;flex-direction:column;align-items:center;}
@@ -275,36 +308,32 @@ body{
 
 .err-msg{width:calc(100% - 36px);max-width:424px;margin-top:8px;padding:9px 12px;border-radius:8px;background:#ef444410;border:1px solid #ef444440;color:#fca5a5;font-size:12px;display:none;}
 .err-msg.show{display:block;}
-/* ── HISTORY SCREEN ── */
+
 .hist-stat-row{display:flex;gap:10px;width:calc(100% - 36px);max-width:424px;margin-top:16px;}
-.hist-stat{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 10px;text-align:center;}
-.hist-stat-val{font-size:22px;font-weight:800;font-family:var(--mono);margin-bottom:2px;}
+.hist-stat{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
+.hist-stat-val{font-size:20px;font-weight:800;font-family:var(--mono);margin-bottom:2px;}
 .hist-stat-lbl{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
-#histBigCanvas{width:calc(100% - 36px);max-width:424px;height:150px;border-radius:8px;background:var(--surface);border:1px solid var(--border);display:block;margin-top:12px;}
+#histBigCanvas{width:calc(100% - 36px);max-width:424px;height:140px;border-radius:8px;background:var(--surface);border:1px solid var(--border);display:block;margin-top:12px;}
 .hist-list{width:calc(100% - 36px);max-width:424px;margin-top:12px;display:flex;flex-direction:column;gap:8px;}
 .hist-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;}
 .hist-item-name{font-size:13px;font-weight:600;color:var(--text);}
-.hist-item-meta{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
-.hist-item-score{font-size:18px;font-weight:800;font-family:var(--mono);}
-
-/* ── GUIDE SCREEN ── */
+.hist-item-meta{font-size:10px;color:var(--muted);font-family:var(--mono);}
+.hist-item-score{font-size:17px;font-weight:800;font-family:var(--mono);}
 .guide-wrap{width:calc(100% - 36px);max-width:424px;margin-top:14px;}
 .guide-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;}
 .guide-card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.guide-icon{width:32px;height:32px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.guide-icon{width:30px;height:30px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
 .guide-card-title{font-size:13px;font-weight:700;color:var(--text);}
 .guide-card-sub{font-size:10px;color:var(--muted);}
 .guide-card-body{font-size:12px;color:var(--muted2);line-height:1.6;}
 .score-legend{display:flex;flex-direction:column;gap:6px;margin:10px 0;}
-.legend-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;}
+.legend-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .legend-text{font-size:12px;color:var(--muted2);}
-
-/* ── SETTINGS SCREEN ── */
 .settings-wrap{width:calc(100% - 36px);max-width:424px;margin-top:14px;}
 .settings-section-lbl{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin:16px 0 6px;}
 .settings-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:8px;}
-.settings-row{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border-bottom:1px solid var(--border);}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);}
 .settings-row:last-child{border-bottom:none;}
 .settings-row-lbl{font-size:13px;font-weight:600;color:var(--text);}
 .settings-row-sub{font-size:10px;color:var(--muted);margin-top:2px;}
@@ -399,11 +428,16 @@ body{
   </div>
 </div>
 
+<!-- USER INFO BAR -->
+<div class="user-bar" id="userBar">
+  <span class="user-bar-email" id="userEmail"></span>
+  <button class="user-bar-signout" onclick="signOut()" data-key="signOutBtn">יציאה</button>
+</div>
+
 <!-- TOPBAR -->
 <div class="topbar">
-  <!-- LEFT: user email -->
-  <div style="flex:1;display:flex;align-items:center;min-width:0;">
-    <span id="userEmail" style="display:none;font-size:11px;color:var(--accent);font-family:var(--mono);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+  <!-- LEFT: status -->
+  <div style="flex:1;">
   </div>
   <!-- CENTER: logo -->
   <div class="logo-svg">
@@ -428,13 +462,12 @@ body{
       <circle cx="79" cy="28" r="1.5" fill="#f59e0b" filter="url(#lg)" opacity="0.8"/>
     </svg>
   </div>
-  <!-- RIGHT: status + signout -->
-  <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
+  <!-- RIGHT: status -->
+  <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;">
     <div class="status-pill">
       <span class="sdot" id="sdot"></span>
       <span id="statusTxt">STANDBY</span>
     </div>
-    <button id="signOutBtn" onclick="signOut()" style="display:none;font-size:11px;padding:4px 10px;border-radius:10px;border:1px solid #ef444440;background:#ef444412;color:#fca5a5;cursor:pointer;font-family:var(--font);white-space:nowrap;" data-key="signOutBtn">יציאה</button>
   </div>
 </div>
 <div class="nav-tabs">
@@ -627,90 +660,6 @@ body{
 
 <script>
 
-
-// ── HISTORY SCREEN ──
-function renderHistory(){
-  var contacts=loadContacts(),all=[];
-  Object.values(contacts).forEach(function(ct){
-    (ct.sessions||[]).forEach(function(s){ all.push({name:ct.name,score:s.score,date:s.date,duration:s.duration||''}); });
-  });
-  all.sort(function(a,b){return b.date-a.date;});
-  var list=document.getElementById('histList');
-  var empty=document.getElementById('histEmpty');
-  var avgEl=document.getElementById('hStatAvg'),bestEl=document.getElementById('hStatBest'),cntEl=document.getElementById('hStatCount');
-  if(all.length===0){
-    list.innerHTML=''; list.appendChild(empty); empty.style.display='block';
-    avgEl.textContent='--'; bestEl.textContent='--'; cntEl.textContent='0';
-    drawBigHistChart([]); return;
-  }
-  empty.style.display='none';
-  var scores=all.map(function(s){return s.score;});
-  var av=Math.round(scores.reduce(function(a,b){return a+b;},0)/scores.length);
-  var bv=Math.max.apply(null,scores);
-  avgEl.textContent=av+'%'; avgEl.style.color=av>65?'#10b981':av>38?'#f59e0b':'#ef4444';
-  bestEl.textContent=bv+'%'; cntEl.textContent=all.length;
-  drawBigHistChart(all.slice(0,30).reverse().map(function(s){return s.score;}));
-  list.innerHTML='';
-  all.slice(0,25).forEach(function(s){
-    var col=s.score>65?'#10b981':s.score>38?'#f59e0b':'#ef4444';
-    var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
-    var dt=new Date(s.date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit',year:'2-digit'});
-    var item=document.createElement('div'); item.className='hist-item';
-    item.innerHTML='<div><div class="hist-item-name">'+s.name+'</div>'
-      +'<div class="hist-item-meta">'+dt+(s.duration?' · '+s.duration:'')+'</div></div>'
-      +'<div class="hist-item-score" style="color:'+col+'">'+s.score+'%</div>';
-    list.appendChild(item);
-  });
-}
-
-function drawBigHistChart(scores){
-  var canvas=document.getElementById('histBigCanvas');
-  if(!canvas) return;
-  var dpr=window.devicePixelRatio||1;
-  canvas.width=canvas.offsetWidth*dpr; canvas.height=150*dpr;
-  var ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,pd=12*dpr;
-  ctx.fillStyle='#0f1623'; ctx.fillRect(0,0,w,h);
-  if(scores.length<2){
-    ctx.fillStyle='#2a4060'; ctx.font=(11*dpr)+'px Inter,sans-serif'; ctx.textAlign='center';
-    ctx.fillText(t('waitingData'),w/2,h/2); return;
-  }
-  for(var i=1;i<scores.length;i++){
-    var v=scores[i],pv=scores[i-1];
-    var x=pd+(i/(scores.length-1))*(w-pd*2),y=h-pd-(v/100)*(h-pd*2);
-    var px=pd+((i-1)/(scores.length-1))*(w-pd*2),py=h-pd-(pv/100)*(h-pd*2);
-    var col=v>65?'#10b981':v>38?'#f59e0b':'#ef4444';
-    ctx.strokeStyle=col; ctx.lineWidth=2.5*dpr; ctx.shadowColor=col; ctx.shadowBlur=3*dpr;
-    ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(x,y); ctx.stroke();
-  }
-}
-
-// ── SETTINGS SCREEN ──
-function renderSettings(){
-  var contacts=loadContacts();
-  document.getElementById('setContactCount').textContent=Object.keys(contacts).length;
-  ['He','En','Ar'].forEach(function(l){
-    var b=document.getElementById('sLang'+l);
-    if(b) b.classList.toggle('active',lang===l.toLowerCase());
-  });
-  var gs=document.getElementById('settingsGainSlider');
-  var gv=document.getElementById('settingsGainVal');
-  if(gs) gs.value=gainLevel;
-  if(gv) gv.textContent='x'+gainLevel;
-}
-
-function updateGainFromSettings(val){
-  gainLevel=parseFloat(val);
-  document.getElementById('settingsGainVal').textContent='x'+gainLevel;
-  if(typeof gainNode!=='undefined'&&gainNode){ try{gainNode.gain.value=gainLevel;}catch(e){} }
-}
-
-function confirmResetAll(){
-  if(confirm(t('confirmReset')||'מחוק את כל הנתונים?')){
-    localStorage.removeItem('liedar_c');
-    showAlert(t('resetDone')||'נמחק',2000);
-    renderSettings();
-  }
-}
 // ── STORAGE ──
 function loadContacts(){try{return JSON.parse(localStorage.getItem('liedar_c')||'{}');}catch(e){return {};}}
 function saveContacts(d){try{localStorage.setItem('liedar_c',JSON.stringify(d));}catch(e){}}
@@ -718,10 +667,8 @@ function saveContacts(d){try{localStorage.setItem('liedar_c',JSON.stringify(d));
 // ── TABS ──
 function switchTab(tab){
   ['Analyze','Contacts','History','Guide','Settings'].forEach(function(s){
-    var sc=document.getElementById('screen'+s);
-    if(sc) sc.classList.toggle('active',tab===s.toLowerCase());
-    var tb=document.getElementById('tab'+s);
-    if(tb) tb.classList.toggle('active',tab===s.toLowerCase());
+    var sc=document.getElementById('screen'+s); if(sc) sc.classList.toggle('active',tab===s.toLowerCase());
+    var tb=document.getElementById('tab'+s); if(tb) tb.classList.toggle('active',tab===s.toLowerCase());
   });
   if(tab==='contacts') renderContacts();
   if(tab==='history') renderHistory();
@@ -908,7 +855,21 @@ const T = {
     expRate:'שינוי עקבי בקצב הדיבור',
     expPitch:'עלייה בגובה הקול',
     expVolume:'תנודות חדה בעוצמת הקול',
-    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.',, tabHistory:'היסטוריה', tabGuide:'מדריך', tabSettings:'הגדרות', hStatAvg:'ממוצע', hStatBest:'שיא', hStatCount:'שיחות', histEmpty:'שמור שיחות כדי לראות היסטוריה', guidePitchTitle:'גובה קול', guidePitchSub:'תדר הקול', guidePitchBody:'עלייה פתאומית עלולה להעיד על מתח.', guideJitterTitle:'רעידת קול', guideJitterSub:'יציבות התדר', guideJitterBody:'Jitter גבוה עשוי להעיד על מתח.', guidePauseTitle:'פאוזות', guidePauseSub:'הפסקות באמצע משפט', guidePauseBody:'פאוזות קצרות עלולות להעיד על היסוס.', guideRateTitle:'קצב דיבור', guideRateSub:'שינויים בקצב', guideRateBody:'שינויים עקביים עלולים להעיד על לחץ.', guideVolTitle:'עוצמת קול', guideVolSub:'רמת האנרגיה', guideVolBody:'תנודות חדות עלולות להצביע על שינוי.', guideBreathTitle:'קצב נשימה', guideBreathSub:'אנרגיית שינוי הקול', guideBreathBody:'ערכים גבוהים עלולים להעיד על נשימה לא סדירה.', guideScoreTitle:'מד האמינות', guideScoreSub:'מה המספרים אומרים', legendHigh:'65-100% — מאפיינים יציבים', legendMid:'38-65% — חריגות מסוימות', legendLow:'0-38% — מספר מאפיינים חריגים', guideScoreNote:'אינדיקציה לתרגול אישי בלבד.', setSecLang:'שפה', setLangLabel:'שפת ממשק', setSecAudio:'אודיו', setGainLabel:'רגישות מיקרופון', setGainSub:'גבוה יותר לקליטה מרחוק', setSecData:'נתונים', setSavedContacts:'אנשי קשר שמורים', setStorageLabel:'אחסון', setStorageSub:'מקומי על המכשיר', setStorageVal:'מקומי', setResetBtn:'מחק כל הנתונים', setSecAbout:'אודות', setPrivacyLabel:'מדיניות פרטיות', setPrivacyLink:'צפה', setTermsLabel:'תנאי שימוש', setTermsLink:'צפה', confirmReset:'למחוק את כל הנתונים?', resetDone:'נמחק' signOutBtn:'יציאה', rememberMeLabel:'זכור אותי', authTabLogin:'כניסה', authTabRegister:'הרשמה', authEmailLabel:'אימייל', authPassLabel:'סיסמא', authPassConfirmLabel:'אימות סיסמא', authTermsText:'קראתי ומסכימ/ה ל', authTermsLink:'תנאי השימוש', authPrivacyLink:'מדיניות הפרטיות', authLoginBtn:'כניסה', authRegisterBtn:'הרשמה', authForgotLink:'שכחתי סיסמה', authForgotBtn:'שלח קישור איפוס', authBackLogin:'חזרה לכניסה', authGoogleBtn:'כניסה עם Google', authOrWith:'או', authVerifyTitle:'נא לאשר את האימייל', authVerifySub:'שלחנו קישור אימות. בדוק את תיבת הדואר.', authResend:'שלח שוב', authForgotSent:'קישור נשלח', authErrFields:'מלא את כל השדות', authErrTerms:'יש לאשר את תנאי השימוש', authErrPassMatch:'הסיסמאות אינן תואמות', authErrPassShort:'סיסמא מינימאלית 6 תווים',
+    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.', signOutBtn:'יציאה', rememberMeLabel:'זכור אותי', authTabLogin:'כניסה', authTabRegister:'הרשמה', authEmailLabel:'אימייל', authPassLabel:'סיסמא', authPassConfirmLabel:'אימות סיסמא', authTermsText:'קראתי ומסכימ/ה ל', authTermsLink:'תנאי השימוש', authPrivacyLink:'מדיניות הפרטיות', authLoginBtn:'כניסה', authRegisterBtn:'הרשמה', authForgotLink:'שכחתי סיסמה', authForgotBtn:'שלח קישור איפוס', authBackLogin:'חזרה לכניסה', authGoogleBtn:'כניסה עם Google', authOrWith:'או', authVerifyTitle:'נא לאשר את האימייל', authVerifySub:'שלחנו קישור אימות. בדוק את תיבת הדואר.', authResend:'שלח שוב', authForgotSent:'קישור נשלח', authErrFields:'מלא את כל השדות', authErrTerms:'יש לאשר את תנאי השימוש', authErrPassMatch:'הסיסמאות אינן תואמות', authErrPassShort:'סיסמא מינימאלית 6 תווים',
+    tabHistory:'היסטוריה', tabGuide:'מדריך', tabSettings:'הגדרות',
+    hStatAvg:'ממוצע', hStatBest:'שיא', hStatCount:'שיחות', histEmpty:'שמור שיחות כדי לראות היסטוריה',
+    guidePitchTitle:'גובה קול', guidePitchSub:'תדר הקול', guidePitchBody:'עלייה פתאומית עלולה להעיד על מתח.',
+    guideJitterTitle:'רעידת קול', guideJitterSub:'יציבות התדר', guideJitterBody:'Jitter גבוה עשוי להעיד על מתח.',
+    guidePauseTitle:'פאוזות', guidePauseSub:'הפסקות באמצע משפט', guidePauseBody:'פאוזות קצרות עלולות להעיד על היסוס.',
+    guideRateTitle:'קצב דיבור', guideRateSub:'שינויים בקצב', guideRateBody:'שינויים עקביים עלולים להעיד על לחץ.',
+    guideVolTitle:'עוצמת קול', guideVolSub:'רמת האנרגיה', guideVolBody:'תנודות חדות עלולות להצביע על שינוי.',
+    guideBreathTitle:'קצב נשימה', guideBreathSub:'אנרגיית שינוי הקול', guideBreathBody:'ערכים גבוהים עלולים להעיד על נשימה לא סדירה.',
+    guideScoreTitle:'מד האמינות', guideScoreSub:'מה המספרים אומרים',
+    legendHigh:'65-100% — יציב', legendMid:'38-65% — חריגות מסוימות', legendLow:'0-38% — מספר מאפיינים חריגים', guideScoreNote:'אינדיקציה לתרגול אישי בלבד.',
+    setSecLang:'שפה', setLangLabel:'שפת ממשק', setSecAudio:'אודיו', setGainLabel:'רגישות מיקרופון', setGainSub:'גבוה יותר לקליטה מרחוק',
+    setSecData:'נתונים', setSavedContacts:'אנשי קשר שמורים', setStorageLabel:'אחסון', setStorageSub:'מקומי על המכשיר', setStorageVal:'מקומי',
+    setResetBtn:'מחק כל הנתונים', setSecAbout:'אודות', setPrivacyLabel:'מדיניות פרטיות', setPrivacyLink:'צפה', setTermsLabel:'תנאי שימוש', setTermsLink:'צפה',
+    confirmReset:'למחוק את כל הנתונים?', resetDone:'נמחק'
   },
   en:{
     waiting:'Waiting', calibrating:'⏳ Calibrating...', eqTitle:'Real-Time Voice Feature Analysis',
@@ -937,7 +898,25 @@ const T = {
     expRate:'Consistent change in speech rate',
     expPitch:'Rise in vocal pitch',
     expVolume:'Sharp fluctuations in volume',
-    expNone:'No significant anomalies detected — voice features are normal.',, tabHistory:'History', tabGuide:'Guide', tabSettings:'Settings', hStatAvg:'Average', hStatBest:'Best', hStatCount:'Sessions', histEmpty:'Save calls to see history', guidePitchTitle:'Pitch', guidePitchSub:'Fundamental frequency', guidePitchBody:'A sudden rise in pitch may indicate stress.', guideJitterTitle:'Jitter', guideJitterSub:'Frequency stability', guideJitterBody:'High jitter may indicate stress or tension.', guidePauseTitle:'Pauses', guidePauseSub:'Mid-sentence stops', guidePauseBody:'Short unexpected pauses may indicate hesitation.', guideRateTitle:'Speech Rate', guideRateSub:'Pace changes', guideRateBody:'Consistent pace changes may indicate stress.', guideVolTitle:'Volume', guideVolSub:'Energy level', guideVolBody:'Sharp volume fluctuations may indicate comfort changes.', guideBreathTitle:'Breathing', guideBreathSub:'Energy change rate', guideBreathBody:'High values may indicate irregular breathing.', guideScoreTitle:'The Score', guideScoreSub:'What the numbers mean', legendHigh:'65-100% - Stable and consistent', legendMid:'38-65% - Some anomalies', legendLow:'0-38% - Multiple anomalies', guideScoreNote:'For personal practice only.', setSecLang:'Language', setLangLabel:'Interface Language', setSecAudio:'Audio', setGainLabel:'Microphone Sensitivity', setGainSub:'Higher for remote pickup', setSecData:'Data', setSavedContacts:'Saved Contacts', setStorageLabel:'Storage', setStorageSub:'Local on device only', setStorageVal:'Local', setResetBtn:'Delete All Data', setSecAbout:'About', setPrivacyLabel:'Privacy Policy', setPrivacyLink:'View', setTermsLabel:'Terms of Use', setTermsLink:'View', confirmReset:'Delete all data?', resetDone:'Cleared' signOutBtn:'Sign Out', rememberMeLabel:'Remember me', authTabLogin:'Login', authTabRegister:'Register', authEmailLabel:'Email', authPassLabel:'Password', authPassConfirmLabel:'Confirm Password', authTermsText:'I agree to the ', authTermsLink:'Terms of Use', authPrivacyLink:'Privacy Policy', authLoginBtn:'Sign In', authRegisterBtn:'Register', authForgotLink:'Forgot password', authForgotBtn:'Send Reset Link', authBackLogin:'Back to Login', authGoogleBtn:'Sign in with Google', authOrWith:'or', authVerifyTitle:'Please verify your email', authVerifySub:'We sent you a verification link. Check your inbox.', authResend:'Resend', authForgotSent:'Reset link sent', authErrFields:'Please fill in all fields', authErrTerms:'You must accept the Terms of Use', authErrPassMatch:'Passwords do not match', authErrPassShort:'Password must be at least 6 characters',
+    expNone:'No significant anomalies detected — voice features are normal.', signOutBtn:'Sign Out', rememberMeLabel:'Remember me', authTabLogin:'Login', authTabRegister:'Register', authEmailLabel:'Email', authPassLabel:'Password', authPassConfirmLabel:'Confirm Password', authTermsText:'I agree to the ', authTermsLink:'Terms of Use', authPrivacyLink:'Privacy Policy', authLoginBtn:'Sign In', authRegisterBtn:'Register', authForgotLink:'Forgot password', authForgotBtn:'Send Reset Link', authBackLogin:'Back to Login', authGoogleBtn:'Sign in with Google', authOrWith:'or', authVerifyTitle:'Please verify your email', authVerifySub:'We sent you a verification link. Check your inbox.', authResend:'Resend', authForgotSent:'Reset link sent', authErrFields:'Please fill in all fields', authErrTerms:'You must accept the Terms of Use', authErrPassMatch:'Passwords do not match', authErrPassShort:'Password must be at least 6 characters',
+    tabHistory:'History', tabGuide:'Guide', tabSettings:'Settings',
+    hStatAvg:'Average', hStatBest:'Best', hStatCount:'Sessions', histEmpty:'Save calls to see history',
+    guidePitchTitle:'Pitch', guidePitchSub:'Frequency', guidePitchBody:'A sudden rise may indicate stress.',
+    guideJitterTitle:'Jitter', guideJitterSub:'Stability', guideJitterBody:'High jitter may indicate stress.',
+    guidePauseTitle:'Pauses', guidePauseSub:'Mid-sentence stops', guidePauseBody:'Short pauses may indicate hesitation.',
+    guideRateTitle:'Speech Rate', guideRateSub:'Pace changes', guideRateBody:'Consistent changes may indicate stress.',
+    guideVolTitle:'Volume', guideVolSub:'Energy level', guideVolBody:'Sharp changes may indicate discomfort.',
+    guideBreathTitle:'Breathing', guideBreathSub:'Energy rate', guideBreathBody:'High values may indicate irregular breathing.',
+    guideScoreTitle:'The Score', guideScoreSub:'What the numbers mean',
+    legendHigh:'65-100% - Stable', legendMid:'38-65% - Some anomalies', legendLow:'0-38% - Multiple anomalies',
+    guideScoreNote:'For personal practice only.',
+    setSecLang:'Language', setLangLabel:'Interface Language', setSecAudio:'Audio',
+    setGainLabel:'Microphone Sensitivity', setGainSub:'Higher for remote pickup',
+    setSecData:'Data', setSavedContacts:'Saved Contacts', setStorageLabel:'Storage',
+    setStorageSub:'Local on device only', setStorageVal:'Local',
+    setResetBtn:'Delete All Data', setSecAbout:'About', setPrivacyLabel:'Privacy Policy',
+    setPrivacyLink:'View', setTermsLabel:'Terms of Use', setTermsLink:'View',
+    confirmReset:'Delete all data?', resetDone:'Cleared'
   },
   ar:{
     waiting:'انتظار',
@@ -983,6 +962,25 @@ const T = {
     expPitch:'ارتفاع في طبقة الصوت',
     expVolume:'تغييرات حادة في مستوى الصوت',
     expNone:'لم ترصد شذوذات مهمة — مميزات الصوت مستقرة.',
+    tabHistory:'السجل', tabGuide:'دليل', tabSettings:'الإعدادات',
+    hStatAvg:'المتوسط', hStatBest:'أعلى', hStatCount:'مكالمات', histEmpty:'احفظ مكالمات لعرض السجل',
+    guidePitchTitle:'نبرة الصوت', guidePitchSub:'التردد', guidePitchBody:'قد يشير إلى توتر.',
+    guideJitterTitle:'اهتزاز الصوت', guideJitterSub:'ثبات التردد', guideJitterBody:'يشير إلى توتر.',
+    guidePauseTitle:'التوقفات', guidePauseSub:'توقفات وسط الجملة', guidePauseBody:'قد تشير إلى تردد.',
+    guideRateTitle:'سرعة الكلام', guideRateSub:'تغييرات الإيقاع', guideRateBody:'التغييرات المتكررة تشير إلى توتر.',
+    guideVolTitle:'مستوى الصوت', guideVolSub:'مستوى الطاقة', guideVolBody:'التذبذبات تعكس تغييرات.',
+    guideBreathTitle:'معدل التنفس', guideBreathSub:'معدل تغيير الطاقة', guideBreathBody:'القيم العالية تشير إلى نفس غير منتظم.',
+    guideScoreTitle:'مؤشر المصداقية', guideScoreSub:'ماذا تعني الأرقام',
+    legendHigh:'65-100% — مستقر', legendMid:'38-65% — شذوذات', legendLow:'0-38% — شذوذات متعددة',
+    guideScoreNote:'مؤشر للتدريب فقط.',
+    setSecLang:'اللغة', setLangLabel:'لغة الواجهة', setSecAudio:'الصوت',
+    setGainLabel:'حساسية الميكروفون', setGainSub:'أعلى للتقاط عن بُعد',
+    setSecData:'البيانات', setSavedContacts:'جهات الاتصال', setStorageLabel:'التخزين',
+    setStorageSub:'محلي فقط', setStorageVal:'محلي',
+    setResetBtn:'حذف جميع البيانات', setSecAbout:'حول',
+    setPrivacyLabel:'سياسة الخصوصية', setPrivacyLink:'عرض',
+    setTermsLabel:'شروط الاستخدام', setTermsLink:'عرض',
+    confirmReset:'حذف جميع البيانات؟', resetDone:'تم الحذف'
   }
 };
 let lang='he';
@@ -991,9 +989,11 @@ function setLang(l){
   lang=l;
   document.documentElement.lang=l;
   document.documentElement.dir=(l==='he'||l==='ar')?'rtl':'ltr';
-  document.getElementById('btnHe').classList.toggle('active',l==='he');
-  document.getElementById('btnEn').classList.toggle('active',l==='en');
-  document.getElementById('btnAr').classList.toggle('active',l==='ar');
+  // Update lang buttons in settings screen
+  ['He','En','Ar'].forEach(function(x){
+    var b=document.getElementById('sLang'+x)||document.getElementById('btn'+x);
+    if(b) b.classList.toggle('active',lang===(x==='He'?'he':x==='En'?'en':'ar'));
+  });
   document.body.style.fontFamily=l==='ar'?"'Noto Sans Arabic',sans-serif":"'Inter',-apple-system,sans-serif";
   document.querySelectorAll('[data-key]').forEach(el=>{
     const k=el.getAttribute('data-key');
@@ -1582,8 +1582,12 @@ window.addEventListener('DOMContentLoaded', function() {
     } else if (event === 'SIGNED_OUT') {
       _currentUser = null;
       document.getElementById('authOverlay').style.display = 'flex';
-      document.getElementById('userEmail').style.display = 'none';
-      document.getElementById('signOutBtn').style.display = 'none';
+      var bar = document.getElementById('userBar');
+      if (bar) bar.classList.remove('visible');
+      var tb = document.querySelector('.topbar');
+      var nt = document.querySelector('.nav-tabs');
+      if (tb) tb.style.top = '0';
+      if (nt) nt.style.top = '57px';
     }
   });
 });
@@ -1595,10 +1599,16 @@ function showAppNoAuth() {
 function onUserLoggedIn(user) {
   _currentUser = user;
   document.getElementById('authOverlay').style.display = 'none';
+  // Show user bar at top
+  var bar = document.getElementById('userBar');
   var emailEl = document.getElementById('userEmail');
-  if (emailEl) { emailEl.style.display = 'block'; emailEl.textContent = user.email; }
-  var soBtn = document.getElementById('signOutBtn');
-  if (soBtn) soBtn.style.display = 'block';
+  if (bar) bar.classList.add('visible');
+  if (emailEl) emailEl.textContent = user.email;
+  // Shift topbar and nav-tabs down
+  var tb = document.querySelector('.topbar');
+  var nt = document.querySelector('.nav-tabs');
+  if (tb) tb.style.top = '36px';
+  if (nt) nt.style.top = '93px';
 }
 
 function switchAuthTab(tab) {
@@ -1694,38 +1704,20 @@ async function signOut() {
 <!-- GUIDE SCREEN -->
 <div class="screen" id="screenGuide">
   <div class="guide-wrap">
-    <div class="guide-card">
-      <div class="guide-card-hdr"><div class="guide-icon">🎵</div><div><div class="guide-card-title" data-key="guidePitchTitle">גובה קול (Pitch)</div><div class="guide-card-sub" data-key="guidePitchSub">תדר הקול הבסיסי</div></div></div>
-      <div class="guide-card-body" data-key="guidePitchBody">עלייה פתאומית בגובה הקול עלולה להעיד על מתח. קול יציב נוטה להישאר בטווח עקבי.</div>
-    </div>
-    <div class="guide-card">
-      <div class="guide-card-hdr"><div class="guide-icon">〰️</div><div><div class="guide-card-title" data-key="guideJitterTitle">רעידת קול (Jitter)</div><div class="guide-card-sub" data-key="guideJitterSub">יציבות התדר</div></div></div>
-      <div class="guide-card-body" data-key="guideJitterBody">Jitter גבוה מעיד על חוסר יציבות — עשוי להצביע על מתח או לחץ.</div>
-    </div>
-    <div class="guide-card">
-      <div class="guide-card-hdr"><div class="guide-icon">⏸️</div><div><div class="guide-card-title" data-key="guidePauseTitle">פאוזות (Pauses)</div><div class="guide-card-sub" data-key="guidePauseSub">הפסקות באמצע משפט</div></div></div>
-      <div class="guide-card-body" data-key="guidePauseBody">פאוזות קצרות באמצע משפט עלולות להעיד על היסוס. הפסקות בסוף משפט טבעיות.</div>
-    </div>
-    <div class="guide-card">
-      <div class="guide-card-hdr"><div class="guide-icon">⚡</div><div><div class="guide-card-title" data-key="guideRateTitle">קצב דיבור (Rate)</div><div class="guide-card-sub" data-key="guideRateSub">שינויים בקצב</div></div></div>
-      <div class="guide-card-body" data-key="guideRateBody">שינויים עקביים וחוזרים בקצב הדיבור עלולים להעיד על לחץ.</div>
-    </div>
-    <div class="guide-card">
-      <div class="guide-card-hdr"><div class="guide-icon">🔊</div><div><div class="guide-card-title" data-key="guideVolTitle">עוצמת קול (Volume)</div><div class="guide-card-sub" data-key="guideVolSub">רמת האנרגיה הקולית</div></div></div>
-      <div class="guide-card-body" data-key="guideVolBody">תנודות חדות בעוצמה יכולות להצביע על שינוי ברמת הנוחות.</div>
-    </div>
-    <div class="guide-card">
-      <div class="guide-card-hdr"><div class="guide-icon">💨</div><div><div class="guide-card-title" data-key="guideBreathTitle">קצב נשימה (Breath)</div><div class="guide-card-sub" data-key="guideBreathSub">אנרגיית שינוי הקול</div></div></div>
-      <div class="guide-card-body" data-key="guideBreathBody">ערכים גבוהים עלולים להעיד על נשימה לא סדירה.</div>
-    </div>
+    <div class="guide-card"><div class="guide-card-hdr"><div class="guide-icon">🎵</div><div><div class="guide-card-title" data-key="guidePitchTitle">גובה קול</div><div class="guide-card-sub" data-key="guidePitchSub">תדר הקול הבסיסי</div></div></div><div class="guide-card-body" data-key="guidePitchBody">עלייה פתאומית עלולה להעיד על מתח.</div></div>
+    <div class="guide-card"><div class="guide-card-hdr"><div class="guide-icon">〰️</div><div><div class="guide-card-title" data-key="guideJitterTitle">רעידת קול</div><div class="guide-card-sub" data-key="guideJitterSub">יציבות התדר</div></div></div><div class="guide-card-body" data-key="guideJitterBody">Jitter גבוה עשוי להעיד על מתח.</div></div>
+    <div class="guide-card"><div class="guide-card-hdr"><div class="guide-icon">⏸️</div><div><div class="guide-card-title" data-key="guidePauseTitle">פאוזות</div><div class="guide-card-sub" data-key="guidePauseSub">הפסקות באמצע משפט</div></div></div><div class="guide-card-body" data-key="guidePauseBody">פאוזות קצרות עלולות להעיד על היסוס.</div></div>
+    <div class="guide-card"><div class="guide-card-hdr"><div class="guide-icon">⚡</div><div><div class="guide-card-title" data-key="guideRateTitle">קצב דיבור</div><div class="guide-card-sub" data-key="guideRateSub">שינויים בקצב</div></div></div><div class="guide-card-body" data-key="guideRateBody">שינויים עקביים עלולים להעיד על לחץ.</div></div>
+    <div class="guide-card"><div class="guide-card-hdr"><div class="guide-icon">🔊</div><div><div class="guide-card-title" data-key="guideVolTitle">עוצמת קול</div><div class="guide-card-sub" data-key="guideVolSub">רמת האנרגיה</div></div></div><div class="guide-card-body" data-key="guideVolBody">תנודות חדות יכולות להצביע על שינוי בנוחות.</div></div>
+    <div class="guide-card"><div class="guide-card-hdr"><div class="guide-icon">💨</div><div><div class="guide-card-title" data-key="guideBreathTitle">קצב נשימה</div><div class="guide-card-sub" data-key="guideBreathSub">אנרגיית שינוי הקול</div></div></div><div class="guide-card-body" data-key="guideBreathBody">ערכים גבוהים עלולים להעיד על נשימה לא סדירה.</div></div>
     <div class="guide-card">
       <div class="guide-card-hdr"><div class="guide-icon">🎯</div><div><div class="guide-card-title" data-key="guideScoreTitle">מד האמינות</div><div class="guide-card-sub" data-key="guideScoreSub">מה המספרים אומרים</div></div></div>
       <div class="score-legend">
-        <div class="legend-row" style="background:#10b98115;"><div class="legend-dot" style="background:#10b981;"></div><div class="legend-text" data-key="legendHigh">65–100% — מאפיינים יציבים ועקביים</div></div>
-        <div class="legend-row" style="background:#f59e0b15;"><div class="legend-dot" style="background:#f59e0b;"></div><div class="legend-text" data-key="legendMid">38–65% — זוהו חריגות מסוימות</div></div>
-        <div class="legend-row" style="background:#ef444415;"><div class="legend-dot" style="background:#ef4444;"></div><div class="legend-text" data-key="legendLow">0–38% — מספר מאפיינים חריגים</div></div>
+        <div class="legend-row" style="background:#10b98115;"><div class="legend-dot" style="background:#10b981;"></div><div class="legend-text" data-key="legendHigh">65-100% — יציב</div></div>
+        <div class="legend-row" style="background:#f59e0b15;"><div class="legend-dot" style="background:#f59e0b;"></div><div class="legend-text" data-key="legendMid">38-65% — חריגות מסוימות</div></div>
+        <div class="legend-row" style="background:#ef444415;"><div class="legend-dot" style="background:#ef4444;"></div><div class="legend-text" data-key="legendLow">0-38% — מספר מאפיינים חריגים</div></div>
       </div>
-      <div class="guide-card-body" style="border-top:1px solid var(--border);padding-top:8px;margin-top:8px;" data-key="guideScoreNote">⚠️ הציון אינו מבחן מדעי. אינדיקציה לתרגול ומשוב אישי בלבד.</div>
+      <div class="guide-card-body" style="border-top:1px solid var(--border);padding-top:8px;margin-top:8px;" data-key="guideScoreNote">⚠️ אינדיקציה לתרגול אישי בלבד.</div>
     </div>
   </div>
 </div>
@@ -1736,7 +1728,7 @@ async function signOut() {
     <div class="settings-section-lbl" data-key="setSecLang">שפה</div>
     <div class="settings-card">
       <div class="settings-row">
-        <div><div class="settings-row-lbl" data-key="setLangLabel">שפת ממשק</div></div>
+        <div class="settings-row-lbl" data-key="setLangLabel">שפת ממשק</div>
         <div style="display:flex;gap:5px;">
           <button class="lang-opt active" id="sLangHe" onclick="setLang('he')">עב</button>
           <button class="lang-opt" id="sLangEn" onclick="setLang('en')">EN</button>
@@ -1756,14 +1748,8 @@ async function signOut() {
     </div>
     <div class="settings-section-lbl" data-key="setSecData">נתונים</div>
     <div class="settings-card">
-      <div class="settings-row">
-        <div class="settings-row-lbl" data-key="setSavedContacts">אנשי קשר שמורים</div>
-        <div class="settings-row-val" id="setContactCount">0</div>
-      </div>
-      <div class="settings-row">
-        <div><div class="settings-row-lbl" data-key="setStorageLabel">אחסון</div><div class="settings-row-sub" data-key="setStorageSub">מקומי על המכשיר בלבד</div></div>
-        <div class="settings-row-val" data-key="setStorageVal">מקומי</div>
-      </div>
+      <div class="settings-row"><div class="settings-row-lbl" data-key="setSavedContacts">אנשי קשר שמורים</div><div class="settings-row-val" id="setContactCount">0</div></div>
+      <div class="settings-row"><div><div class="settings-row-lbl" data-key="setStorageLabel">אחסון</div><div class="settings-row-sub" data-key="setStorageSub">מקומי על המכשיר בלבד</div></div><div class="settings-row-val" data-key="setStorageVal">מקומי</div></div>
     </div>
     <button class="danger-btn" onclick="confirmResetAll()" data-key="setResetBtn">🗑 מחק את כל הנתונים</button>
     <div class="settings-section-lbl" data-key="setSecAbout">אודות</div>
@@ -1775,5 +1761,64 @@ async function signOut() {
   </div>
 </div>
 
+<script>
+function renderHistory(){
+  var contacts=loadContacts(),all=[];
+  Object.values(contacts).forEach(function(ct){(ct.sessions||[]).forEach(function(s){all.push({name:ct.name,score:s.score,date:s.date,duration:s.duration||''});});});
+  all.sort(function(a,b){return b.date-a.date;});
+  var list=document.getElementById('histList'),empty=document.getElementById('histEmpty');
+  var avg=document.getElementById('hStatAvg'),best=document.getElementById('hStatBest'),cnt=document.getElementById('hStatCount');
+  if(all.length===0){list.innerHTML='';list.appendChild(empty);empty.style.display='block';avg.textContent='--';best.textContent='--';cnt.textContent='0';drawBigHistChart([]);return;}
+  empty.style.display='none';
+  var scores=all.map(function(s){return s.score;});
+  var av=Math.round(scores.reduce(function(a,b){return a+b;},0)/scores.length);
+  var bv=Math.max.apply(null,scores);
+  avg.textContent=av+'%'; avg.style.color=av>65?'#10b981':av>38?'#f59e0b':'#ef4444';
+  best.textContent=bv+'%'; cnt.textContent=all.length;
+  drawBigHistChart(all.slice(0,30).reverse().map(function(s){return s.score;}));
+  list.innerHTML='';
+  all.slice(0,25).forEach(function(s){
+    var col=s.score>65?'#10b981':s.score>38?'#f59e0b':'#ef4444';
+    var loc=lang==='en'?'en-US':lang==='ar'?'ar-SA':'he-IL';
+    var dt=new Date(s.date).toLocaleDateString(loc,{day:'2-digit',month:'2-digit',year:'2-digit'});
+    var item=document.createElement('div');item.className='hist-item';
+    item.innerHTML='<div><div class="hist-item-name">'+s.name+'</div><div class="hist-item-meta">'+dt+(s.duration?' · '+s.duration:'')+'</div></div><div class="hist-item-score" style="color:'+col+'">'+s.score+'%</div>';
+    list.appendChild(item);
+  });
+}
+function drawBigHistChart(scores){
+  var canvas=document.getElementById('histBigCanvas');if(!canvas)return;
+  var dpr=window.devicePixelRatio||1;
+  canvas.width=canvas.offsetWidth*dpr;canvas.height=140*dpr;
+  var ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,pd=10*dpr;
+  ctx.fillStyle='#0f1623';ctx.fillRect(0,0,w,h);
+  if(scores.length<2){ctx.fillStyle='#2a4060';ctx.font=(10*dpr)+'px Inter';ctx.textAlign='center';ctx.fillText(t('waitingData'),w/2,h/2);return;}
+  for(var i=1;i<scores.length;i++){
+    var v=scores[i],pv=scores[i-1];
+    var x=pd+(i/(scores.length-1))*(w-pd*2),y=h-pd-(v/100)*(h-pd*2);
+    var px=pd+((i-1)/(scores.length-1))*(w-pd*2),py=h-pd-(pv/100)*(h-pd*2);
+    var col=v>65?'#10b981':v>38?'#f59e0b':'#ef4444';
+    ctx.strokeStyle=col;ctx.lineWidth=2*dpr;ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(x,y);ctx.stroke();
+  }
+}
+function renderSettings(){
+  document.getElementById('setContactCount').textContent=Object.keys(loadContacts()).length;
+  ['He','En','Ar'].forEach(function(l){var b=document.getElementById('sLang'+l);if(b)b.classList.toggle('active',lang===l.toLowerCase());});
+  var gs=document.getElementById('settingsGainSlider'),gv=document.getElementById('settingsGainVal');
+  if(gs)gs.value=gainLevel;if(gv)gv.textContent='x'+gainLevel;
+}
+function updateGainFromSettings(val){
+  gainLevel=parseFloat(val);
+  document.getElementById('settingsGainVal').textContent='x'+gainLevel;
+  if(typeof gainNode!=='undefined'&&gainNode){try{gainNode.gain.value=gainLevel;}catch(e){}}
+}
+function confirmResetAll(){
+  if(confirm(t('confirmReset')||'מחוק את כל הנתונים?')){
+    localStorage.removeItem('liedar_c');
+    showAlert(t('resetDone')||'נמחק',2000);
+    renderSettings();
+  }
+}
+</script>
 </body>
 </html>
