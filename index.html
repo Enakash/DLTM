@@ -868,7 +868,7 @@ const T = {
     legendHigh:'65-100% — יציב', legendMid:'38-65% — חריגות מסוימות', legendLow:'0-38% — מספר מאפיינים חריגים', guideScoreNote:'אינדיקציה לתרגול אישי בלבד.',
     setSecLang:'שפה', setLangLabel:'שפת ממשק', setSecAudio:'אודיו', setGainLabel:'רגישות מיקרופון', setGainSub:'גבוה יותר לקליטה מרחוק',
     setSecData:'נתונים', setSavedContacts:'אנשי קשר שמורים', setStorageLabel:'אחסון', setStorageSub:'מקומי על המכשיר', setStorageVal:'מקומי',
-    setResetBtn:'מחק כל הנתונים', setSecAbout:'אודות', setPrivacyLabel:'מדיניות פרטיות', setPrivacyLink:'צפה', setTermsLabel:'תנאי שימוש', setTermsLink:'צפה',
+    setResetBtn:'מחק כל הנתונים', setSecAbout:'אודות', setPrivacyLabel:'מדיניות פרטיות', setPrivacyLink:'צפה', setTermsLabel:'תנאי שימוש', setTermsLink:'צפה', setDeleteAccount:'🗑 מחיקת חשבון',
     confirmReset:'למחוק את כל הנתונים?', resetDone:'נמחק'
   },
   en:{
@@ -915,7 +915,7 @@ const T = {
     setSecData:'Data', setSavedContacts:'Saved Contacts', setStorageLabel:'Storage',
     setStorageSub:'Local on device only', setStorageVal:'Local',
     setResetBtn:'Delete All Data', setSecAbout:'About', setPrivacyLabel:'Privacy Policy',
-    setPrivacyLink:'View', setTermsLabel:'Terms of Use', setTermsLink:'View',
+    setPrivacyLink:'View', setTermsLabel:'Terms of Use', setTermsLink:'View', setDeleteAccount:'🗑 Delete Account',
     confirmReset:'Delete all data?', resetDone:'Cleared'
   },
   ar:{
@@ -979,7 +979,7 @@ const T = {
     setStorageSub:'محلي فقط', setStorageVal:'محلي',
     setResetBtn:'حذف جميع البيانات', setSecAbout:'حول',
     setPrivacyLabel:'سياسة الخصوصية', setPrivacyLink:'عرض',
-    setTermsLabel:'شروط الاستخدام', setTermsLink:'عرض',
+    setTermsLabel:'شروط الاستخدام', setTermsLink:'عرض', setDeleteAccount:'🗑 حذف الحساب',
     confirmReset:'حذف جميع البيانات؟', resetDone:'تم الحذف'
   }
 };
@@ -1752,6 +1752,11 @@ async function signOut() {
       <div class="settings-row"><div><div class="settings-row-lbl" data-key="setStorageLabel">אחסון</div><div class="settings-row-sub" data-key="setStorageSub">מקומי על המכשיר בלבד</div></div><div class="settings-row-val" data-key="setStorageVal">מקומי</div></div>
     </div>
     <button class="danger-btn" onclick="confirmResetAll()" data-key="setResetBtn">🗑 מחק את כל הנתונים</button>
+    <a href="https://enakash.github.io/DLTM/delete-account.html" target="_blank"
+      style="display:block;width:100%;padding:13px;border-radius:12px;border:1px solid #ef444460;
+             background:transparent;color:#ef4444;font-size:13px;font-weight:600;
+             text-align:center;text-decoration:none;margin-top:8px;font-family:var(--font);"
+      data-key="setDeleteAccount">🗑 מחיקת חשבון</a>
     <div class="settings-section-lbl" data-key="setSecAbout">אודות</div>
     <div class="settings-card">
       <div class="settings-row"><div class="settings-row-lbl">LIEDAR</div><div class="settings-row-val">v1.0</div></div>
