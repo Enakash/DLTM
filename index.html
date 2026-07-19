@@ -356,78 +356,78 @@ body{
     <!-- Language selector on auth screen -->
     <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;">
       <button class="lang-btn" id="authLangHe" onclick="setAuthLang('he')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;font-family:var(--font);">עברית</button>
-      <button class="lang-btn active" id="authLangEn" onclick="setAuthLang('en')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;font-family:var(--font);">English</button>
+      <button class="lang-btn active" id="authLangEn" onclick="setAuthLang('en')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;cursor:pointer;font-family:var(--font);">English</button>
       <button class="lang-btn" id="authLangAr" onclick="setAuthLang('ar')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;font-family:var(--font);">العربية</button>
     </div>
     <div class="auth-tabs">
-      <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')" data-key="authTabLogin">כניסה</button>
-      <button class="auth-tab" id="authTabRegister" onclick="switchAuthTab('register')" data-key="authTabRegister">הרשמה</button>
+      <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')" data-key="authTabLogin"></button>
+      <button class="auth-tab" id="authTabRegister" onclick="switchAuthTab('register')" data-key="authTabRegister"></button>
     </div>
     <!-- LOGIN -->
     <div id="authLogin">
       <div class="auth-field">
-        <label class="auth-label" data-key="authEmailLabel">אימייל</label>
+        <label class="auth-label" data-key="authEmailLabel"></label>
         <input class="auth-input" id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com">
       </div>
       <div class="auth-field">
-        <label class="auth-label" data-key="authPassLabel">סיסמה</label>
+        <label class="auth-label" data-key="authPassLabel"></label>
         <input class="auth-input" id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••">
       </div>
       <label class="auth-remember">
         <input type="checkbox" id="rememberMe">
-        <span data-key="rememberMeLabel">זכור אותי</span>
+        <span data-key="rememberMeLabel"></span>
       </label>
-      <button class="auth-btn" id="loginBtn" onclick="doLogin()" data-key="authLoginBtn">כניסה</button>
-      <div class="auth-forgot"><a onclick="switchAuthTab('forgot')" data-key="authForgotLink">שכחתי סיסמה</a></div>
+      <button class="auth-btn" id="loginBtn" onclick="doLogin()" data-key="authLoginBtn"></button>
+      <div class="auth-forgot"><a onclick="switchAuthTab('forgot')" data-key="authForgotLink"></a></div>
     </div>
     <!-- REGISTER -->
     <div id="authRegister" style="display:none;">
       <div class="auth-field">
-        <label class="auth-label" data-key="authEmailLabel">אימייל</label>
+        <label class="auth-label" data-key="authEmailLabel"></label>
         <input class="auth-input" id="regEmail" type="email" autocomplete="email" placeholder="you@example.com">
       </div>
       <div class="auth-field">
-        <label class="auth-label" data-key="authPassLabel">סיסמה</label>
+        <label class="auth-label" data-key="authPassLabel"></label>
         <input class="auth-input" id="regPass" type="password" autocomplete="new-password" placeholder="•••••• (6+ תווים)">
       </div>
       <div class="auth-field">
-        <label class="auth-label" data-key="authPassConfirmLabel">אימות סיסמה</label>
+        <label class="auth-label" data-key="authPassConfirmLabel"></label>
         <input class="auth-input" id="regPassConfirm" type="password" autocomplete="new-password" placeholder="••••••">
       </div>
       <div class="auth-terms">
         <input type="checkbox" id="termsCheck">
         <div class="auth-terms-text" data-key="authTermsText">קראתי ואני מסכים/ה ל<a href="https://enakash.github.io/DLTM/terms.html" target="_blank" data-key="authTermsLink">תנאי השימוש</a> ול<a href="https://enakash.github.io/DLTM/privacy.html" target="_blank" data-key="authPrivacyLink">מדיניות הפרטיות</a></div>
       </div>
-      <button class="auth-btn" id="regBtn" onclick="doRegister()" data-key="authRegisterBtn">הרשמה</button>
+      <button class="auth-btn" id="regBtn" onclick="doRegister()" data-key="authRegisterBtn"></button>
     </div>
     <!-- FORGOT -->
     <div id="authForgot" style="display:none;">
       <div class="auth-field">
-        <label class="auth-label" data-key="authEmailLabel">אימייל</label>
+        <label class="auth-label" data-key="authEmailLabel"></label>
         <input class="auth-input" id="forgotEmail" type="email" placeholder="you@example.com">
       </div>
-      <button class="auth-btn" onclick="doForgot()" data-key="authForgotBtn">שלח קישור איפוס</button>
-      <div class="auth-forgot" style="margin-top:10px;"><a onclick="switchAuthTab('login')" data-key="authBackLogin">חזרה לכניסה</a></div>
+      <button class="auth-btn" onclick="doForgot()" data-key="authForgotBtn"></button>
+      <div class="auth-forgot" style="margin-top:10px;"><a onclick="switchAuthTab('login')" data-key="authBackLogin"></a></div>
     </div>
     <!-- VERIFY -->
     <div id="authVerify" style="display:none;">
       <div class="auth-verify">
         <div class="auth-verify-icon">📧</div>
-        <div class="auth-verify-title" data-key="authVerifyTitle">נא לאשר את האימייל</div>
-        <div class="auth-verify-sub" data-key="authVerifySub">שלחנו קישור אימות. בדוק את תיבת הדואר שלך.</div>
-        <div class="auth-verify-resend" onclick="resendVerify()" data-key="authResend">שלח שוב</div>
+        <div class="auth-verify-title" data-key="authVerifyTitle"></div>
+        <div class="auth-verify-sub" data-key="authVerifySub"></div>
+        <div class="auth-verify-resend" onclick="resendVerify()" data-key="authResend"></div>
       </div>
     </div>
     <!-- Google -->
     <div id="authGoogleSection">
       <div class="auth-divider">
         <div class="auth-divider-line"></div>
-        <span class="auth-divider-text" data-key="authOrWith">או</span>
+        <span class="auth-divider-text" data-key="authOrWith"></span>
         <div class="auth-divider-line"></div>
       </div>
       <button class="auth-google-btn" onclick="doGoogleLogin()">
         <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
-        <span data-key="authGoogleBtn">כניסה עם Google</span>
+        <span data-key="authGoogleBtn"></span>
       </button>
     </div>
     <div class="auth-msg" id="authMsg"></div>
@@ -437,7 +437,7 @@ body{
 <!-- USER INFO BAR -->
 <div class="user-bar" id="userBar">
   <span class="user-bar-email" id="userEmail"></span>
-  <button class="user-bar-signout" onclick="signOut()" data-key="signOutBtn">יציאה</button>
+  <button class="user-bar-signout" onclick="signOut()" data-key="signOutBtn"></button>
 </div>
 
 <!-- TOPBAR -->
@@ -1571,16 +1571,32 @@ window.addEventListener('resize', resizeCanvases);
 
 function setAuthLang(l) {
   setLang(l);
-  // Update auth lang buttons active state
-  ['He','En','Ar'].forEach(function(x) {
-    var b = document.getElementById('authLang'+x);
-    if (b) {
-      var isActive = (l === x.toLowerCase());
-      b.style.background = isActive ? 'var(--accent)' : 'transparent';
-      b.style.color = isActive ? '#fff' : 'var(--muted2)';
-      b.style.borderColor = isActive ? 'var(--accent)' : 'var(--border2)';
+  // Explicitly update auth tab texts (in case querySelectorAll misses them)
+  var authKeys = ['authTabLogin','authTabRegister','authEmailLabel','authPassLabel',
+    'authPassConfirmLabel','authLoginBtn','authRegisterBtn','authForgotLink',
+    'authForgotBtn','authBackLogin','authGoogleBtn','authOrWith',
+    'authVerifyTitle','authVerifySub','authResend','rememberMeLabel','signOutBtn'];
+  authKeys.forEach(function(k) {
+    if (T[l] && T[l][k]) {
+      document.querySelectorAll('[data-key="'+k+'"]').forEach(function(el) {
+        el.textContent = T[l][k];
+      });
     }
   });
+  // Update auth lang button styles
+  var map = {He:'he', En:'en', Ar:'ar'};
+  Object.keys(map).forEach(function(x) {
+    var b = document.getElementById('authLang'+x);
+    if (!b) return;
+    var active = (l === map[x]);
+    b.style.background = active ? 'var(--accent)' : 'transparent';
+    b.style.color = active ? '#fff' : 'var(--muted2)';
+    b.style.borderColor = active ? 'var(--accent)' : 'var(--border2)';
+    b.style.fontWeight = active ? '700' : 'normal';
+  });
+  // RTL for auth box
+  var box = document.querySelector('.auth-box');
+  if (box) box.style.direction = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
 }
 
 // ── SUPABASE AUTH ──
