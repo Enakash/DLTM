@@ -353,6 +353,12 @@ body{
       <div class="auth-wordmark">LIEDAR</div>
       <div class="auth-sub-text">VOICE ANALYSIS</div>
     </div>
+    <!-- Language selector on auth screen -->
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;">
+      <button class="lang-btn" id="authLangHe" onclick="setAuthLang('he')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;font-family:var(--font);">עברית</button>
+      <button class="lang-btn active" id="authLangEn" onclick="setAuthLang('en')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;font-family:var(--font);">English</button>
+      <button class="lang-btn" id="authLangAr" onclick="setAuthLang('ar')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;font-family:var(--font);">العربية</button>
+    </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')" data-key="authTabLogin">כניסה</button>
       <button class="auth-tab" id="authTabRegister" onclick="switchAuthTab('register')" data-key="authTabRegister">הרשמה</button>
@@ -983,10 +989,15 @@ const T = {
     confirmReset:'حذف جميع البيانات؟', resetDone:'تم الحذف'
   }
 };
-let lang='he';
+// ── LANGUAGE INIT ──
+var _savedLang = localStorage.getItem('liedar_lang');
+var _browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+var _detectedLang = _browserLang.startsWith('he') ? 'he' : _browserLang.startsWith('ar') ? 'ar' : 'en';
+var lang = _savedLang || _detectedLang;
 function t(k,a){ const v=T[lang][k]; return typeof v==='function'?v(a):v; }
 function setLang(l){
   lang=l;
+  localStorage.setItem('liedar_lang', l);
   document.documentElement.lang=l;
   document.documentElement.dir=(l==='he'||l==='ar')?'rtl':'ltr';
   // Update lang buttons in settings screen
@@ -1557,9 +1568,24 @@ window.addEventListener('resize', resizeCanvases);
     });
   }
 
+
+function setAuthLang(l) {
+  setLang(l);
+  // Update auth lang buttons active state
+  ['He','En','Ar'].forEach(function(x) {
+    var b = document.getElementById('authLang'+x);
+    if (b) {
+      var isActive = (l === x.toLowerCase());
+      b.style.background = isActive ? 'var(--accent)' : 'transparent';
+      b.style.color = isActive ? '#fff' : 'var(--muted2)';
+      b.style.borderColor = isActive ? 'var(--accent)' : 'var(--border2)';
+    }
+  });
+}
+
 // ── SUPABASE AUTH ──
-const SUPA_URL = 'https://fllqlcofglxvygslfbiy.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbHFsY29mZ2x4dnlnc2xmYml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMjU0MzgsImV4cCI6MjA5OTYwMTQzOH0.mASmyJNF0qqhZbyMPkBbG3eyPMN9b8P87BC_WB-fpNE';
+const SUPA_URL = 'https://YOUR_PROJECT.supabase.co';
+const SUPA_KEY = 'YOUR_ANON_KEY';
 const _supa = (typeof supabase !== 'undefined' && !SUPA_URL.includes('YOUR_PROJECT') && !SUPA_KEY.includes('YOUR_ANON'))
   ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
 if (!_supa) console.warn('Supabase not configured');
@@ -1568,6 +1594,8 @@ var _currentUser = null;
 var _pendingEmail = '';
 
 window.addEventListener('DOMContentLoaded', function() {
+  // Apply detected/saved language immediately
+  setAuthLang(lang);
   console.log('Supabase init:', _supa ? 'OK' : 'FAILED - check SUPA_URL and SUPA_KEY');
   if (!_supa) { showAppNoAuth(); return; }
   _supa.auth.getSession().then(function(res) {
@@ -1659,7 +1687,10 @@ async function doRegister() {
   var { data, error } = await _supa.auth.signUp({ email, password: pass });
   btn.disabled = false; btn.textContent = t('authRegisterBtn');
   if (error) { showAuthMsg(error.message, 'error'); return; }
-  _pendingEmail = email; switchAuthTab('verify');
+  // Auto-login after registration - no email verification required
+  if (data && data.user) {
+    onUserLoggedIn(data.user);
+  }
 }
 
 async function doForgot() {
