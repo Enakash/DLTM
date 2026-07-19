@@ -354,10 +354,10 @@ body{
       <div class="auth-sub-text">VOICE ANALYSIS</div>
     </div>
     <!-- Language selector on auth screen -->
-    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;">
-      <button class="lang-btn" id="authLangHe" onclick="setAuthLang('he')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;font-family:var(--font);">עברית</button>
-      <button class="lang-btn active" id="authLangEn" onclick="setAuthLang('en')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;cursor:pointer;font-family:var(--font);">English</button>
-      <button class="lang-btn" id="authLangAr" onclick="setAuthLang('ar')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;font-family:var(--font);">العربية</button>
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;direction:ltr;">
+      <button id="authLangHe" onclick="setAuthLang('he')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;font-family:var(--font);">עברית</button>
+      <button id="authLangEn" onclick="setAuthLang('en')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;cursor:pointer;font-family:var(--font);font-weight:700;">English</button>
+      <button id="authLangAr" onclick="setAuthLang('ar')" style="padding:5px 14px;border-radius:14px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;font-family:var(--font);">العربية</button>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')" data-key="authTabLogin"></button>
@@ -986,7 +986,7 @@ const T = {
     setResetBtn:'حذف جميع البيانات', setSecAbout:'حول',
     setPrivacyLabel:'سياسة الخصوصية', setPrivacyLink:'عرض',
     setTermsLabel:'شروط الاستخدام', setTermsLink:'عرض', setDeleteAccount:'🗑 حذف الحساب',
-    confirmReset:'حذف جميع البيانات؟', resetDone:'تم الحذف'
+    confirmReset:'حذف جميع البيانات؟', resetDone:'تم الحذف', signOutBtn:'خروج', rememberMeLabel:'تذكّرني', authTabLogin:'دخول', authTabRegister:'تسجيل', authEmailLabel:'البريد الإلكتروني', authPassLabel:'كلمة المرور', authPassConfirmLabel:'تأكيد كلمة المرور', authTermsText:'أوافق على ', authTermsLink:'شروط الاستخدام', authPrivacyLink:'سياسة الخصوصية', authLoginBtn:'دخول', authRegisterBtn:'تسجيل', authForgotLink:'نسيت كلمة المرور', authForgotBtn:'إرسال رابط إعادة التعيين', authBackLogin:'عودة لتسجيل الدخول', authGoogleBtn:'دخول بحساب Google', authOrWith:'أو', authVerifyTitle:'يُرجى تأكيد البريد', authVerifySub:'أرسلنا رابط تحقق. تحقق من بريدك.', authResend:'إعادة الإرسال', authForgotSent:'تم الإرسال', authErrFields:'يُرجى ملء جميع الحقول', authErrTerms:'يجب الموافقة على الشروط', authErrPassMatch:'كلمتا المرور غير متطابقتين', authErrPassShort:'كلمة المرور 6 أحرف على الأقل'
   }
 };
 // ── LANGUAGE INIT ──
@@ -1576,13 +1576,11 @@ function setAuthLang(l) {
     'authPassConfirmLabel','authLoginBtn','authRegisterBtn','authForgotLink',
     'authForgotBtn','authBackLogin','authGoogleBtn','authOrWith',
     'authVerifyTitle','authVerifySub','authResend','rememberMeLabel','signOutBtn'];
+  if (typeof T === 'undefined' || !T[l]) return;
   authKeys.forEach(function(k) {
-    if (T[l] && T[l][k]) {
+    if (T[l][k]) {
       document.querySelectorAll('[data-key="'+k+'"]').forEach(function(el) {
-        // authTermsText has links inside - update text nodes only
-        if (k === 'authTermsText') {
-          // handled separately below
-        } else {
+        if (k !== 'authTermsText') {
           el.textContent = T[l][k];
         }
       });
@@ -1609,9 +1607,15 @@ function setAuthLang(l) {
     b.style.borderColor = active ? 'var(--accent)' : 'var(--border2)';
     b.style.fontWeight = active ? '700' : 'normal';
   });
-  // RTL for auth box
+  // RTL for auth box - but keep lang buttons row always LTR
   var box = document.querySelector('.auth-box');
-  if (box) box.style.direction = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
+  if (box) {
+    box.style.direction = (l==='he'||l==='ar') ? 'rtl' : 'ltr';
+    box.style.textAlign = (l==='he'||l==='ar') ? 'right' : 'left';
+  }
+  // Keep lang button row always LTR regardless
+  var langRow = box ? box.querySelector('div[style*="direction:ltr"]') : null;
+  if (langRow) langRow.style.direction = 'ltr';
 }
 
 // ── SUPABASE AUTH ──
