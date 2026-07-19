@@ -18,7 +18,7 @@
   --border:#1c2d42; --border2:#243552;
   --text:#e2e8f0; --muted:#4a6080; --muted2:#7a98b8; --accent:#3b82f6;
   --safe:#10b981; --warn:#f59e0b; --danger:#ef4444;
-  --font:', signOutBtn:'خروج', rememberMeLabel:'تذكّرني', authTabLogin:'دخول', authTabRegister:'تسجيل', authEmailLabel:'البريد', authPassLabel:'كلمة المرور', authPassConfirmLabel:'تأكيد كلمة المرور', authTermsText:'أوافق على ', authTermsLink:'شروط الاستخدام', authPrivacyLink:'سياسة الخصوصية', authLoginBtn:'دخول', authRegisterBtn:'تسجيل', authForgotLink:'نسيت كلمة المرور', authForgotBtn:'إرسال رابط', authBackLogin:'عودة للدخول', authGoogleBtn:'دخول بحساب Google', authOrWith:'أو', authVerifyTitle:'يُرجى تأكيد البريد', authVerifySub:'أرسلنا رابط تحقق.', authResend:'إعادة الإرسال', authForgotSent:'تم الإرسال', authErrFields:'يُرجى ملء جميع الحقول', authErrTerms:'يجب الموافقة على الشروط', authErrPassMatch:'كلمتا المرور غير متطابقتين', authErrPassShort:'كلمة المرور 6 أحرف على الأقل'Inter',-apple-system,sans-serif;
+  --font:', signOutBtn:'خروج', rememberMeLabel:'تذكّرني', authTabLogin:'دخول', authTabRegister:'تسجيل', authEmailLabel:'البريد', authPassLabel:'كلمة المرور', authPassConfirmLabel:'تأكيد كلمة المرور', authTermsText:'أوافق على ', authTermsText:'أوافق على ', authTermsLink:'شروط الاستخدام', authPrivacyLink:'سياسة الخصوصية', authLoginBtn:'دخول', authRegisterBtn:'تسجيل', authForgotLink:'نسيت كلمة المرور', authForgotBtn:'إرسال رابط', authBackLogin:'عودة للدخول', authGoogleBtn:'دخول بحساب Google', authOrWith:'أو', authVerifyTitle:'يُرجى تأكيد البريد', authVerifySub:'أرسلنا رابط تحقق.', authResend:'إعادة الإرسال', authForgotSent:'تم الإرسال', authErrFields:'يُرجى ملء جميع الحقول', authErrTerms:'يجب الموافقة على الشروط', authErrPassMatch:'كلمتا المرور غير متطابقتين', authErrPassShort:'كلمة المرور 6 أحرف على الأقل'Inter',-apple-system,sans-serif;
   --mono:'JetBrains Mono','Courier New',monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -396,7 +396,7 @@ body{
       </div>
       <div class="auth-terms">
         <input type="checkbox" id="termsCheck">
-        <div class="auth-terms-text" data-key="authTermsText">קראתי ואני מסכים/ה ל<a href="https://enakash.github.io/DLTM/terms.html" target="_blank" data-key="authTermsLink">תנאי השימוש</a> ול<a href="https://enakash.github.io/DLTM/privacy.html" target="_blank" data-key="authPrivacyLink">מדיניות הפרטיות</a></div>
+        <div class="auth-terms-text" data-key="authTermsText"><a href="https://enakash.github.io/DLTM/terms.html" target="_blank" data-key="authTermsLink"></a> <a href="https://enakash.github.io/DLTM/privacy.html" target="_blank" data-key="authPrivacyLink"></a></div>
       </div>
       <button class="auth-btn" id="regBtn" onclick="doRegister()" data-key="authRegisterBtn"></button>
     </div>
@@ -861,7 +861,7 @@ const T = {
     expRate:'שינוי עקבי בקצב הדיבור',
     expPitch:'עלייה בגובה הקול',
     expVolume:'תנודות חדה בעוצמת הקול',
-    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.', signOutBtn:'יציאה', rememberMeLabel:'זכור אותי', authTabLogin:'כניסה', authTabRegister:'הרשמה', authEmailLabel:'אימייל', authPassLabel:'סיסמא', authPassConfirmLabel:'אימות סיסמא', authTermsText:'קראתי ומסכימ/ה ל', authTermsLink:'תנאי השימוש', authPrivacyLink:'מדיניות הפרטיות', authLoginBtn:'כניסה', authRegisterBtn:'הרשמה', authForgotLink:'שכחתי סיסמה', authForgotBtn:'שלח קישור איפוס', authBackLogin:'חזרה לכניסה', authGoogleBtn:'כניסה עם Google', authOrWith:'או', authVerifyTitle:'נא לאשר את האימייל', authVerifySub:'שלחנו קישור אימות. בדוק את תיבת הדואר.', authResend:'שלח שוב', authForgotSent:'קישור נשלח', authErrFields:'מלא את כל השדות', authErrTerms:'יש לאשר את תנאי השימוש', authErrPassMatch:'הסיסמאות אינן תואמות', authErrPassShort:'סיסמא מינימאלית 6 תווים',
+    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.', signOutBtn:'יציאה', rememberMeLabel:'זכור אותי', authTabLogin:'כניסה', authTabRegister:'הרשמה', authEmailLabel:'אימייל', authPassLabel:'סיסמא', authPassConfirmLabel:'אימות סיסמא', authTermsText:'קראתי ומסכימ/ה ל', authTermsText:'קראתי ומסכימ/ה ל', authTermsLink:'תנאי השימוש', authPrivacyLink:'מדיניות הפרטיות', authLoginBtn:'כניסה', authRegisterBtn:'הרשמה', authForgotLink:'שכחתי סיסמה', authForgotBtn:'שלח קישור איפוס', authBackLogin:'חזרה לכניסה', authGoogleBtn:'כניסה עם Google', authOrWith:'או', authVerifyTitle:'נא לאשר את האימייל', authVerifySub:'שלחנו קישור אימות. בדוק את תיבת הדואר.', authResend:'שלח שוב', authForgotSent:'קישור נשלח', authErrFields:'מלא את כל השדות', authErrTerms:'יש לאשר את תנאי השימוש', authErrPassMatch:'הסיסמאות אינן תואמות', authErrPassShort:'סיסמא מינימאלית 6 תווים',
     tabHistory:'היסטוריה', tabGuide:'מדריך', tabSettings:'הגדרות',
     hStatAvg:'ממוצע', hStatBest:'שיא', hStatCount:'שיחות', histEmpty:'שמור שיחות כדי לראות היסטוריה',
     guidePitchTitle:'גובה קול', guidePitchSub:'תדר הקול', guidePitchBody:'עלייה פתאומית עלולה להעיד על מתח.',
@@ -904,7 +904,7 @@ const T = {
     expRate:'Consistent change in speech rate',
     expPitch:'Rise in vocal pitch',
     expVolume:'Sharp fluctuations in volume',
-    expNone:'No significant anomalies detected — voice features are normal.', signOutBtn:'Sign Out', rememberMeLabel:'Remember me', authTabLogin:'Login', authTabRegister:'Register', authEmailLabel:'Email', authPassLabel:'Password', authPassConfirmLabel:'Confirm Password', authTermsText:'I agree to the ', authTermsLink:'Terms of Use', authPrivacyLink:'Privacy Policy', authLoginBtn:'Sign In', authRegisterBtn:'Register', authForgotLink:'Forgot password', authForgotBtn:'Send Reset Link', authBackLogin:'Back to Login', authGoogleBtn:'Sign in with Google', authOrWith:'or', authVerifyTitle:'Please verify your email', authVerifySub:'We sent you a verification link. Check your inbox.', authResend:'Resend', authForgotSent:'Reset link sent', authErrFields:'Please fill in all fields', authErrTerms:'You must accept the Terms of Use', authErrPassMatch:'Passwords do not match', authErrPassShort:'Password must be at least 6 characters',
+    expNone:'No significant anomalies detected — voice features are normal.', signOutBtn:'Sign Out', rememberMeLabel:'Remember me', authTabLogin:'Login', authTabRegister:'Register', authEmailLabel:'Email', authPassLabel:'Password', authPassConfirmLabel:'Confirm Password', authTermsText:'I agree to the ', authTermsText:'I agree to the ', authTermsLink:'Terms of Use', authPrivacyLink:'Privacy Policy', authLoginBtn:'Sign In', authRegisterBtn:'Register', authForgotLink:'Forgot password', authForgotBtn:'Send Reset Link', authBackLogin:'Back to Login', authGoogleBtn:'Sign in with Google', authOrWith:'or', authVerifyTitle:'Please verify your email', authVerifySub:'We sent you a verification link. Check your inbox.', authResend:'Resend', authForgotSent:'Reset link sent', authErrFields:'Please fill in all fields', authErrTerms:'You must accept the Terms of Use', authErrPassMatch:'Passwords do not match', authErrPassShort:'Password must be at least 6 characters',
     tabHistory:'History', tabGuide:'Guide', tabSettings:'Settings',
     hStatAvg:'Average', hStatBest:'Best', hStatCount:'Sessions', histEmpty:'Save calls to see history',
     guidePitchTitle:'Pitch', guidePitchSub:'Frequency', guidePitchBody:'A sudden rise may indicate stress.',
@@ -1579,10 +1579,25 @@ function setAuthLang(l) {
   authKeys.forEach(function(k) {
     if (T[l] && T[l][k]) {
       document.querySelectorAll('[data-key="'+k+'"]').forEach(function(el) {
-        el.textContent = T[l][k];
+        // authTermsText has links inside - update text nodes only
+        if (k === 'authTermsText') {
+          // handled separately below
+        } else {
+          el.textContent = T[l][k];
+        }
       });
     }
   });
+  // Update terms text with links preserved
+  var termsDiv = document.querySelector('[data-key="authTermsText"]');
+  if (termsDiv && T[l].authTermsText) {
+    var termsLink = document.querySelector('[data-key="authTermsLink"]');
+    var privLink  = document.querySelector('[data-key="authPrivacyLink"]');
+    if (termsLink) termsLink.textContent = T[l].authTermsLink || 'Terms of Use';
+    if (privLink)  privLink.textContent  = T[l].authPrivacyLink || 'Privacy Policy';
+    // Update surrounding text node
+    if (termsDiv.childNodes[0]) termsDiv.childNodes[0].textContent = T[l].authTermsText || '';
+  }
   // Update auth lang button styles
   var map = {He:'he', En:'en', Ar:'ar'};
   Object.keys(map).forEach(function(x) {
