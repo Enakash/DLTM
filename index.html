@@ -396,7 +396,7 @@ body{
       </div>
       <div class="auth-terms">
         <input type="checkbox" id="termsCheck">
-        <div class="auth-terms-text" data-key="authTermsText"><a href="https://enakash.github.io/DLTM/terms.html" target="_blank" data-key="authTermsLink" style="color:var(--accent);text-decoration:underline;"></a><span data-key="authTermsAnd"> ו</span><a href="https://enakash.github.io/DLTM/privacy.html" target="_blank" data-key="authPrivacyLink" style="color:var(--accent);text-decoration:underline;"></a></div>
+        <div class="auth-terms-text" data-key="authTermsText"><span id="authTermsPrefix">קראתי ואני מסכים/ה ל</span><a href="https://enakash.github.io/DLTM/terms.html" target="_blank" data-key="authTermsLink" style="color:var(--accent);text-decoration:underline;"></a><span data-key="authTermsAnd"> ו</span><a href="https://enakash.github.io/DLTM/privacy.html" target="_blank" data-key="authPrivacyLink" style="color:var(--accent);text-decoration:underline;"></a></div>
       </div>
       <button class="auth-btn" id="regBtn" onclick="doRegister()" data-key="authRegisterBtn"></button>
     </div>
@@ -1575,7 +1575,7 @@ function setAuthLang(l) {
   var authKeys = ['authTabLogin','authTabRegister','authEmailLabel','authPassLabel',
     'authPassConfirmLabel','authLoginBtn','authRegisterBtn','authForgotLink',
     'authForgotBtn','authBackLogin','authGoogleBtn','authOrWith',
-    'authVerifyTitle','authVerifySub','authResend','rememberMeLabel','signOutBtn','authTermsAnd'];
+    'authVerifyTitle','authVerifySub','authResend','rememberMeLabel','signOutBtn','authTermsAnd','authTermsPrefix'];
   if (typeof T === 'undefined' || !T[l]) return;
   authKeys.forEach(function(k) {
     if (T[l][k]) {
@@ -1594,14 +1594,10 @@ function setAuthLang(l) {
   if (termsLink) termsLink.textContent = T[l] && T[l].authTermsLink ? T[l].authTermsLink : 'Terms of Use';
   if (privLink)  privLink.textContent  = T[l] && T[l].authPrivacyLink ? T[l].authPrivacyLink : 'Privacy Policy';
   if (termsAnd)  termsAnd.textContent  = T[l] && T[l].authTermsAnd ? T[l].authTermsAnd : ' and ';
-  if (termsDiv && termsDiv.childNodes[0] && T[l] && T[l].authTermsPrefix) {
-    // Set first text node = prefix
-    var firstText = termsDiv.childNodes[0];
-    if (firstText.nodeType === 3) {
-      firstText.textContent = T[l].authTermsPrefix;
-    } else {
-      termsDiv.insertBefore(document.createTextNode(T[l].authTermsPrefix), termsDiv.firstChild);
-    }
+  // Update terms prefix via dedicated element
+  var termsPrefix = document.getElementById('authTermsPrefix');
+  if (termsPrefix && T[l] && T[l].authTermsPrefix) {
+    termsPrefix.textContent = T[l].authTermsPrefix;
   }
   // Update auth lang button styles
   var map = {He:'he', En:'en', Ar:'ar'};
