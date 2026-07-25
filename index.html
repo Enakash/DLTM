@@ -437,7 +437,7 @@ body{
 <!-- USER INFO BAR -->
 <div class="user-bar" id="userBar">
   <span class="user-bar-email" id="userEmail"></span>
-  <button class="user-bar-signout" onclick="signOut()" data-key="signOutBtn"></button>
+  <button class="user-bar-signout" onclick="signOut()" data-key="signOutBtn">יציאה</button>
 </div>
 
 <!-- TOPBAR -->
@@ -1659,7 +1659,17 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 function showAppNoAuth() {
-  document.getElementById('authOverlay').style.display = 'none';
+  // Supabase not configured - still show auth screen so UI is visible
+  // Just add a note that auth is not configured
+  console.warn('Running without Supabase - auth overlay stays visible for testing');
+  // Show the overlay with a warning banner
+  var box = document.querySelector('.auth-box');
+  if (box) {
+    var warn = document.createElement('div');
+    warn.style.cssText = 'background:#1a0e0e;border:1px solid #5b1f1f;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:#fca5a5;text-align:center;';
+    warn.textContent = '⚠️ Supabase not configured — add your ANON_KEY';
+    box.insertBefore(warn, box.firstChild);
+  }
 }
 
 function onUserLoggedIn(user) {
@@ -1752,8 +1762,16 @@ async function resendVerify() {
 }
 
 async function signOut() {
-  if (!_supa) return;
-  await _supa.auth.signOut();
+  if (_supa) await _supa.auth.signOut();
+  // Always reset UI when signing out
+  _currentUser = null;
+  document.getElementById('authOverlay').style.display = 'flex';
+  var bar = document.getElementById('userBar');
+  if (bar) bar.classList.remove('visible');
+  var tb = document.querySelector('.topbar');
+  var nt = document.querySelector('.nav-tabs');
+  if (tb) tb.style.top = '0';
+  if (nt) nt.style.top = '57px';
 }
 </script>
 
