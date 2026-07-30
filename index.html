@@ -1797,6 +1797,26 @@ async function doForgot() {
 
 async function doGoogleLogin() {
   if (!_supa) return;
+  // Check if we're on register tab - if so, require terms agreement
+  var isRegisterTab = document.getElementById('authTabRegister').classList.contains('active');
+  if (isRegisterTab) {
+    var terms = document.getElementById('termsCheck');
+    if (!terms || !terms.checked) {
+      showAuthMsg(t('authErrTerms') || 'Please accept the Terms of Use', 'error');
+      // Highlight the terms checkbox
+      var termsRow = document.querySelector('.auth-terms');
+      if (termsRow) {
+        termsRow.style.background = '#1a0e0e';
+        termsRow.style.borderRadius = '8px';
+        termsRow.style.padding = '6px';
+        setTimeout(function(){ 
+          termsRow.style.background = ''; 
+          termsRow.style.padding = '';
+        }, 2000);
+      }
+      return;
+    }
+  }
   await _supa.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: 'https://liedar.store/' } });
 }
 
