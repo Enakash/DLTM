@@ -94,8 +94,7 @@
     <p class="page-sub">פעולה זו תמחק לצמיתות את חשבונך ואת כל הנתונים הקשורים אליו. לא ניתן לבטל פעולה זו.</p>
 
     <div class="warning-box">
-      ⚠️ <strong>שים לב:</strong> מחיקת החשבון תבטל את המנוי הפעיל שלך. לא יינתן החזר כספי יחסי אלא אם נדרש על פי חוק.<br><br>
-      🛒 <strong>חשוב:</strong> מחיקת החשבון <u>אינה</u> מבטלת אוטומטית מנוי פעיל ב-Google Play. עליך לבטל את המנוי ידנית דרך Google Play לפני המחיקה, אחרת תמשיך להיחייב.
+      ⚠️ <strong>שים לב:</strong> מחיקת החשבון היא פעולה בלתי הפיכה. כל נתוניך ימחקו לצמיתות. האפליקציה נמכרת ברכישה חד-פעמית — אין מנוי פעיל שיש לבטל.
     </div>
 
     <div class="field">
@@ -111,7 +110,6 @@
 
     <button class="delete-btn" id="he-btn" onclick="doDelete('he')">מחק את חשבוני לצמיתות</button>
     <div class="msg" id="he-msg"></div>
-    <a class="back-link" href="https://play.google.com/store/account/subscriptions" target="_blank" style="color:#fca5a5;display:block;text-align:center;margin-top:10px;font-size:12px;">ביטול מנוי ב-Google Play ←</a>
     <a class="back-link" href="https://enakash.github.io/DLTM">חזרה לאפליקציה</a>
   </div>
 
@@ -129,8 +127,7 @@
     <p class="page-sub">This action will permanently delete your account and all associated data. This cannot be undone.</p>
 
     <div class="warning-box">
-      ⚠️ <strong>Warning:</strong> Deleting your account will cancel your active subscription. No pro-rata refund will be issued unless required by law.<br><br>
-      🛒 <strong>Important:</strong> Deleting your account does <u>not</u> automatically cancel an active Google Play subscription. You must cancel it manually through Google Play before deleting your account, otherwise you will continue to be charged.
+      ⚠️ <strong>Warning:</strong> Account deletion is permanent and irreversible. All your data will be deleted. The App is sold as a one-time purchase — there is no active subscription to cancel.
     </div>
 
     <div class="field">
@@ -146,7 +143,6 @@
 
     <button class="delete-btn" id="en-btn" onclick="doDelete('en')">Permanently Delete My Account</button>
     <div class="msg" id="en-msg"></div>
-    <a class="back-link" href="https://play.google.com/store/account/subscriptions" target="_blank" style="color:#fca5a5;display:block;text-align:center;margin-top:10px;font-size:12px;">Cancel Google Play Subscription ←</a>
     <a class="back-link" href="https://enakash.github.io/DLTM">Back to App</a>
   </div>
 
@@ -164,8 +160,7 @@
     <p class="page-sub">ستؤدي هذه العملية إلى حذف حسابك وجميع البيانات المرتبطة به بشكل دائم. لا يمكن التراجع عن هذا الإجراء.</p>
 
     <div class="warning-box">
-      ⚠️ <strong>تنبيه:</strong> سيؤدي حذف الحساب إلى إلغاء اشتراكك النشط. لن يُردّ المبلغ المتبقي إلا وفقاً للقانون.<br><br>
-      🛒 <strong>مهم:</strong> حذف الحساب <u>لا</u> يلغي تلقائياً اشتراكاً نشطاً في Google Play. يجب عليك إلغاؤه يدوياً عبر Google Play قبل حذف الحساب، وإلا ستستمر الرسوم.
+      ⚠️ <strong>تنبيه:</strong> حذف الحساب إجراء دائم ولا يمكن التراجع عنه. ستُحذف جميع بياناتك نهائياً. يُباع التطبيق بدفعة واحدة — لا يوجد اشتراك نشط للإلغاء.
     </div>
 
     <div class="field">
@@ -181,7 +176,6 @@
 
     <button class="delete-btn" id="ar-btn" onclick="doDelete('ar')">حذف حسابي نهائياً</button>
     <div class="msg" id="ar-msg"></div>
-    <a class="back-link" href="https://play.google.com/store/account/subscriptions" target="_blank" style="color:#fca5a5;display:block;text-align:center;margin-top:10px;font-size:12px;">إلغاء اشتراك Google Play ←</a>
     <a class="back-link" href="https://enakash.github.io/DLTM">العودة إلى التطبيق</a>
   </div>
 
@@ -198,7 +192,7 @@
 // ── SUPABASE ──
 // Replace YOUR_ANON_KEY with your actual anon key
 const SUPA_URL = 'https://fllqlcofglxvygslfbiy.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbHFsY29mZ2x4dnlnc2xmYml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMjU0MzgsImV4cCI6MjA5OTYwMTQzOH0.mASmyJNF0qqhZbyMPkBbG3eyPMN9b8P87BC_WB-fpNE';
+const SUPA_KEY = 'YOUR_ANON_KEY';
 const _supa = (typeof supabase !== 'undefined' && !SUPA_KEY.includes('YOUR_ANON'))
   ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
 
