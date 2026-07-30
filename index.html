@@ -18,7 +18,7 @@
   --border:#1c2d42; --border2:#243552;
   --text:#e2e8f0; --muted:#4a6080; --muted2:#7a98b8; --accent:#3b82f6;
   --safe:#10b981; --warn:#f59e0b; --danger:#ef4444;
-  --font:', signOutBtn:'خروج', rememberMeLabel:'تذكّرني', authTabLogin:'دخول', authTabRegister:'تسجيل', authEmailLabel:'البريد', authPassLabel:'كلمة المرور', authPassConfirmLabel:'تأكيد كلمة المرور', authTermsText:'أوافق على ', authTermsText:'أوافق على ', authTermsLink:'شروط الاستخدام', authTermsAnd:' و', authTermsPrefix:'قرأت وأوافق على ', authPrivacyLink:'سياسة الخصوصية', authLoginBtn:'دخول', authRegisterBtn:'تسجيل', authForgotLink:'نسيت كلمة المرور', authForgotBtn:'إرسال رابط', authBackLogin:'عودة للدخول', authGoogleBtn:'دخول بحساب Google', authOrWith:'أو', authVerifyTitle:'يُرجى تأكيد البريد', authVerifySub:'أرسلنا رابط تحقق.', authResend:'إعادة الإرسال', authForgotSent:'تم الإرسال', authErrFields:'يُرجى ملء جميع الحقول', authErrTerms:'يجب الموافقة على الشروط', authErrPassMatch:'كلمتا المرور غير متطابقتين', authErrPassShort:'كلمة المرور 6 أحرف على الأقل'Inter',-apple-system,sans-serif;
+  --font:', signOutBtn:'خروج', rememberMeLabel:'تذكّرني', autoGainBtn:'تلقائي', autoGainOn:'تلقائي نشط', authTabLogin:'دخول', authTabRegister:'تسجيل', authEmailLabel:'البريد', authPassLabel:'كلمة المرور', authPassConfirmLabel:'تأكيد كلمة المرور', authTermsText:'أوافق على ', authTermsText:'أوافق على ', authTermsLink:'شروط الاستخدام', authTermsAnd:' و', authTermsPrefix:'قرأت وأوافق على ', authPrivacyLink:'سياسة الخصوصية', authLoginBtn:'دخول', authRegisterBtn:'تسجيل', authForgotLink:'نسيت كلمة المرور', authForgotBtn:'إرسال رابط', authBackLogin:'عودة للدخول', authGoogleBtn:'دخول بحساب Google', authOrWith:'أو', authVerifyTitle:'يُرجى تأكيد البريد', authVerifySub:'أرسلنا رابط تحقق.', authResend:'إعادة الإرسال', authForgotSent:'تم الإرسال', authErrFields:'يُرجى ملء جميع الحقول', authErrTerms:'يجب الموافقة على الشروط', authErrPassMatch:'كلمتا المرور غير متطابقتين', authErrPassShort:'كلمة المرور 6 أحرف على الأقل'Inter',-apple-system,sans-serif;
   --mono:'JetBrains Mono','Courier New',monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -507,12 +507,14 @@ body{
   <span>⚠️</span><span id="alertTxt"></span>
 </div>
 
-  <div class="gain-row" style="display:flex;align-items:center;gap:10px;margin-top:4px;width:100%;max-width:280px;">
+  <div class="gain-row" style="display:flex;align-items:center;gap:8px;margin-top:4px;width:100%;max-width:460px;padding:0 18px;box-sizing:border-box;">
     <span style="font-size:10px;color:var(--muted);font-family:var(--mono);white-space:nowrap;" data-key="gainLabel">רגישות</span>
-    <input type="range" id="gainSlider" min="1" max="12" value="4" step="0.5"
-      oninput="updateGain(this.value)"
+    <input type="range" id="gainSlider" min="1" max="12" value="1" step="0.5" oninput="updateGain(this.value)"
       style="flex:1;accent-color:var(--accent);cursor:pointer;height:4px;">
-    <span id="gainVal" style="font-size:11px;color:var(--accent);font-family:var(--mono);min-width:28px;">x4</span>
+    <span id="gainVal" style="font-size:11px;color:var(--accent);font-family:var(--mono);min-width:28px;">x1</span>
+    <button onclick="toggleAutoGain()" id="autoGainBtn" 
+      style="font-size:10px;padding:4px 10px;border-radius:10px;border:1px solid var(--border2);background:transparent;color:var(--muted2);cursor:pointer;font-family:var(--font);white-space:nowrap;" 
+      data-key="autoGainBtn">אוטו</button>
   </div>
 
 <!-- EQ BARS -->
@@ -666,6 +668,46 @@ body{
 
 <script>
 
+
+// ── AUTO GAIN ──
+var autoGainActive = false;
+var autoGainFrames = 0;
+var autoGainRmsSum = 0;
+
+function toggleAutoGain() {
+  autoGainActive = !autoGainActive;
+  var btn = document.getElementById('autoGainBtn');
+  if (btn) {
+    btn.style.background = autoGainActive ? 'var(--accent)' : 'transparent';
+    btn.style.color = autoGainActive ? '#fff' : 'var(--muted2)';
+    btn.style.borderColor = autoGainActive ? 'var(--accent)' : 'var(--border2)';
+    btn.textContent = autoGainActive ? (t('autoGainOn') || 'AUTO') : (t('autoGainBtn') || 'אוטו');
+  }
+  if (autoGainActive) {
+    // Reset counters
+    autoGainFrames = 0;
+    autoGainRmsSum = 0;
+  }
+}
+
+function autoAdjustGain(rms) {
+  if (!autoGainActive || !active) return;
+  autoGainFrames++;
+  autoGainRmsSum += rms;
+  // Adjust every 30 frames (~1 second)
+  if (autoGainFrames >= 30) {
+    var avgRms = autoGainRmsSum / autoGainFrames;
+    var targetRms = 0.05; // target signal level
+    var ratio = avgRms > 0 ? targetRms / avgRms : 1;
+    var newGain = Math.min(12, Math.max(1, gainLevel * ratio));
+    newGain = Math.round(newGain * 2) / 2; // round to 0.5
+    if (Math.abs(newGain - gainLevel) >= 0.5) {
+      updateGain(newGain);
+    }
+    autoGainFrames = 0;
+    autoGainRmsSum = 0;
+  }
+}
 // ── STORAGE ──
 function loadContacts(){try{return JSON.parse(localStorage.getItem('liedar_c')||'{}');}catch(e){return {};}}
 function saveContacts(d){try{localStorage.setItem('liedar_c',JSON.stringify(d));}catch(e){}}
@@ -861,7 +903,7 @@ const T = {
     expRate:'שינוי עקבי בקצב הדיבור',
     expPitch:'עלייה בגובה הקול',
     expVolume:'תנודות חדה בעוצמת הקול',
-    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.', signOutBtn:'יציאה', rememberMeLabel:'זכור אותי', authTabLogin:'כניסה', authTabRegister:'הרשמה', authEmailLabel:'אימייל', authPassLabel:'סיסמא', authPassConfirmLabel:'אימות סיסמא', authTermsText:'קראתי ומסכימ/ה ל', authTermsText:'קראתי ומסכימ/ה ל', authTermsLink:'תנאי השימוש', authTermsAnd:' ו', authTermsPrefix:'קראתי ומסכימ/ה ל', authPrivacyLink:'מדיניות הפרטיות', authLoginBtn:'כניסה', authRegisterBtn:'הרשמה', authForgotLink:'שכחתי סיסמה', authForgotBtn:'שלח קישור איפוס', authBackLogin:'חזרה לכניסה', authGoogleBtn:'כניסה עם Google', authOrWith:'או', authVerifyTitle:'נא לאשר את האימייל', authVerifySub:'שלחנו קישור אימות. בדוק את תיבת הדואר.', authResend:'שלח שוב', authForgotSent:'קישור נשלח', authErrFields:'מלא את כל השדות', authErrTerms:'יש לאשר את תנאי השימוש', authErrPassMatch:'הסיסמאות אינן תואמות', authErrPassShort:'סיסמא מינימאלית 6 תווים',
+    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.', signOutBtn:'יציאה', rememberMeLabel:'זכור אותי', autoGainBtn:'אוטו', autoGainOn:'אוטו פעיל', authTabLogin:'כניסה', authTabRegister:'הרשמה', authEmailLabel:'אימייל', authPassLabel:'סיסמא', authPassConfirmLabel:'אימות סיסמא', authTermsText:'קראתי ומסכימ/ה ל', authTermsText:'קראתי ומסכימ/ה ל', authTermsLink:'תנאי השימוש', authTermsAnd:' ו', authTermsPrefix:'קראתי ומסכימ/ה ל', authPrivacyLink:'מדיניות הפרטיות', authLoginBtn:'כניסה', authRegisterBtn:'הרשמה', authForgotLink:'שכחתי סיסמה', authForgotBtn:'שלח קישור איפוס', authBackLogin:'חזרה לכניסה', authGoogleBtn:'כניסה עם Google', authOrWith:'או', authVerifyTitle:'נא לאשר את האימייל', authVerifySub:'שלחנו קישור אימות. בדוק את תיבת הדואר.', authResend:'שלח שוב', authForgotSent:'קישור נשלח', authErrFields:'מלא את כל השדות', authErrTerms:'יש לאשר את תנאי השימוש', authErrPassMatch:'הסיסמאות אינן תואמות', authErrPassShort:'סיסמא מינימאלית 6 תווים',
     tabHistory:'היסטוריה', tabGuide:'מדריך', tabSettings:'הגדרות',
     hStatAvg:'ממוצע', hStatBest:'שיא', hStatCount:'שיחות', histEmpty:'שמור שיחות כדי לראות היסטוריה',
     guidePitchTitle:'גובה קול', guidePitchSub:'תדר הקול', guidePitchBody:'עלייה פתאומית עלולה להעיד על מתח.',
@@ -904,7 +946,7 @@ const T = {
     expRate:'Consistent change in speech rate',
     expPitch:'Rise in vocal pitch',
     expVolume:'Sharp fluctuations in volume',
-    expNone:'No significant anomalies detected — voice features are normal.', signOutBtn:'Sign Out', rememberMeLabel:'Remember me', authTabLogin:'Login', authTabRegister:'Register', authEmailLabel:'Email', authPassLabel:'Password', authPassConfirmLabel:'Confirm Password', authTermsText:'I agree to the ', authTermsText:'I agree to the ', authTermsLink:'Terms of Use', authTermsAnd:' and ', authTermsPrefix:'I have read and agree to the ', authPrivacyLink:'Privacy Policy', authLoginBtn:'Sign In', authRegisterBtn:'Register', authForgotLink:'Forgot password', authForgotBtn:'Send Reset Link', authBackLogin:'Back to Login', authGoogleBtn:'Sign in with Google', authOrWith:'or', authVerifyTitle:'Please verify your email', authVerifySub:'We sent you a verification link. Check your inbox.', authResend:'Resend', authForgotSent:'Reset link sent', authErrFields:'Please fill in all fields', authErrTerms:'You must accept the Terms of Use', authErrPassMatch:'Passwords do not match', authErrPassShort:'Password must be at least 6 characters',
+    expNone:'No significant anomalies detected — voice features are normal.', signOutBtn:'Sign Out', rememberMeLabel:'Remember me', autoGainBtn:'Auto', autoGainOn:'Auto ON', authTabLogin:'Login', authTabRegister:'Register', authEmailLabel:'Email', authPassLabel:'Password', authPassConfirmLabel:'Confirm Password', authTermsText:'I agree to the ', authTermsText:'I agree to the ', authTermsLink:'Terms of Use', authTermsAnd:' and ', authTermsPrefix:'I have read and agree to the ', authPrivacyLink:'Privacy Policy', authLoginBtn:'Sign In', authRegisterBtn:'Register', authForgotLink:'Forgot password', authForgotBtn:'Send Reset Link', authBackLogin:'Back to Login', authGoogleBtn:'Sign in with Google', authOrWith:'or', authVerifyTitle:'Please verify your email', authVerifySub:'We sent you a verification link. Check your inbox.', authResend:'Resend', authForgotSent:'Reset link sent', authErrFields:'Please fill in all fields', authErrTerms:'You must accept the Terms of Use', authErrPassMatch:'Passwords do not match', authErrPassShort:'Password must be at least 6 characters',
     tabHistory:'History', tabGuide:'Guide', tabSettings:'Settings',
     hStatAvg:'Average', hStatBest:'Best', hStatCount:'Sessions', histEmpty:'Save calls to see history',
     guidePitchTitle:'Pitch', guidePitchSub:'Frequency', guidePitchBody:'A sudden rise may indicate stress.',
@@ -986,7 +1028,7 @@ const T = {
     setResetBtn:'حذف جميع البيانات', setSecAbout:'حول',
     setPrivacyLabel:'سياسة الخصوصية', setPrivacyLink:'عرض',
     setTermsLabel:'شروط الاستخدام', setTermsLink:'عرض', setDeleteAccount:'🗑 حذف الحساب',
-    confirmReset:'حذف جميع البيانات؟', resetDone:'تم الحذف', signOutBtn:'خروج', rememberMeLabel:'تذكّرني', authTabLogin:'دخول', authTabRegister:'تسجيل', authEmailLabel:'البريد الإلكتروني', authPassLabel:'كلمة المرور', authPassConfirmLabel:'تأكيد كلمة المرور', authTermsText:'أوافق على ', authTermsLink:'شروط الاستخدام', authTermsAnd:' و', authTermsPrefix:'قرأت وأوافق على ', authPrivacyLink:'سياسة الخصوصية', authLoginBtn:'دخول', authRegisterBtn:'تسجيل', authForgotLink:'نسيت كلمة المرور', authForgotBtn:'إرسال رابط إعادة التعيين', authBackLogin:'عودة لتسجيل الدخول', authGoogleBtn:'دخول بحساب Google', authOrWith:'أو', authVerifyTitle:'يُرجى تأكيد البريد', authVerifySub:'أرسلنا رابط تحقق. تحقق من بريدك.', authResend:'إعادة الإرسال', authForgotSent:'تم الإرسال', authErrFields:'يُرجى ملء جميع الحقول', authErrTerms:'يجب الموافقة على الشروط', authErrPassMatch:'كلمتا المرور غير متطابقتين', authErrPassShort:'كلمة المرور 6 أحرف على الأقل'
+    confirmReset:'حذف جميع البيانات؟', resetDone:'تم الحذف', signOutBtn:'خروج', rememberMeLabel:'تذكّرني', autoGainBtn:'تلقائي', autoGainOn:'تلقائي نشط', authTabLogin:'دخول', authTabRegister:'تسجيل', authEmailLabel:'البريد الإلكتروني', authPassLabel:'كلمة المرور', authPassConfirmLabel:'تأكيد كلمة المرور', authTermsText:'أوافق على ', authTermsLink:'شروط الاستخدام', authTermsAnd:' و', authTermsPrefix:'قرأت وأوافق على ', authPrivacyLink:'سياسة الخصوصية', authLoginBtn:'دخول', authRegisterBtn:'تسجيل', authForgotLink:'نسيت كلمة المرور', authForgotBtn:'إرسال رابط إعادة التعيين', authBackLogin:'عودة لتسجيل الدخول', authGoogleBtn:'دخول بحساب Google', authOrWith:'أو', authVerifyTitle:'يُرجى تأكيد البريد', authVerifySub:'أرسلنا رابط تحقق. تحقق من بريدك.', authResend:'إعادة الإرسال', authForgotSent:'تم الإرسال', authErrFields:'يُرجى ملء جميع الحقول', authErrTerms:'يجب الموافقة على الشروط', authErrPassMatch:'كلمتا المرور غير متطابقتين', authErrPassShort:'كلمة المرور 6 أحرف على الأقل'
   }
 };
 // ── LANGUAGE INIT ──
@@ -1395,6 +1437,9 @@ function _resetUI(){
 async function startAnalysis(){
   document.getElementById('errMsg').classList.remove('show');
   document.getElementById('summaryPanel').classList.remove('show');
+  // Reset gain to 1 at start of each analysis
+  gainLevel = 1;
+  updateGain(1);
   document.getElementById('saveSumBtn').style.display='none';
   pendingSaveData=null;
   summaryVisible=false;
@@ -1622,7 +1667,7 @@ function setAuthLang(l) {
 }
 
 // ── SUPABASE AUTH ──
-const SUPA_URL = 'https://fllqlcofglxvygslfbiy.supabase.co';
+const SUPA_URL = 'e19c81048cf3fbc24d3d12b221b8f042872a06e3';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbHFsY29mZ2x4dnlnc2xmYml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMjU0MzgsImV4cCI6MjA5OTYwMTQzOH0.mASmyJNF0qqhZbyMPkBbG3eyPMN9b8P87BC_WB-fpNE';
 const _supa = (typeof supabase !== 'undefined' && !SUPA_URL.includes('YOUR_PROJECT') && !SUPA_KEY.includes('YOUR_ANON'))
   ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
@@ -1828,7 +1873,7 @@ async function signOut() {
       <div class="settings-row">
         <div><div class="settings-row-lbl" data-key="setGainLabel">רגישות מיקרופון</div><div class="settings-row-sub" data-key="setGainSub">גבוה יותר לקליטה מרחוק</div></div>
         <div style="display:flex;align-items:center;gap:6px;">
-          <input type="range" id="settingsGainSlider" min="1" max="12" value="4" step="0.5" oninput="updateGainFromSettings(this.value)" style="width:90px;accent-color:var(--accent);">
+          <input type="range" id="settingsGainSlider" min="1" max="12" value="1" step="0.5" oninput="updateGainFromSettings(this.value)" style="width:90px;accent-color:var(--accent);">
           <span id="settingsGainVal" style="font-size:11px;color:var(--accent);font-family:var(--mono);min-width:24px;">x4</span>
         </div>
       </div>
