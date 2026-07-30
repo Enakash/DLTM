@@ -102,10 +102,7 @@
       <label>אימייל</label>
       <input type="email" id="he-email" placeholder="your@email.com" autocomplete="email">
     </div>
-    <div class="field">
-      <label>סיסמה</label>
-      <input type="password" id="he-pass" placeholder="••••••••" autocomplete="current-password">
-    </div>
+
 
     <div class="confirm-row">
       <input type="checkbox" id="he-confirm">
@@ -140,10 +137,7 @@
       <label>Email</label>
       <input type="email" id="en-email" placeholder="your@email.com" autocomplete="email">
     </div>
-    <div class="field">
-      <label>Password</label>
-      <input type="password" id="en-pass" placeholder="••••••••" autocomplete="current-password">
-    </div>
+
 
     <div class="confirm-row">
       <input type="checkbox" id="en-confirm">
@@ -178,10 +172,7 @@
       <label>البريد الإلكتروني</label>
       <input type="email" id="ar-email" placeholder="your@email.com" autocomplete="email">
     </div>
-    <div class="field">
-      <label>كلمة المرور</label>
-      <input type="password" id="ar-pass" placeholder="••••••••" autocomplete="current-password">
-    </div>
+
 
     <div class="confirm-row">
       <input type="checkbox" id="ar-confirm">
@@ -207,7 +198,7 @@
 // ── SUPABASE ──
 // Replace YOUR_ANON_KEY with your actual anon key
 const SUPA_URL = 'https://fllqlcofglxvygslfbiy.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbHFsY29mZ2x4dnlnc2xmYml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMjU0MzgsImV4cCI6MjA5OTYwMTQzOH0.mASmyJNF0qqhZbyMPkBbG3eyPMN9b8P87BC_WB-fpNE';
+const SUPA_KEY = 'YOUR_ANON_KEY';
 const _supa = (typeof supabase !== 'undefined' && !SUPA_KEY.includes('YOUR_ANON'))
   ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
 
@@ -230,41 +221,48 @@ function showMsg(lang, msg, type) {
 }
 
 async function doDelete(lang) {
-  var email    = document.getElementById(lang+'-email').value.trim();
-  var pass     = document.getElementById(lang+'-pass').value;
-  var confirm  = document.getElementById(lang+'-confirm').checked;
-  var btn      = document.getElementById(lang+'-btn');
+  var email   = document.getElementById(lang+'-email').value.trim();
+  var confirm = document.getElementById(lang+'-confirm').checked;
+  var btn     = document.getElementById(lang+'-btn');
 
   var msgs = {
-    he: { fill:'נא למלא את כל השדות', agree:'יש לאשר את ההבנה', err:'שגיאה: ', noSupa:'השירות אינו זמין כרגע.' },
-    en: { fill:'Please fill in all fields', agree:'Please confirm that you understand', err:'Error: ', noSupa:'Service unavailable.' },
-    ar: { fill:'يُرجى ملء جميع الحقول', agree:'يُرجى تأكيد فهمك', err:'خطأ: ', noSupa:'الخدمة غير متاحة حالياً.' }
+    he: { fill:'נא להזין כתובת אימייל', agree:'יש לאשר את ההבנה', err:'שגיאה: ', noSupa:'השירות אינו זמין כרגע.' },
+    en: { fill:'Please enter your email address', agree:'Please confirm that you understand', err:'Error: ', noSupa:'Service unavailable.' },
+    ar: { fill:'يُرجى إدخال عنوان البريد الإلكتروني', agree:'يُرجى تأكيد فهمك', err:'خطأ: ', noSupa:'الخدمة غير متاحة حالياً.' }
   };
   var m = msgs[lang];
 
-  if (!email || !pass) { showMsg(lang, m.fill, 'error'); return; }
-  if (!confirm)        { showMsg(lang, m.agree, 'error'); return; }
-  if (!_supa)          { showMsg(lang, m.noSupa, 'error'); return; }
+  if (!email)   { showMsg(lang, m.fill, 'error'); return; }
+  if (!confirm) { showMsg(lang, m.agree, 'error'); return; }
+  if (!_supa)   { showMsg(lang, m.noSupa, 'error'); return; }
 
   btn.disabled = true;
   btn.textContent = '...';
 
   try {
-    // 1. Sign in to verify credentials
-    var { data, error } = await _supa.auth.signInWithPassword({ email, password: pass });
-    if (error) { showMsg(lang, m.err + error.message, 'error'); btn.disabled=false; btn.textContent=getLabel(lang); return; }
+    // Get current session
+    var { data: sessionData } = await _supa.auth.getSession();
+    var session = sessionData && sessionData.session;
 
-    // 2. Delete user via Supabase Admin (requires service role) OR via RPC
-    // Using the user's own session to delete
-    var { error: delErr } = await _supa.rpc('delete_user');
-    if (delErr) {
-      // Fallback: just sign out and show success (account marked for deletion)
-      await _supa.auth.signOut();
-    } else {
-      await _supa.auth.signOut();
+    if (!session) {
+      // No active session - send OTP to verify identity
+      var { error: otpErr } = await _supa.auth.signInWithOtp({ email });
+      if (otpErr) { showMsg(lang, m.err + otpErr.message, 'error'); btn.disabled=false; btn.textContent=getLabel(lang); return; }
+      showMsg(lang, 
+        lang==='he' ? 'נשלח קישור אימות לאימייל שלך. לחץ עליו ואז חזור לכאן.' :
+        lang==='ar' ? 'تم إرسال رابط التحقق إلى بريدك. انقر عليه ثم عد هنا.' :
+        'A verification link was sent to your email. Click it then return here.',
+        'success');
+      btn.disabled = false;
+      btn.textContent = getLabel(lang);
+      return;
     }
 
-    // 3. Show success
+    // Session active - delete account
+    var { error: delErr } = await _supa.rpc('delete_user');
+    await _supa.auth.signOut();
+
+    // Show success
     document.getElementById(lang+'-form').style.display = 'none';
     document.getElementById(lang+'-success').style.display = 'block';
 
