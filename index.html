@@ -18,7 +18,7 @@
   --border:#1c2d42; --border2:#243552;
   --text:#e2e8f0; --muted:#4a6080; --muted2:#7a98b8; --accent:#3b82f6;
   --safe:#10b981; --warn:#f59e0b; --danger:#ef4444;
-  --font:', signOutBtn:'خروج', rememberMeLabel:'تذكّرني', autoGainBtn:'تلقائي', autoGainOn:'تلقائي نشط', authTabLogin:'دخول', authTabRegister:'تسجيل', authEmailLabel:'البريد', authPassLabel:'كلمة المرور', authPassConfirmLabel:'تأكيد كلمة المرور', authTermsText:'أوافق على ', authTermsText:'أوافق على ', authTermsLink:'شروط الاستخدام', authTermsAnd:' و', authTermsPrefix:'قرأت وأوافق على ', authPrivacyLink:'سياسة الخصوصية', authLoginBtn:'دخول', authRegisterBtn:'تسجيل', authForgotLink:'نسيت كلمة المرور', authForgotBtn:'إرسال رابط', authBackLogin:'عودة للدخول', authGoogleBtn:'دخول بحساب Google', authOrWith:'أو', authVerifyTitle:'يُرجى تأكيد البريد', authVerifySub:'أرسلنا رابط تحقق.', authResend:'إعادة الإرسال', authForgotSent:'تم الإرسال', authErrFields:'يُرجى ملء جميع الحقول', authErrTerms:'يجب الموافقة على الشروط', authErrPassMatch:'كلمتا المرور غير متطابقتين', authErrPassShort:'كلمة المرور 6 أحرف على الأقل'Inter',-apple-system,sans-serif;
+  --font:'Inter',-apple-system,sans-serif;
   --mono:'JetBrains Mono','Courier New',monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -396,7 +396,7 @@ body{
       </div>
       <div class="auth-terms">
         <input type="checkbox" id="termsCheck">
-        <div class="auth-terms-text" data-key="authTermsText"><span id="authTermsPrefix">קראתי ואני מסכים/ה ל</span><a href="https://liedar.store/terms.html" target="_blank" data-key="authTermsLink" style="color:var(--accent);text-decoration:underline;">תנאי השימוש</a><span data-key="authTermsAnd"> ו</span><a href="https://liedar.store/privacy.html" target="_blank" data-key="authPrivacyLink" style="color:var(--accent);text-decoration:underline;">מדיניות הפרטיות</a></div>
+        <div class="auth-terms-text" data-key="authTermsText"><span id="authTermsPrefix">I have read and agree to the </span><a href="https://liedar.store/terms.html" target="_blank" data-key="authTermsLink" style="color:var(--accent);text-decoration:underline;">Terms of Use</a><span data-key="authTermsAnd"> and </span><a href="https://liedar.store/privacy.html" target="_blank" data-key="authPrivacyLink" style="color:var(--accent);text-decoration:underline;">Privacy Policy</a></div>
       </div>
       <button class="auth-btn" id="regBtn" onclick="doRegister()" data-key="authRegisterBtn">Register</button>
     </div>
@@ -903,7 +903,7 @@ const T = {
     expRate:'שינוי עקבי בקצב הדיבור',
     expPitch:'עלייה בגובה הקול',
     expVolume:'תנודות חדה בעוצמת הקול',
-    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.', signOutBtn:'יציאה', rememberMeLabel:'זכור אותי', autoGainBtn:'אוטו', autoGainOn:'אוטו פעיל', authTabLogin:'כניסה', authTabRegister:'הרשמה', authEmailLabel:'אימייל', authPassLabel:'סיסמא', authPassConfirmLabel:'אימות סיסמא', authTermsText:'קראתי ומסכימ/ה ל', authTermsText:'קראתי ומסכימ/ה ל', authTermsLink:'תנאי השימוש', authTermsAnd:' ו', authTermsPrefix:'קראתי ומסכימ/ה ל', authPrivacyLink:'מדיניות הפרטיות', authLoginBtn:'כניסה', authRegisterBtn:'הרשמה', authForgotLink:'שכחתי סיסמה', authForgotBtn:'שלח קישור איפוס', authBackLogin:'חזרה לכניסה', authGoogleBtn:'כניסה עם Google', authOrWith:'או', authVerifyTitle:'נא לאשר את האימייל', authVerifySub:'שלחנו קישור אימות. בדוק את תיבת הדואר.', authResend:'שלח שוב', authForgotSent:'קישור נשלח', authErrFields:'מלא את כל השדות', authErrTerms:'יש לאשר את תנאי השימוש', authErrPassMatch:'הסיסמאות אינן תואמות', authErrPassShort:'סיסמא מינימאלית 6 תווים',
+    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.', signOutBtn:'יציאה', rememberMeLabel:'זכור אותי', autoGainBtn:'אוטו', autoGainOn:'אוטו פעיל', authTabLogin:'כניסה', authTabRegister:'הרשמה', authEmailLabel:'אימייל', authPassLabel:'סיסמא', authPassConfirmLabel:'אימות סיסמא', authTermsText:'קראתי ומסכימ/ה ל', authTermsText:'קראתי ומסכימ/ה ל', authTermsLink:'תנאי השימוש', authTermsAnd:' ו', authTermsPrefix:'קראתי ואני מסכים/ה ל', authPrivacyLink:'מדיניות הפרטיות', authLoginBtn:'כניסה', authRegisterBtn:'הרשמה', authForgotLink:'שכחתי סיסמה', authForgotBtn:'שלח קישור איפוס', authBackLogin:'חזרה לכניסה', authGoogleBtn:'כניסה עם Google', authOrWith:'או', authVerifyTitle:'נא לאשר את האימייל', authVerifySub:'שלחנו קישור אימות. בדוק את תיבת הדואר.', authResend:'שלח שוב', authForgotSent:'קישור נשלח', authErrFields:'מלא את כל השדות', authErrTerms:'יש לאשר את תנאי השימוש', authErrPassMatch:'הסיסמאות אינן תואמות', authErrPassShort:'סיסמא מינימאלית 6 תווים',
     tabHistory:'היסטוריה', tabGuide:'מדריך', tabSettings:'הגדרות',
     hStatAvg:'ממוצע', hStatBest:'שיא', hStatCount:'שיחות', histEmpty:'שמור שיחות כדי לראות היסטוריה',
     guidePitchTitle:'גובה קול', guidePitchSub:'תדר הקול', guidePitchBody:'עלייה פתאומית עלולה להעיד על מתח.',
@@ -1667,7 +1667,7 @@ function setAuthLang(l) {
 }
 
 // ── SUPABASE AUTH ──
-const SUPA_URL = 'e19c81048cf3fbc24d3d12b221b8f042872a06e3';
+const SUPA_URL = 'https://fllqlcofglxvygslfbiy.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbHFsY29mZ2x4dnlnc2xmYml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMjU0MzgsImV4cCI6MjA5OTYwMTQzOH0.mASmyJNF0qqhZbyMPkBbG3eyPMN9b8P87BC_WB-fpNE';
 const _supa = (typeof supabase !== 'undefined' && !SUPA_URL.includes('YOUR_PROJECT') && !SUPA_KEY.includes('YOUR_ANON'))
   ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
