@@ -137,6 +137,17 @@ body{
 .auth-divider{display:flex;align-items:center;gap:10px;margin:14px 0;}
 .auth-divider-line{flex:1;height:1px;background:var(--border);}
 .auth-divider-text{font-size:10px;color:var(--muted);}
+
+.auth-apple-btn{
+  width:100%;padding:11px;border-radius:10px;
+  border:1px solid var(--border);
+  background:#000;color:#fff;
+  font-size:13px;font-weight:600;
+  cursor:pointer;font-family:var(--font);
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  margin-top:8px;
+}
+.auth-apple-btn svg{ flex-shrink:0; }
 .auth-google-btn{width:100%;padding:11px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:9px;}
 .auth-forgot{text-align:center;margin-top:12px;}
 .auth-forgot a{font-size:11px;color:var(--accent);cursor:pointer;}
@@ -430,6 +441,10 @@ body{
         <span data-key="authGoogleBtn">Sign in with Google</span>
       </button>
     </div>
+      <button class="auth-apple-btn" onclick="doAppleLogin()">
+        <svg width="16" height="16" viewBox="0 0 814 1000" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-43.4-150.3-109.2c-52.3-75.1-101.9-193.5-101.9-306.1 0-213.8 139.5-327.1 276.5-327.1 70.6 0 129.2 46.4 173.5 46.4 42.8 0 109.7-49.4 188.6-49.4zm-30.2-113.5c-25.2 30.4-68.2 54.4-110.1 54.4-1.9 0-3.8-.1-5.7-.4 1.3-45.4 18.7-92.1 47.2-123.5 25.6-29.4 70.1-51.6 107.8-53.8 1.3 4.4 1.9 8.9 1.9 14.6 0 44.6-17.2 90.4-41.1 108.7z"/></svg>
+        <span data-key="authAppleBtn">Sign in with Apple</span>
+      </button>
     <div class="auth-msg" id="authMsg"></div>
   </div>
 </div>
@@ -904,7 +919,7 @@ const T = {
     expRate:'שינוי עקבי בקצב הדיבור',
     expPitch:'עלייה בגובה הקול',
     expVolume:'תנודות חדה בעוצמת הקול',
-    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.', signOutBtn:'יציאה', rememberMeLabel:'זכור אותי', autoGainBtn:'אוטו', autoGainOn:'אוטו פעיל', authTabLogin:'כניסה', authTabRegister:'הרשמה', authEmailLabel:'אימייל', authPassLabel:'סיסמא', authPassConfirmLabel:'אימות סיסמא', authTermsText:'קראתי ומסכימ/ה ל', authTermsText:'קראתי ומסכימ/ה ל', authTermsLink:'תנאי השימוש', authTermsAnd:' ו', authTermsPrefix:'קראתי ואני מסכים/ה ל', authPrivacyLink:'מדיניות הפרטיות', authLoginBtn:'כניסה', authRegisterBtn:'הרשמה', authForgotLink:'שכחתי סיסמה', authForgotBtn:'שלח קישור איפוס', authBackLogin:'חזרה לכניסה', authGoogleBtn:'כניסה עם Google', authOrWith:'או', authVerifyTitle:'נא לאשר את האימייל', authVerifySub:'שלחנו קישור אימות. בדוק את תיבת הדואר.', authResend:'שלח שוב', authForgotSent:'קישור נשלח', authErrFields:'מלא את כל השדות', authErrTerms:'יש לאשר את תנאי השימוש', authErrPassMatch:'הסיסמאות אינן תואמות', authErrPassShort:'סיסמא מינימאלית 6 תווים',
+    expNone:'לא נמצאו חריגות משמעותיות — מאפייני הקול תקינים.', signOutBtn:'יציאה', rememberMeLabel:'זכור אותי', autoGainBtn:'אוטו', autoGainOn:'אוטו פעיל', authAppleBtn:'כניסה עם Apple', authTabLogin:'כניסה', authTabRegister:'הרשמה', authEmailLabel:'אימייל', authPassLabel:'סיסמא', authPassConfirmLabel:'אימות סיסמא', authTermsText:'קראתי ומסכימ/ה ל', authTermsText:'קראתי ומסכימ/ה ל', authTermsLink:'תנאי השימוש', authTermsAnd:' ו', authTermsPrefix:'קראתי ואני מסכים/ה ל', authPrivacyLink:'מדיניות הפרטיות', authLoginBtn:'כניסה', authRegisterBtn:'הרשמה', authForgotLink:'שכחתי סיסמה', authForgotBtn:'שלח קישור איפוס', authBackLogin:'חזרה לכניסה', authGoogleBtn:'כניסה עם Google', authOrWith:'או', authVerifyTitle:'נא לאשר את האימייל', authVerifySub:'שלחנו קישור אימות. בדוק את תיבת הדואר.', authResend:'שלח שוב', authForgotSent:'קישור נשלח', authErrFields:'מלא את כל השדות', authErrTerms:'יש לאשר את תנאי השימוש', authErrPassMatch:'הסיסמאות אינן תואמות', authErrPassShort:'סיסמא מינימאלית 6 תווים',
     tabHistory:'היסטוריה', tabGuide:'מדריך', tabSettings:'הגדרות',
     hStatAvg:'ממוצע', hStatBest:'שיא', hStatCount:'שיחות', histEmpty:'שמור שיחות כדי לראות היסטוריה',
     guidePitchTitle:'גובה קול', guidePitchSub:'תדר הקול', guidePitchBody:'עלייה פתאומית עלולה להעיד על מתח.',
@@ -947,7 +962,7 @@ const T = {
     expRate:'Consistent change in speech rate',
     expPitch:'Rise in vocal pitch',
     expVolume:'Sharp fluctuations in volume',
-    expNone:'No significant anomalies detected — voice features are normal.', signOutBtn:'Sign Out', rememberMeLabel:'Remember me', autoGainBtn:'Auto', autoGainOn:'Auto ON', authTabLogin:'Login', authTabRegister:'Register', authEmailLabel:'Email', authPassLabel:'Password', authPassConfirmLabel:'Confirm Password', authTermsText:'I agree to the ', authTermsLink:'Terms of Use', authTermsAnd:' and ', authTermsPrefix:'I have read and agree to the ', authPrivacyLink:'Privacy Policy', authLoginBtn:'Sign In', authRegisterBtn:'Register', authForgotLink:'Forgot password', authForgotBtn:'Send Reset Link', authBackLogin:'Back to Login', authGoogleBtn:'Sign in with Google', authOrWith:'or', authVerifyTitle:'Please verify your email', authVerifySub:'We sent you a verification link. Check your inbox.', authResend:'Resend', authForgotSent:'Reset link sent', authErrFields:'Please fill in all fields', authErrTerms:'You must accept the Terms of Use', authErrPassMatch:'Passwords do not match', authErrPassShort:'Password must be at least 6 characters',
+    expNone:'No significant anomalies detected — voice features are normal.', signOutBtn:'Sign Out', rememberMeLabel:'Remember me', autoGainBtn:'Auto', autoGainOn:'Auto ON', authAppleBtn:'Sign in with Apple', authTabLogin:'Login', authTabRegister:'Register', authEmailLabel:'Email', authPassLabel:'Password', authPassConfirmLabel:'Confirm Password', authTermsText:'I agree to the ', authTermsLink:'Terms of Use', authTermsAnd:' and ', authTermsPrefix:'I have read and agree to the ', authPrivacyLink:'Privacy Policy', authLoginBtn:'Sign In', authRegisterBtn:'Register', authForgotLink:'Forgot password', authForgotBtn:'Send Reset Link', authBackLogin:'Back to Login', authGoogleBtn:'Sign in with Google', authOrWith:'or', authVerifyTitle:'Please verify your email', authVerifySub:'We sent you a verification link. Check your inbox.', authResend:'Resend', authForgotSent:'Reset link sent', authErrFields:'Please fill in all fields', authErrTerms:'You must accept the Terms of Use', authErrPassMatch:'Passwords do not match', authErrPassShort:'Password must be at least 6 characters',
     tabHistory:'History', tabGuide:'Guide', tabSettings:'Settings',
     hStatAvg:'Average', hStatBest:'Best', hStatCount:'Sessions', histEmpty:'Save calls to see history',
     guidePitchTitle:'Pitch', guidePitchSub:'Frequency', guidePitchBody:'A sudden rise may indicate stress.',
@@ -1029,9 +1044,14 @@ const T = {
     setResetBtn:'حذف جميع البيانات', setSecAbout:'حول',
     setPrivacyLabel:'سياسة الخصوصية', setPrivacyLink:'عرض',
     setTermsLabel:'شروط الاستخدام', setTermsLink:'عرض', setDeleteAccount:'🗑 حذف الحساب',
-    confirmReset:'حذف جميع البيانات؟', resetDone:'تم الحذف', signOutBtn:'خروج', rememberMeLabel:'تذكّرني', autoGainBtn:'تلقائي', autoGainOn:'تلقائي نشط', authTabLogin:'دخول', authTabRegister:'تسجيل', authEmailLabel:'البريد الإلكتروني', authPassLabel:'كلمة المرور', authPassConfirmLabel:'تأكيد كلمة المرور', authTermsLink:'شروط الاستخدام', authTermsAnd:' و', authTermsPrefix:'قرأت وأوافق على ', authPrivacyLink:'سياسة الخصوصية', authLoginBtn:'دخول', authRegisterBtn:'تسجيل', authForgotLink:'نسيت كلمة المرور', authForgotBtn:'إرسال رابط إعادة التعيين', authBackLogin:'عودة لتسجيل الدخول', authGoogleBtn:'دخول بحساب Google', authOrWith:'أو', authVerifyTitle:'يُرجى تأكيد البريد', authVerifySub:'أرسلنا رابط تحقق. تحقق من بريدك.', authResend:'إعادة الإرسال', authForgotSent:'تم الإرسال', authErrFields:'يُرجى ملء جميع الحقول', authErrTerms:'يجب الموافقة على الشروط', authErrPassMatch:'كلمتا المرور غير متطابقتين', authErrPassShort:'كلمة المرور 6 أحرف على الأقل'
+    confirmReset:'حذف جميع البيانات؟', resetDone:'تم الحذف', signOutBtn:'خروج', rememberMeLabel:'تذكّرني', autoGainBtn:'تلقائي', autoGainOn:'تلقائي نشط', authAppleBtn:'دخول بحساب Apple', authTabLogin:'دخول', authTabRegister:'تسجيل', authEmailLabel:'البريد الإلكتروني', authPassLabel:'كلمة المرور', authPassConfirmLabel:'تأكيد كلمة المرور', authTermsLink:'شروط الاستخدام', authTermsAnd:' و', authTermsPrefix:'قرأت وأوافق على ', authPrivacyLink:'سياسة الخصوصية', authLoginBtn:'دخول', authRegisterBtn:'تسجيل', authForgotLink:'نسيت كلمة المرور', authForgotBtn:'إرسال رابط إعادة التعيين', authBackLogin:'عودة لتسجيل الدخول', authGoogleBtn:'دخول بحساب Google', authOrWith:'أو', authVerifyTitle:'يُرجى تأكيد البريد', authVerifySub:'أرسلنا رابط تحقق. تحقق من بريدك.', authResend:'إعادة الإرسال', authForgotSent:'تم الإرسال', authErrFields:'يُرجى ملء جميع الحقول', authErrTerms:'يجب الموافقة على الشروط', authErrPassMatch:'كلمتا المرور غير متطابقتين', authErrPassShort:'كلمة المرور 6 أحرف على الأقل'
   }
 };
+// Hide auth overlay immediately if returning from OAuth redirect
+if (window.location.hash && window.location.hash.includes('access_token')) {
+  var ov = document.getElementById('authOverlay');
+  if (ov) ov.style.display = 'none';
+}
 // ── LANGUAGE INIT ──
 var _savedLang = localStorage.getItem('liedar_lang');
 var _browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
@@ -1621,7 +1641,7 @@ function setAuthLang(l) {
   var authKeys = ['authTabLogin','authTabRegister','authEmailLabel','authPassLabel',
     'authPassConfirmLabel','authLoginBtn','authRegisterBtn','authForgotLink',
     'authForgotBtn','authBackLogin','authGoogleBtn','authOrWith',
-    'authVerifyTitle','authVerifySub','authResend','rememberMeLabel','signOutBtn','authTermsAnd','authTermsPrefix'];
+    'authVerifyTitle','authVerifySub','authResend','rememberMeLabel','signOutBtn','authTermsAnd','authTermsPrefix','authAppleBtn'];
   if (typeof T === 'undefined' || !T[l]) return;
   authKeys.forEach(function(k) {
     if (T[l][k]) {
@@ -1668,8 +1688,8 @@ function setAuthLang(l) {
 }
 
 // ── SUPABASE AUTH ──
-const SUPA_URL = 'https://fllqlcofglxvygslfbiy.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbHFsY29mZ2x4dnlnc2xmYml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMjU0MzgsImV4cCI6MjA5OTYwMTQzOH0.mASmyJNF0qqhZbyMPkBbG3eyPMN9b8P87BC_WB-fpNE';
+const SUPA_URL = 'https://YOUR_PROJECT.supabase.co';
+const SUPA_KEY = 'YOUR_ANON_KEY';
 const _supa = (typeof supabase !== 'undefined' && !SUPA_URL.includes('YOUR_PROJECT') && !SUPA_KEY.includes('YOUR_ANON'))
   ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
 if (!_supa) console.warn('Supabase not configured');
@@ -1725,12 +1745,20 @@ function onUserLoggedIn(user) {
   var bar = document.getElementById('userBar');
   var emailEl = document.getElementById('userEmail');
   if (bar) bar.classList.add('visible');
-  if (emailEl) emailEl.textContent = user.email;
+  if (emailEl) {
+    // Show name if available (Google OAuth), otherwise email
+    var displayName = (user.user_metadata && user.user_metadata.full_name)
+      ? user.user_metadata.full_name
+      : user.email;
+    emailEl.textContent = displayName;
+  }
   // Shift topbar and nav-tabs down
   var tb = document.querySelector('.topbar');
   var nt = document.querySelector('.nav-tabs');
   if (tb) tb.style.top = '36px';
   if (nt) nt.style.top = '93px';
+  // Apply saved language preference
+  setAuthLang(lang);
 }
 
 function switchAuthTab(tab) {
@@ -1796,6 +1824,23 @@ async function doForgot() {
   showAuthMsg(t('authForgotSent'), 'success');
 }
 
+
+async function doAppleLogin() {
+  if (!_supa) return;
+  // Check terms if on register tab
+  var isRegisterTab = document.getElementById('authTabRegister') && document.getElementById('authTabRegister').classList.contains('active');
+  if (isRegisterTab) {
+    var terms = document.getElementById('termsCheck');
+    if (!terms || !terms.checked) {
+      showAuthMsg(t('authErrTerms') || 'Please accept the Terms of Use', 'error');
+      return;
+    }
+  }
+  await _supa.auth.signInWithOAuth({
+    provider: 'apple',
+    options: { redirectTo: 'https://liedar.store/' }
+  });
+}
 async function doGoogleLogin() {
   if (!_supa) return;
   // Check if we're on register tab - if so, require terms agreement
