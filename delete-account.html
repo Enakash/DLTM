@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+
+<script>
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var urlLang = params.get('lang');
+  if (urlLang && ['he','en','ar'].includes(urlLang)) {
+    // Apply lang immediately
+    document.documentElement.lang = urlLang;
+    document.documentElement.dir = (urlLang === 'he' || urlLang === 'ar') ? 'rtl' : 'ltr';
+    // Store for use by showLang
+    window._urlLang = urlLang;
+  }
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LIEDAR — מחיקת חשבון / Delete Account / حذف الحساب</title>
@@ -192,7 +207,7 @@
 // ── SUPABASE ──
 // Replace YOUR_ANON_KEY with your actual anon key
 const SUPA_URL = 'https://fllqlcofglxvygslfbiy.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbHFsY29mZ2x4dnlnc2xmYml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMjU0MzgsImV4cCI6MjA5OTYwMTQzOH0.mASmyJNF0qqhZbyMPkBbG3eyPMN9b8P87BC_WB-fpNE';
+const SUPA_KEY = 'YOUR_ANON_KEY';
 const _supa = (typeof supabase !== 'undefined' && !SUPA_KEY.includes('YOUR_ANON'))
   ? supabase.createClient(SUPA_URL, SUPA_KEY) : null;
 
@@ -273,5 +288,24 @@ function getLabel(lang) {
          'Permanently Delete My Account';
 }
 </script>
+
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  if (window._urlLang) {
+    showLang(window._urlLang, null);
+    // Update active lang button
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.remove('active');
+    });
+    var activeMap = { he: 'עברית', en: 'English', ar: 'العربية' };
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      if (b.textContent.trim() === activeMap[window._urlLang]) {
+        b.classList.add('active');
+      }
+    });
+  }
+});
+</script>
+
 </body>
 </html>
