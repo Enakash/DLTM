@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+
+<script>
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var urlLang = params.get('lang');
+  if (urlLang && ['he','en','ar'].includes(urlLang)) {
+    // Apply lang immediately
+    document.documentElement.lang = urlLang;
+    document.documentElement.dir = (urlLang === 'he' || urlLang === 'ar') ? 'rtl' : 'ltr';
+    // Store for use by showLang
+    window._urlLang = urlLang;
+  }
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LIEDAR — תנאי שימוש / Terms of Use / شروط الاستخدام</title>
@@ -285,5 +300,24 @@ function showLang(l, e) {
   document.documentElement.lang = l;
 }
 </script>
+
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  if (window._urlLang) {
+    showLang(window._urlLang, null);
+    // Update active lang button
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.remove('active');
+    });
+    var activeMap = { he: 'עברית', en: 'English', ar: 'العربية' };
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      if (b.textContent.trim() === activeMap[window._urlLang]) {
+        b.classList.add('active');
+      }
+    });
+  }
+});
+</script>
+
 </body>
 </html>
