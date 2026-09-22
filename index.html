@@ -1707,6 +1707,23 @@ if (!_supa) console.warn('Supabase not configured');
 var _currentUser = null;
 var _pendingEmail = '';
 
+// WTN.deviceInfo() only ever resolves when the page is actually running
+// inside the WebToNative-wrapped app (it round-trips to native code to
+// fetch real device data). In a plain browser/PWA there is no native side
+// to answer, so it just hangs -- we race it against a short timeout.
+// Stored as a promise (not a boolean set later) so doAppleLogin() can
+// safely await the real answer even if clicked before the native
+// round-trip finishes, instead of racing against a stale default.
+var _inWrappedAppPromise = (function detectWrappedApp() {
+  if (!window.WTN || !window.WTN.deviceInfo) return Promise.resolve(false);
+  return Promise.race([
+    window.WTN.deviceInfo().then(function (info) {
+      return !!(info && (info.platform === 'ios' || info.platform === 'android'));
+    }),
+    new Promise(function (resolve) { setTimeout(function () { resolve(false); }, 800); })
+  ]).catch(function () { return false; });
+})();
+
 window.addEventListener('DOMContentLoaded', function() {
   // Apply detected/saved language immediately
   setAuthLang(lang);
@@ -1854,10 +1871,9 @@ async function doAppleLogin() {
   // webtonative.min.js always defines window.WTN.socialLogin.apple, even
   // when the page is opened in a normal browser (liedar.store, PWA) where
   // there is no native side to talk to -- calling it there just does
-  // nothing silently. window.webkit.messageHandlers only exists when the
-  // page is actually running inside a native WKWebView, so we require both
-  // checks before trusting the native bridge.
-  var inWrappedApp = !!(window.webkit && window.webkit.messageHandlers);
+  // nothing silently. inWrappedApp (via WTN.deviceInfo(), see above) is
+  // only true once we've confirmed a real native side actually answered.
+  var inWrappedApp = await _inWrappedAppPromise;
   if (inWrappedApp && window.WTN && window.WTN.socialLogin && window.WTN.socialLogin.apple) {
     window.WTN.socialLogin.apple.login({
       callback: async function (result) {
