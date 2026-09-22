@@ -354,6 +354,7 @@ body{
 .danger-btn{width:100%;padding:12px;border-radius:10px;border:1px solid #ef444430;background:#ef444408;color:#fca5a5;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;margin-top:6px;}
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/webtonative@1.1.14/webtonative.min.js"></script>
 </head>
 <body>
 
@@ -1845,10 +1846,34 @@ async function doAppleLogin() {
       return;
     }
   }
-  await _supa.auth.signInWithOAuth({
+  // Inside the WebToNative-wrapped iOS app, use the native Sign in with
+  // Apple bridge (real ASAuthorizationController under the hood) instead
+  // of the web OAuth redirect. A plain WKWebView redirect gets blocked by
+  // Apple, which is why App Review saw it bounce to "Manage Apple ID".
+  if (window.WTN && window.WTN.socialLogin && window.WTN.socialLogin.apple) {
+    window.WTN.socialLogin.apple.login({
+      callback: async function (result) {
+        if (!result || !result.isSuccess || !result.idToken) {
+          showAuthMsg((result && result.error) || t('authErrFields') || 'Apple sign-in failed', 'error');
+          return;
+        }
+        var { error } = await _supa.auth.signInWithIdToken({
+          provider: 'apple',
+          token: result.idToken
+        });
+        if (error) { showAuthMsg(error.message, 'error'); return; }
+      }
+    });
+    return;
+  }
+
+  // Fallback for liedar.store viewed directly in a browser / as a PWA
+  // (no WebToNative bridge present): use the normal web OAuth flow.
+  var { error } = await _supa.auth.signInWithOAuth({
     provider: 'apple',
     options: { redirectTo: 'https://liedar.store/' }
   });
+  if (error) { showAuthMsg(error.message, 'error'); return; }
 }
 async function doGoogleLogin() {
   if (!_supa) return;
