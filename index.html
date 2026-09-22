@@ -1850,7 +1850,15 @@ async function doAppleLogin() {
   // Apple bridge (real ASAuthorizationController under the hood) instead
   // of the web OAuth redirect. A plain WKWebView redirect gets blocked by
   // Apple, which is why App Review saw it bounce to "Manage Apple ID".
-  if (window.WTN && window.WTN.socialLogin && window.WTN.socialLogin.apple) {
+  //
+  // webtonative.min.js always defines window.WTN.socialLogin.apple, even
+  // when the page is opened in a normal browser (liedar.store, PWA) where
+  // there is no native side to talk to -- calling it there just does
+  // nothing silently. window.webkit.messageHandlers only exists when the
+  // page is actually running inside a native WKWebView, so we require both
+  // checks before trusting the native bridge.
+  var inWrappedApp = !!(window.webkit && window.webkit.messageHandlers);
+  if (inWrappedApp && window.WTN && window.WTN.socialLogin && window.WTN.socialLogin.apple) {
     window.WTN.socialLogin.apple.login({
       callback: async function (result) {
         if (!result || !result.isSuccess || !result.idToken) {
