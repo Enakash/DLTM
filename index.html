@@ -1859,8 +1859,31 @@ async function doAppleLogin() {
     // of the web OAuth redirect. A plain WKWebView redirect gets blocked by
     // Apple, which is why App Review saw it bounce to "Manage Apple ID".
     if (window.WTN && window.WTN.socialLogin && window.WTN.socialLogin.apple) {
+      var settled = false;
+      var fallbackToWeb = async function () {
+        if (settled) return;
+        settled = true;
+        var { error } = await _supa.auth.signInWithOAuth({
+          provider: 'apple',
+          options: { redirectTo: 'https://liedar.store/' }
+        });
+        if (error) { showAuthMsg(error.message, 'error'); return; }
+      };
+      // Safety net: if nothing ever calls back (e.g. this is a desktop
+      // browser / PWA with no real native side, not the wrapped app), fall
+      // back to the web OAuth flow instead of leaving the button dead.
+      // 4s is generous enough that a real device's native sheet has time
+      // to appear, but this is a stopgap -- if a slow real login triggers
+      // this too, the "settled" flag stops the native callback below from
+      // double-firing, but the user may see the fallback flow start
+      // underneath an already-open native sheet. Only a confirmed reliable
+      // app-detection signal removes this tradeoff; we don't have one yet.
+      var fallbackTimer = setTimeout(fallbackToWeb, 4000);
       window.WTN.socialLogin.apple.login({
         callback: async function (result) {
+          clearTimeout(fallbackTimer);
+          if (settled) return;
+          settled = true;
           try {
             if (!result || !result.isSuccess || !result.idToken) {
               showAuthMsg((result && result.error) || t('authErrFields') || 'Apple sign-in failed', 'error');
@@ -1881,7 +1904,7 @@ async function doAppleLogin() {
     }
 
     // Fallback for liedar.store viewed directly in a browser / as a PWA
-    // (no WebToNative bridge present): use the normal web OAuth flow.
+    // (no WebToNative bridge present at all): use the normal web OAuth flow.
     var { error } = await _supa.auth.signInWithOAuth({
       provider: 'apple',
       options: { redirectTo: 'https://liedar.store/' }
