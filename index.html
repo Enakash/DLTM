@@ -1894,6 +1894,16 @@ async function doAppleLogin() {
               token: result.idToken
             });
             if (error) { showAuthMsg(error.message, 'error'); return; }
+            // Apple only sends firstName/lastName on the user's very first
+            // authorization of this app -- save it now so future logins
+            // (which only get a private-relay-style email back) still show
+            // a real name via user.user_metadata.full_name.
+            if (result.firstName || result.lastName) {
+              var fullName = [result.firstName, result.lastName].filter(Boolean).join(' ');
+              _supa.auth.updateUser({ data: { full_name: fullName } }).catch(function (e) {
+                console.error('Failed to save Apple full name:', e);
+              });
+            }
           } catch (e) {
             console.error('Apple login callback error:', e);
             showAuthMsg(t('authErrFields') || 'Apple sign-in failed', 'error');
