@@ -1707,22 +1707,12 @@ if (!_supa) console.warn('Supabase not configured');
 var _currentUser = null;
 var _pendingEmail = '';
 
-// WTN.deviceInfo() only ever resolves when the page is actually running
-// inside the WebToNative-wrapped app (it round-trips to native code to
-// fetch real device data). In a plain browser/PWA there is no native side
-// to answer, so it just hangs -- we race it against a short timeout.
-// Stored as a promise (not a boolean set later) so doAppleLogin() can
-// safely await the real answer even if clicked before the native
-// round-trip finishes, instead of racing against a stale default.
-var _inWrappedAppPromise = (function detectWrappedApp() {
-  if (!window.WTN || !window.WTN.deviceInfo) return Promise.resolve(false);
-  return Promise.race([
-    window.WTN.deviceInfo().then(function (info) {
-      return !!(info && (info.platform === 'ios' || info.platform === 'android'));
-    }),
-    new Promise(function (resolve) { setTimeout(function () { resolve(false); }, 800); })
-  ]).catch(function () { return false; });
-})();
+// NOTE: an earlier version of this check called WTN.deviceInfo().then(...),
+// assuming it returned a Promise. WebToNative's API is callback-based
+// (like socialLogin.apple.login({callback: ...}) below), so that .then()
+// call likely threw immediately and silently broke doAppleLogin() entirely.
+// Simple synchronous presence check instead -- reliable inside the real
+// wrapped app, where webtonative.min.js actually defines this object.
 
 window.addEventListener('DOMContentLoaded', function() {
   // Apply detected/saved language immediately
@@ -1863,41 +1853,45 @@ async function doAppleLogin() {
       return;
     }
   }
-  // Inside the WebToNative-wrapped iOS app, use the native Sign in with
-  // Apple bridge (real ASAuthorizationController under the hood) instead
-  // of the web OAuth redirect. A plain WKWebView redirect gets blocked by
-  // Apple, which is why App Review saw it bounce to "Manage Apple ID".
-  //
-  // webtonative.min.js always defines window.WTN.socialLogin.apple, even
-  // when the page is opened in a normal browser (liedar.store, PWA) where
-  // there is no native side to talk to -- calling it there just does
-  // nothing silently. inWrappedApp (via WTN.deviceInfo(), see above) is
-  // only true once we've confirmed a real native side actually answered.
-  var inWrappedApp = await _inWrappedAppPromise;
-  if (inWrappedApp && window.WTN && window.WTN.socialLogin && window.WTN.socialLogin.apple) {
-    window.WTN.socialLogin.apple.login({
-      callback: async function (result) {
-        if (!result || !result.isSuccess || !result.idToken) {
-          showAuthMsg((result && result.error) || t('authErrFields') || 'Apple sign-in failed', 'error');
-          return;
+  try {
+    // Inside the WebToNative-wrapped iOS app, use the native Sign in with
+    // Apple bridge (real ASAuthorizationController under the hood) instead
+    // of the web OAuth redirect. A plain WKWebView redirect gets blocked by
+    // Apple, which is why App Review saw it bounce to "Manage Apple ID".
+    if (window.WTN && window.WTN.socialLogin && window.WTN.socialLogin.apple) {
+      window.WTN.socialLogin.apple.login({
+        callback: async function (result) {
+          try {
+            if (!result || !result.isSuccess || !result.idToken) {
+              showAuthMsg((result && result.error) || t('authErrFields') || 'Apple sign-in failed', 'error');
+              return;
+            }
+            var { error } = await _supa.auth.signInWithIdToken({
+              provider: 'apple',
+              token: result.idToken
+            });
+            if (error) { showAuthMsg(error.message, 'error'); return; }
+          } catch (e) {
+            console.error('Apple login callback error:', e);
+            showAuthMsg(t('authErrFields') || 'Apple sign-in failed', 'error');
+          }
         }
-        var { error } = await _supa.auth.signInWithIdToken({
-          provider: 'apple',
-          token: result.idToken
-        });
-        if (error) { showAuthMsg(error.message, 'error'); return; }
-      }
-    });
-    return;
-  }
+      });
+      return;
+    }
 
-  // Fallback for liedar.store viewed directly in a browser / as a PWA
-  // (no WebToNative bridge present): use the normal web OAuth flow.
-  var { error } = await _supa.auth.signInWithOAuth({
-    provider: 'apple',
-    options: { redirectTo: 'https://liedar.store/' }
-  });
-  if (error) { showAuthMsg(error.message, 'error'); return; }
+    // Fallback for liedar.store viewed directly in a browser / as a PWA
+    // (no WebToNative bridge present): use the normal web OAuth flow.
+    var { error } = await _supa.auth.signInWithOAuth({
+      provider: 'apple',
+      options: { redirectTo: 'https://liedar.store/' }
+    });
+    if (error) { showAuthMsg(error.message, 'error'); return; }
+  } catch (e) {
+    // Never fail silently -- a dead-looking button is the worst outcome.
+    console.error('doAppleLogin error:', e);
+    showAuthMsg((e && e.message) || 'Apple sign-in failed', 'error');
+  }
 }
 async function doGoogleLogin() {
   if (!_supa) return;
