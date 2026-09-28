@@ -1858,7 +1858,10 @@ async function doAppleLogin() {
     // Apple bridge (real ASAuthorizationController under the hood) instead
     // of the web OAuth redirect. A plain WKWebView redirect gets blocked by
     // Apple, which is why App Review saw it bounce to "Manage Apple ID".
-    if (window.WTN && window.WTN.socialLogin && window.WTN.socialLogin.apple) {
+    // WTN.isIosApp is the library's own reliable check (true only inside the
+    // wrapped iOS app). Outside it -- desktop browser, PWA, Android -- the
+    // native call does nothing, so go straight to the web flow with no delay.
+    if (window.WTN && window.WTN.isIosApp && window.WTN.socialLogin && window.WTN.socialLogin.apple) {
       var settled = false;
       var fallbackToWeb = async function () {
         if (settled) return;
