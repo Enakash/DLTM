@@ -1859,7 +1859,13 @@ async function doAppleLogin() {
     // no custom detection or timeout logic wrapped around it, so a failure
     // here is directly attributable to the native bridge, not masked by a
     // fallback.
-    if (window.WTN && window.WTN.socialLogin && window.WTN.socialLogin.apple) {
+    // Apple's native SDK is iOS-only (WebToNative's own docs: "Apple Login
+    // is available only in iOS"). window.WTN.socialLogin.apple still exists
+    // as a stub on Android, so without the isIosApp check the native call
+    // would be attempted there too and fail silently instead of falling
+    // through to the web OAuth flow below, which Google Play doesn't
+    // restrict the way Apple's App Store does.
+    if (window.WTN && window.WTN.isIosApp && window.WTN.socialLogin && window.WTN.socialLogin.apple) {
       var { apple } = window.WTN.socialLogin;
       apple.login({
         callback: async function (value) {
