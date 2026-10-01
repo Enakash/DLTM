@@ -1929,6 +1929,35 @@ async function doGoogleLogin() {
     }
   }
   try {
+    // Native Google Sign-In only inside the wrapped iOS app. WTN.isIosApp
+    // is a real flag (true only inside that specific wrapper) -- unlike
+    // WTN.socialLogin.google, which the library always defines as a stub
+    // even in a plain browser, Android, or PWA. Gating on isIosApp is what
+    // was missing last time and broke Google everywhere.
+    if (window.WTN && window.WTN.isIosApp && window.WTN.socialLogin && window.WTN.socialLogin.google) {
+      window.WTN.socialLogin.google.login({
+        callback: async function (value) {
+          console.log(value);
+          try {
+            if (!value || !value.isSuccess || !value.idToken) {
+              showAuthMsg((value && value.error) || t('authErrFields') || 'Google sign-in failed', 'error');
+              return;
+            }
+            var { error } = await _supa.auth.signInWithIdToken({
+              provider: 'google',
+              token: value.idToken
+            });
+            if (error) { showAuthMsg(error.message, 'error'); return; }
+          } catch (e) {
+            console.error('Google login callback error:', e);
+            showAuthMsg(t('authErrFields') || 'Google sign-in failed', 'error');
+          }
+        }
+      });
+      return;
+    }
+
+    // Android, browser, PWA: plain web OAuth (already works there).
     var { error } = await _supa.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: 'https://liedar.store/' } });
     if (error) { showAuthMsg(error.message, 'error'); return; }
   } catch (e) {
