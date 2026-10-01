@@ -1866,7 +1866,14 @@ async function doAppleLogin() {
           console.log(value);
           try {
             if (!value || !value.isSuccess || !value.idToken) {
-              showAuthMsg((value && value.error) || t('authErrFields') || 'Apple sign-in failed', 'error');
+              // The user simply canceled the native sheet (closed it, or
+              // left the app mid-flow) -- not a real error, so don't show
+              // the raw "AuthorizationError -1001" system text.
+              var errText = (value && value.error) || '';
+              var wasCanceled = /1001|cancel/i.test(errText);
+              if (!wasCanceled) {
+                showAuthMsg(errText || t('authErrFields') || 'Apple sign-in failed', 'error');
+              }
               return;
             }
             var { error } = await _supa.auth.signInWithIdToken({
