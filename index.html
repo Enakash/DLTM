@@ -1928,7 +1928,40 @@ async function doGoogleLogin() {
       return;
     }
   }
-  await _supa.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: 'https://liedar.store/' } });
+  try {
+    // Mirrors the working Apple native flow: inside the wrapped app, the
+    // web OAuth redirect appears to get intercepted/swallowed by the
+    // native side now that Social Login is active, with no response.
+    if (window.WTN && window.WTN.socialLogin && window.WTN.socialLogin.google) {
+      window.WTN.socialLogin.google.login({
+        callback: async function (value) {
+          console.log(value);
+          try {
+            if (!value || !value.isSuccess || !value.idToken) {
+              showAuthMsg((value && value.error) || t('authErrFields') || 'Google sign-in failed', 'error');
+              return;
+            }
+            var { error } = await _supa.auth.signInWithIdToken({
+              provider: 'google',
+              token: value.idToken
+            });
+            if (error) { showAuthMsg(error.message, 'error'); return; }
+          } catch (e) {
+            console.error('Google login callback error:', e);
+            showAuthMsg(t('authErrFields') || 'Google sign-in failed', 'error');
+          }
+        }
+      });
+      return;
+    }
+
+    // Fallback for liedar.store viewed directly in a browser / as a PWA.
+    var { error } = await _supa.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: 'https://liedar.store/' } });
+    if (error) { showAuthMsg(error.message, 'error'); return; }
+  } catch (e) {
+    console.error('doGoogleLogin error:', e);
+    showAuthMsg((e && e.message) || 'Google sign-in failed', 'error');
+  }
 }
 
 async function resendVerify() {
